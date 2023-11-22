@@ -7,7 +7,7 @@ on:
 
 jobs:
   eslint:
-    uses: .github/workflows/eslint.yaml
+    uses: .github/workflows/eslint.yml
 
   jest:
-    uses: .github/workflows/jest.yaml
+    uses: .github/workflows/jest.yml
