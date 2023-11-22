@@ -1,0 +1,13 @@
+name: Main Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  eslint:
+    uses: .github/workflows/eslint.yml
+
+  jest:
+    uses: .github/workflows/jest.yml

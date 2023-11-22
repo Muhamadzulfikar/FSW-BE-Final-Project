@@ -1,0 +1,52 @@
+name: Jest Unit Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.18.2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest
+        run: npm test
+
+      - name: Comment on pull request
+        uses: unsplash/comment-on-pr@v1
+        with:
+          message: "Jest unit tests passed. Good job!"
+          check_for_single_commit: true
+        if: success()
+
+      - name: Set pull request status
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { context } = require('@actions/github');
+            const { owner, repo } = context.repo;
+
+            octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+
+            octokit.repos.createCommitStatus({
+              owner,
+              repo,
+              sha: context.sha,
+              state: 'success',
+              target_url: 'URL_TO_YOUR_DOCUMENTATION_OR_OTHER_HELPFUL_RESOURCE',
+              description: 'Jest unit tests passed. Good job!',
+              context: 'Jest Unit Tests'
+            });
+        if: success()
