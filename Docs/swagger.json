@@ -251,13 +251,13 @@
           "classTarget": {
             "type": "array",
             "items": {
-              "type": "string",
-              "example": [
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-              ]
-            }
+              "type": "string"
+            },
+            "example": [
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+            ]
           },
           "telegram": {
             "type": "string",

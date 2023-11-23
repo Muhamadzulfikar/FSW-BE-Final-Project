@@ -1,298 +1,242 @@
 openapi: 3.0.3
 info:
-  title: Swagger Cars - OpenAPI 3.0
-  description: |-
-    This api is used to manage car data, but only admin and super admin are allowed to perform crud operations on this api. This api uses authentication using json web tokens, where users are asked to register or login first before using this api.
-    email: apiteam@swagger.io
-  version: 0.0.1
+  title: Academy  - OpenAPI 3.0
+  description: |
+    API documentation for the Academy Website, providing endpoints to manage courses, students, and mor
+    
+    Some useful links:
+    - [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
+    - [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)
+  license:
+    name: ISC License
+    url: https://www.isc.org/licenses/
+  version: 1.0.0
 servers:
-  - url: http://localhost:8000
+  - url: http://localhost:8000/v1
 tags:
-  - name: user
-    description: api to authenticate
-  - name: cars
-    description: api to manage cars
-  - name: cars/{id}
-    description: api manage car with id
+  - name: Root
+    description: Root end-point
+  - name: Category
+    description: Everything about cars management
+  - name: Class
+    description: Everything about user management
 paths:
-  /register:
-    post:
-      tags:
-        - user
-      summary: Register a new user
-      description: Register a new user
-      operationId: register
-      requestBody:
-        description: Register a new user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-        required: true
-      responses:
-        '201':
-          description: Successful Register User
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'          
-        '422':
-          description: Cannot Register user
-      security:
-        - cars_auth:
-            - write:user
-            - read:user
-            
-  /login:
-    post:
-      tags:
-        - user
-      summary: Login user
-      description: Login user
-      operationId: login
-      requestBody:
-        description: Login user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-        required: true
-      responses:
-        '200':
-          description: Successful Login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'          
-        '401':
-          description: Unauthorize
-      security:
-        - cars_auth:
-            - write:user
-            - read:user
-
-  /cars:
-    post:
-      tags:
-        - cars
-      summary: Store Car In Database
-      description: Store Car In Database
-      operationId: storeCars
-      requestBody:
-        description: Store Car In Database
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cars'
-        required: true
-      responses:
-        '201':
-          description: Successful Update Cars
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cars'          
-        '422':
-          description: Invalid ID supplied
-      security:
-        - cars_auth:
-            - write:cars
-            - read:cars
-            
+  /:
     get:
       tags:
-        - cars
-      summary: Get All Cars Data
-      description: Get All Cars Data
-      operationId: getCars
+        - Root
+      summary: Test your ping to the server here
+      operationId: testPing
       responses:
         '200':
-          description: Successful get
+          description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cars'
+                $ref: '#/components/schemas/Ping'
         '500':
           description: Internal Server Error
-      security:
-        - cars_auth:
-            - write:cars
-            - read:cars
-      
-  /cars/{id}:
-    put:
-      parameters:
-        - name: id
-          in: path
-          description: ID Mobil
-          required: true
-          schema:
-            type: string
-            format: uuid
-      tags:
-        - cars/{id}
-      summary: Update an Existing Car
-      description: Update an Existing Car
-      operationId: updateCars
-      requestBody:
-        description: update an Existing Car
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cars'
-        required: true
-      responses:
-        '201':
-          description: Successful Update Car
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cars'          
-        '422':
-          description: Cannot Update Car
-      security:
-        - cars_auth:
-            - write:cars
-            - read:cars
+                $ref: '#/components/schemas/Internal_Error'
+  /categories:
     get:
-      parameters:
-        - name: id
-          in: path
-          description: ID Mobil
-          required: true
-          schema:
-            type: string
-            format: uuid
       tags:
-        - cars/{id}
-      summary: Get Car With ID
-      description: Get Car With ID
-      operationId: getCarById
+        - Category
+      summary: Find all Category
+      description: This end point will serve all list of categories
+      operationId: getAllCategories
       responses:
         '200':
-          description: Get Car By ID
+          description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cars'          
-        '404':
-          description: Car With ID Not Found 
+                $ref: '#/components/schemas/Categories'
         '500':
-          description: "Internal server Error"
-      security:
-        - cars_auth:
-            - write:cars
-            - read:cars
-            
-    delete:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal_Error'
+  /classes:
+    get:
+      tags:
+        - Class
+      summary: Find all Class
+      description: This end point will serve all list of class
+      operationId: getAllClass
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classes'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal_Error'
+  /classes/{classID}:
+    get:
+      tags:
+        - Class
+      summary: Find detail class by ID
+      description: This end point will serve data of detailed class
+      operationId: getDetailClass
       parameters:
-        - name: id
+        - name: classID
           in: path
-          description: ID Mobil
+          description: ID of class to fetch
           required: true
           schema:
-            type: string
-            format: uuid
-      tags:
-        - cars/{id}
-      summary: Delete an Existing Car
-      description: Update an Existing Car
-      operationId: deleteCars
+            $ref: '#/components/schemas/ParamsID'
+
       responses:
-        '201':
-          description: Successful Delete Car
+        '200':
+          description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cars'          
-        '422':
-          description: Cannot Delete Car
-      security:
-        - cars_auth:
-            - write:cars
-            - read:cars
+                allOf:
+                  - $ref: '#/components/schemas/Class'
+                  - $ref: '#/components/schemas/ClassID'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Internal_Error'
 components:
   schemas:
-    User:
+    ParamsID:
+      type: string
+      format: uuid
+      example: "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+    Ping:
       type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        username:
+      properties :
+        status:
           type: string
-          example: theUser
-        firstName:
+          example: OK
+        message:
           type: string
-          example: John
-        lastName:
-          type: string
-          example: James
-        email:
-          type: string
-          example: john@email.com
-        password:
-          type: string
-          example: '12345'
-        phone:
-          type: string
-          example: '12345'
-        userStatus:
-          type: integer
-          description: User Status
-          format: int32
-          example: 1
-    Cars:
-      required:
-        - name
-        - photoUrls
+          example: Ping succesfully
+    Category:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          example: "6418b641-df5b-4719-a7ad-55686af0bc06"
+          example: 0033d087-4a4c-4828-a987-e6e0c72d37e9
         name:
           type: string
-          format: string
-          example: "Mobil B"
-        type:
-          type: string
-          example: "medium"
+          example: UI/UX Design
         image:
           type: string
-          example: https://example.com/image2.jpg
-        capacity:
-          type: integer
-          example: 5
-        rent_per_day:
-          type: integer
-          example: 100000
+          example: https://www.image.com
+    Categories:
+      type: object
+      properties:
+        status: 
+          type: string
+          example: OK
+        message: 
+          type: string
+          example: Success
+        data:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Category'
+    CategoryName:
+      type: object
+      properties: 
+        name:
+          type: string
+          example: UI/UX Design
+    ClassID:
+      type: object
+      properties:
         description:
           type: string
-          example: "Mobil sedang dengan kenyamanan tinggi."
-        available_at:
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+        classTarget:
+          type: array
+          items :
+            type : string
+          example : ["Lorem ipsum dolor sit amet, consectetur adipiscing elit","Lorem ipsum dolor sit amet, consectetur adipiscing elit","Lorem ipsum dolor sit amet, consectetur adipiscing elit"]
+        telegram:
           type: string
-          format: date
-          example: "2023-10-10T08:00:00Z"
-  requestBodies:
-    cars:
-      description: Pet object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Cars'
-    UserArray:
-      description: List of user object
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
-  securitySchemes:
-    cars_auth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+          example: telegram.co.id
+        onboarding:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+    Class:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 0033d087-4a4c-4828-a987-e6e0c72d37e9
+        name:
+          type: string
+          example: UI/UX Design
+        image:
+          type: string
+          example: https://www.image.com
+        author:
+          type: string
+          example: nameexample
+        price:
+          type: number
+          example: 280000
+        level:
+          type: string
+          example: Advanced
+        rating: 
+          type: number
+          example: 4.9
+        is_premium:
+          type: boolean
+          example: true
+        code:
+          type: string
+          example: UIUX0123
+        category:
+            $ref: '#/components/schemas/CategoryName'
+    Classes:
+      type: object
+      properties:
+        status: 
+          type: string
+          example: OK
+        message: 
+          type: string
+          example: Success
+        data:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Class'
+    Unauthorized:
+      type: object
+      properties :
+        status:
+          type: string
+          example: FAILED
+        message:
+          type: string
+          example: Please login first
+    Internal_Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAILED
+        error : 
+          type : string
+          example : Internal Server Error
+    
+      
