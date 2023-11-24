@@ -3,7 +3,7 @@ info:
   title: Academy  - OpenAPI 3.0
   description: |
     API documentation for the Academy Website, providing endpoints to manage courses, students, and mor
-    
+
     Some useful links:
     - [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
     - [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)
@@ -94,7 +94,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/ParamsID'
-
       responses:
         '200':
           description: successful operation
@@ -115,10 +114,10 @@ components:
     ParamsID:
       type: string
       format: uuid
-      example: "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+      example: 0033d087-4a4c-4828-a987-e6e0c72d37e9
     Ping:
       type: object
-      properties :
+      properties:
         status:
           type: string
           example: OK
@@ -141,19 +140,19 @@ components:
     Categories:
       type: object
       properties:
-        status: 
+        status:
           type: string
           example: OK
-        message: 
+        message:
           type: string
           example: Success
         data:
           type: array
-          items: 
+          items:
             $ref: '#/components/schemas/Category'
     CategoryName:
       type: object
-      properties: 
+      properties:
         name:
           type: string
           example: UI/UX Design
@@ -165,15 +164,28 @@ components:
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
         classTarget:
           type: array
-          items :
-            type : string
-          example : ["Lorem ipsum dolor sit amet, consectetur adipiscing elit","Lorem ipsum dolor sit amet, consectetur adipiscing elit","Lorem ipsum dolor sit amet, consectetur adipiscing elit"]
+          items:
+            type: string
+          example:
+            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
         telegram:
           type: string
           example: telegram.co.id
         onboarding:
           type: string
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        class_module:
+          type: array
+          items:
+            type: object
+          example:
+            - chapter: chapter 1 - Pendahuluan
+              estimation: 60 Menit
+              module:
+                - title: title
+                  link: https://youtube.com
     Class:
       type: object
       properties:
@@ -196,7 +208,7 @@ components:
         level:
           type: string
           example: Advanced
-        rating: 
+        rating:
           type: number
           example: 4.9
         is_premium:
@@ -206,23 +218,23 @@ components:
           type: string
           example: UIUX0123
         category:
-            $ref: '#/components/schemas/CategoryName'
+          $ref: '#/components/schemas/CategoryName'
     Classes:
       type: object
       properties:
-        status: 
+        status:
           type: string
           example: OK
-        message: 
+        message:
           type: string
           example: Success
         data:
           type: array
-          items: 
+          items:
             $ref: '#/components/schemas/Class'
     Unauthorized:
       type: object
-      properties :
+      properties:
         status:
           type: string
           example: FAILED
@@ -235,8 +247,6 @@ components:
         status:
           type: string
           example: FAILED
-        error : 
-          type : string
-          example : Internal Server Error
-    
-      
+        error:
+          type: string
+          example: Internal Server Error

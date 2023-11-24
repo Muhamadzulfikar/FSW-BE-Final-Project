@@ -266,6 +266,25 @@
           "onboarding": {
             "type": "string",
             "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+          },
+
+          "class_module": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "example": [
+              {
+                "chapter": "chapter 1 - Pendahuluan",
+                "estimation": "60 Menit",
+                "module": [
+                  {
+                    "title": "title",
+                    "link": "https://youtube.com"
+                  }
+                ]
+              }
+            ]
           }
         }
       },
