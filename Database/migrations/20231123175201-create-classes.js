@@ -1,45 +1,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('Classes', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+      },
+      classCategoryId: {
+        type: Sequelize.INTEGER,
       },
       uuid: {
         type: Sequelize.UUID,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      email: {
+      author: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
       },
-      password: {
-        type: Sequelize.CHAR(60),
-        unique: true,
-        allowNull: false,
+      price: {
+        type: Sequelize.DOUBLE,
       },
-      phone: {
+      level: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      country: {
+      rating: {
         type: Sequelize.STRING,
-        allowNull: true,
       },
-      city: {
+      isPremium: {
+        type: Sequelize.BOOLEAN,
+      },
+      code: {
         type: Sequelize.STRING,
-        allowNull: true,
-      },
-      role: {
-        type: Sequelize.ENUM('user', 'admin', 'super admin'),
-        allowNull: false,
-        defaultValue: 'user',
       },
       createdAt: {
         allowNull: false,
@@ -52,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('Classes');
   },
 };
