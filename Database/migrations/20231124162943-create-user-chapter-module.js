@@ -16,14 +16,14 @@ module.exports = {
       chapter_module_uuid: {
         type: Sequelize.UUID,
         references: {
-          model: 'chapter_module',
+          model: 'chapter_modules',
           key: 'uuid',
         },
       },
       user_uuid: {
         type: Sequelize.UUID,
         references: {
-          model: 'user',
+          model: 'users',
           key: 'uuid',
         },
       },

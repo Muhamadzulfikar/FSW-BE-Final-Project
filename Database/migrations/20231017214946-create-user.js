@@ -1,11 +1,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
       uuid: {
         type: Sequelize.UUID,
@@ -54,6 +55,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('users');
   },
 };
