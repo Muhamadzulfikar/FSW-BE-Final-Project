@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class course extends Model {
@@ -9,29 +7,27 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      this.belongsTo(models.classCategory, {
-        foreignKey: 'classCategoryID',
-        as: 'classCategory',
-      });
-    }
   }
   course.init({
-    class_category_Id: {
-      DataTypes: DataTypes.INTEGER,
+    uuid: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+    },
+    course_category_id: {
+      type: DataTypes.INTEGER,
       validate: {
-        isNull: false,
+        notEmpty: true,
       },
     },
     image: {
-      DataTypes: DataTypes.STRING,
+      type: DataTypes.STRING,
       validate: {
         min: 5,
         max: 255,
       },
     },
     name: {
-      DataTypes: DataTypes.STRING,
+      type: DataTypes.STRING,
       validate: {
         isNull: false,
         min: 5,
@@ -39,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     author: {
-      DataTypes: DataTypes.STRING,
+      type: DataTypes.STRING,
       validate: {
         isNull: false,
         min: 5,
@@ -48,14 +44,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     price: DataTypes.DOUBLE,
     level: {
-      DataTypes: DataTypes.ENUM,
+      type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
       validate: {
         isNull: false,
-        isIn: [['advance', 'beginner', 'intermediate']],
+        isIn: [['advanced', 'beginner', 'intermediate']],
       },
     },
     rating: {
-      DataTypes: DataTypes.STRING,
+      type: DataTypes.STRING,
       validate: {
         isNull: false,
         min: 5,
@@ -63,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     isPremium: {
-      DataTypes: DataTypes.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       validate: {
         isNull: false,
       },
@@ -72,8 +68,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'course',
-    tableName: 'course',
-    primaryKey: 'uuid',
+    tableName: 'courses',
   });
   return course;
 };

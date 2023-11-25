@@ -2,7 +2,7 @@ const {
   DB_USERNAME = 'admin',
   DB_PASSWORD = 'admin123',
   DB_HOST = '127.0.0.1',
-  DB_NAME = 'binar_car_managements',
+  DB_NAME = 'course_managements',
 } = process.env;
 
 module.exports = {
