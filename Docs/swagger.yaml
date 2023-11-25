@@ -1,11 +1,16 @@
 openapi: 3.0.3
 info:
   title: Academy  - OpenAPI 3.0
-  description: |
-    API documentation for the Academy Website, providing endpoints to manage courses, students, and mor
+  description: >
+    API documentation for the Academy Website, providing endpoints to manage
+    courses, students, and mor
+
 
     Some useful links:
-    - [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
+
+    - [BackEnd
+    repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
+
     - [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)
   license:
     name: ISC License
@@ -121,6 +126,9 @@ components:
         status:
           type: string
           example: OK
+        code:
+          type: number
+          example: 200      
         message:
           type: string
           example: Ping succesfully
@@ -143,6 +151,9 @@ components:
         status:
           type: string
           example: OK
+        code:
+          type: number
+          example: 200
         message:
           type: string
           example: Success
@@ -150,18 +161,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Category'
-    CategoryName:
-      type: object
-      properties:
-        name:
-          type: string
-          example: UI/UX Design
     ClassID:
       type: object
       properties:
         description:
           type: string
-          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
+          example: >-
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat
         classTarget:
           type: array
           items:
@@ -189,6 +198,12 @@ components:
     Class:
       type: object
       properties:
+        status:
+          type: string
+          example: OK
+        code:
+          type: number
+          example: 200
         id:
           type: string
           format: uuid
@@ -211,20 +226,30 @@ components:
         rating:
           type: number
           example: 4.9
-        is_premium:
+        modul:
+          type: number
+          example: 5
+        menit:
+          type: number
+          example: 60
+        isPremium:
           type: boolean
           example: true
-        code:
+        classCode:
           type: string
           example: UIUX0123
         category:
-          $ref: '#/components/schemas/CategoryName'
+          type: string
+          example: UI/UX Design
     Classes:
       type: object
       properties:
         status:
           type: string
           example: OK
+        code:
+          type: number
+          example: 200
         message:
           type: string
           example: Success
@@ -238,6 +263,9 @@ components:
         status:
           type: string
           example: FAILED
+        code:
+          type: number
+          example: 401
         message:
           type: string
           example: Please login first
@@ -247,6 +275,9 @@ components:
         status:
           type: string
           example: FAILED
+        code:
+          type: number
+          example: 500
         error:
           type: string
           example: Internal Server Error

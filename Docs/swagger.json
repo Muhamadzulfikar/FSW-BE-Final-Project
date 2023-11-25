@@ -189,6 +189,10 @@
             "type": "string",
             "example": "OK"
           },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
           "message": {
             "type": "string",
             "example": "Ping succesfully"
@@ -220,6 +224,10 @@
             "type": "string",
             "example": "OK"
           },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
           "message": {
             "type": "string",
             "example": "Success"
@@ -229,15 +237,6 @@
             "items": {
               "$ref": "#/components/schemas/Category"
             }
-          }
-        }
-      },
-      "CategoryName": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "UI/UX Design"
           }
         }
       },
@@ -267,7 +266,6 @@
             "type": "string",
             "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
           },
-
           "class_module": {
             "type": "array",
             "items": {
@@ -291,6 +289,14 @@
       "Class": {
         "type": "object",
         "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -320,16 +326,25 @@
             "type": "number",
             "example": 4.9
           },
-          "is_premium": {
+          "modul": {
+            "type": "number",
+            "example": 5
+          },
+          "menit": {
+            "type": "number",
+            "example": 60
+          },
+          "isPremium": {
             "type": "boolean",
             "example": true
           },
-          "code": {
+          "classCode": {
             "type": "string",
             "example": "UIUX0123"
           },
           "category": {
-            "$ref": "#/components/schemas/CategoryName"
+            "type": "string",
+            "example": "UI/UX Design"
           }
         }
       },
@@ -339,6 +354,10 @@
           "status": {
             "type": "string",
             "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
           },
           "message": {
             "type": "string",
@@ -359,6 +378,10 @@
             "type": "string",
             "example": "FAILED"
           },
+          "code": {
+            "type": "number",
+            "example": 401
+          },
           "message": {
             "type": "string",
             "example": "Please login first"
@@ -371,6 +394,10 @@
           "status": {
             "type": "string",
             "example": "FAILED"
+          },
+          "code": {
+            "type": "number",
+            "example": 500
           },
           "error": {
             "type": "string",
