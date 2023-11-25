@@ -11,7 +11,7 @@ module.exports = {
       course_uuid: {
         type: Sequelize.UUID,
         references: {
-          model: 'course',
+          model: 'courses',
           key: 'uuid',
         },
       },
