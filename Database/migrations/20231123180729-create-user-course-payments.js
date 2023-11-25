@@ -1,23 +1,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('class_chapters', {
+    await queryInterface.createTable('user_course_payments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      class_uuid: {
+      uuid: {
         type: Sequelize.UUID,
+        unique: true,
+        allowNull: false,
       },
-      chapter: {
-        type: Sequelize.STRING,
+      user_course_uuid: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'user_course',
+          key: 'uuid',
+        },
       },
-      duration: {
-        type: Sequelize.STRING,
+      payment_method: {
+        type: Sequelize.ENUM('credit card', 'bank transfer'),
+        allowNull: false,
       },
-      is_free: {
+      is_paid: {
         type: Sequelize.BOOLEAN,
       },
       createdAt: {
@@ -31,6 +38,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('class_chapters');
+    await queryInterface.dropTable('user_course_payments');
   },
 };

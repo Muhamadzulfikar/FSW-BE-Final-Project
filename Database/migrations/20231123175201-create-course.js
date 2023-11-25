@@ -1,18 +1,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Classes', {
+    await queryInterface.createTable('course', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      classCategoryId: {
+      course_category_id: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'course_category',
+          key: 'id',
+        },
       },
       uuid: {
         type: Sequelize.UUID,
+        unique: true,
+        allowNull: false,
       },
       image: {
         type: Sequelize.STRING,
@@ -27,7 +33,8 @@ module.exports = {
         type: Sequelize.DOUBLE,
       },
       level: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('beginner', 'intermediate', 'advanced'),
+        allowNull: false,
       },
       rating: {
         type: Sequelize.STRING,
@@ -49,6 +56,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('Classes');
+    await queryInterface.dropTable('course');
   },
 };
