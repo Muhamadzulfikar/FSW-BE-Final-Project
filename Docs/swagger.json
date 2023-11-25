@@ -42,7 +42,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Ping"
+                  "$ref": "#/components/schemas/ping"
                 }
               }
             }
@@ -52,7 +52,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Internal_Error"
+                  "$ref": "#/components/schemas/internalError"
                 }
               }
             }
@@ -74,7 +74,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Categories"
+                  "$ref": "#/components/schemas/categories"
                 }
               }
             }
@@ -84,7 +84,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Internal_Error"
+                  "$ref": "#/components/schemas/internalError"
                 }
               }
             }
@@ -106,7 +106,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Classes"
+                  "$ref": "#/components/schemas/classes"
                 }
               }
             }
@@ -116,7 +116,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Internal_Error"
+                  "$ref": "#/components/schemas/internalError"
                 }
               }
             }
@@ -139,7 +139,7 @@
             "description": "ID of class to fetch",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/ParamsID"
+              "$ref": "#/components/schemas/paramsID"
             }
           }
         ],
@@ -151,10 +151,13 @@
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/Class"
+                      "$ref": "#/components/schemas/okStatus"
                     },
                     {
-                      "$ref": "#/components/schemas/ClassID"
+                      "$ref": "#/components/schemas/class"
+                    },
+                    {
+                      "$ref": "#/components/schemas/classID"
                     }
                   ]
                 }
@@ -166,7 +169,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Internal_Error"
+                  "$ref": "#/components/schemas/internalError"
                 }
               }
             }
@@ -177,12 +180,12 @@
   },
   "components": {
     "schemas": {
-      "ParamsID": {
+      "paramsID": {
         "type": "string",
         "format": "uuid",
         "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
       },
-      "Ping": {
+      "ping": {
         "type": "object",
         "properties": {
           "status": {
@@ -199,7 +202,24 @@
           }
         }
       },
-      "Category": {
+      "okStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          }
+        }
+      },
+      "category": {
         "type": "object",
         "properties": {
           "id": {
@@ -217,7 +237,7 @@
           }
         }
       },
-      "Categories": {
+      "categories": {
         "type": "object",
         "properties": {
           "status": {
@@ -235,12 +255,44 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Category"
+              "$ref": "#/components/schemas/category"
             }
           }
         }
       },
-      "ClassID": {
+      "modul": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "title"
+          },
+          "link": {
+            "type": "string",
+            "example": "https://youtube.com"
+          }
+        }
+      },
+      "classModule": {
+        "type": "object",
+        "properties": {
+          "chapter": {
+            "type": "string",
+            "example": "chapter 1 - Pendahuluan"
+          },
+          "estimation": {
+            "type": "number",
+            "example": 60
+          },
+          "module": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/modul"
+            }
+          }
+        }
+      },
+      "classID": {
         "type": "object",
         "properties": {
           "description": {
@@ -266,37 +318,17 @@
             "type": "string",
             "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
           },
-          "class_module": {
+          "classModule": {
             "type": "array",
             "items": {
-              "type": "object"
-            },
-            "example": [
-              {
-                "chapter": "chapter 1 - Pendahuluan",
-                "estimation": "60 Menit",
-                "module": [
-                  {
-                    "title": "title",
-                    "link": "https://youtube.com"
-                  }
-                ]
-              }
-            ]
+              "$ref": "#/components/schemas/classModule"
+            }
           }
         }
       },
-      "Class": {
+      "class": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string",
-            "example": "OK"
-          },
-          "code": {
-            "type": "number",
-            "example": 200
-          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -326,11 +358,11 @@
             "type": "number",
             "example": 4.9
           },
-          "modul": {
+          "module": {
             "type": "number",
             "example": 5
           },
-          "menit": {
+          "totalMinute": {
             "type": "number",
             "example": 60
           },
@@ -348,7 +380,7 @@
           }
         }
       },
-      "Classes": {
+      "classes": {
         "type": "object",
         "properties": {
           "status": {
@@ -366,12 +398,12 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Class"
+              "$ref": "#/components/schemas/class"
             }
           }
         }
       },
-      "Unauthorized": {
+      "unauthorized": {
         "type": "object",
         "properties": {
           "status": {
@@ -388,7 +420,7 @@
           }
         }
       },
-      "Internal_Error": {
+      "internalError": {
         "type": "object",
         "properties": {
           "status": {

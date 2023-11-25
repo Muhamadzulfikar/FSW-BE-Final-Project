@@ -38,13 +38,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ping'
+                $ref: '#/components/schemas/ping'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Internal_Error'
+                $ref: '#/components/schemas/internalError'
   /categories:
     get:
       tags:
@@ -58,13 +58,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Categories'
+                $ref: '#/components/schemas/categories'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Internal_Error'
+                $ref: '#/components/schemas/internalError'
   /classes:
     get:
       tags:
@@ -78,13 +78,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Classes'
+                $ref: '#/components/schemas/classes'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Internal_Error'
+                $ref: '#/components/schemas/internalError'
   /classes/{classID}:
     get:
       tags:
@@ -98,7 +98,7 @@ paths:
           description: ID of class to fetch
           required: true
           schema:
-            $ref: '#/components/schemas/ParamsID'
+            $ref: '#/components/schemas/paramsID'
       responses:
         '200':
           description: successful operation
@@ -106,21 +106,22 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/Class'
-                  - $ref: '#/components/schemas/ClassID'
+                  - $ref: '#/components/schemas/okStatus'
+                  - $ref: '#/components/schemas/class'
+                  - $ref: '#/components/schemas/classID'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Internal_Error'
+                $ref: '#/components/schemas/internalError'
 components:
   schemas:
-    ParamsID:
+    paramsID:
       type: string
       format: uuid
       example: 0033d087-4a4c-4828-a987-e6e0c72d37e9
-    Ping:
+    ping:
       type: object
       properties:
         status:
@@ -132,7 +133,19 @@ components:
         message:
           type: string
           example: Ping succesfully
-    Category:
+    okStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Success
+    category:
       type: object
       properties:
         id:
@@ -145,7 +158,7 @@ components:
         image:
           type: string
           example: https://www.image.com
-    Categories:
+    categories:
       type: object
       properties:
         status:
@@ -160,8 +173,30 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Category'
-    ClassID:
+            $ref: '#/components/schemas/category'
+    modul:
+      type: object
+      properties:
+        title: 
+          type: string
+          example: title
+        link: 
+          type: string
+          example: https://youtube.com
+    classModule:
+      type: object
+      properties:
+        chapter: 
+          type: string
+          example: chapter 1 - Pendahuluan
+        estimation:
+          type: number
+          example: 60
+        module:
+          type: array
+          items: 
+            $ref: '#/components/schemas/modul'
+    classID:
       type: object
       properties:
         description:
@@ -185,25 +220,13 @@ components:
         onboarding:
           type: string
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        class_module:
+        classModule:
           type: array
           items:
-            type: object
-          example:
-            - chapter: chapter 1 - Pendahuluan
-              estimation: 60 Menit
-              module:
-                - title: title
-                  link: https://youtube.com
-    Class:
+            $ref: '#/components/schemas/classModule'
+    class:
       type: object
       properties:
-        status:
-          type: string
-          example: OK
-        code:
-          type: number
-          example: 200
         id:
           type: string
           format: uuid
@@ -226,10 +249,10 @@ components:
         rating:
           type: number
           example: 4.9
-        modul:
+        module:
           type: number
           example: 5
-        menit:
+        totalMinute:
           type: number
           example: 60
         isPremium:
@@ -241,7 +264,7 @@ components:
         category:
           type: string
           example: UI/UX Design
-    Classes:
+    classes:
       type: object
       properties:
         status:
@@ -256,8 +279,8 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Class'
-    Unauthorized:
+            $ref: '#/components/schemas/class'
+    unauthorized:
       type: object
       properties:
         status:
@@ -269,7 +292,7 @@ components:
         message:
           type: string
           example: Please login first
-    Internal_Error:
+    internalError:
       type: object
       properties:
         status:
