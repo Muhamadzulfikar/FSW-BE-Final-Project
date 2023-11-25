@@ -21,11 +21,11 @@
     },
     {
       "name": "Category",
-      "description": "Everything about cars management"
+      "description": "Everything about category management"
     },
     {
       "name": "Class",
-      "description": "Everything about user management"
+      "description": "Everything about class management"
     }
   ],
   "paths": {
@@ -149,17 +149,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/okStatus"
-                    },
-                    {
-                      "$ref": "#/components/schemas/class"
-                    },
-                    {
-                      "$ref": "#/components/schemas/classID"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/classDetail"
                 }
               }
             }
@@ -199,23 +189,6 @@
           "message": {
             "type": "string",
             "example": "Ping succesfully"
-          }
-        }
-      },
-      "okStatus": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "example": "OK"
-          },
-          "code": {
-            "type": "number",
-            "example": 200
-          },
-          "message": {
-            "type": "string",
-            "example": "Success"
           }
         }
       },
@@ -358,7 +331,7 @@
             "type": "number",
             "example": 4.9
           },
-          "module": {
+          "totalModule": {
             "type": "number",
             "example": 5
           },
@@ -377,6 +350,33 @@
           "category": {
             "type": "string",
             "example": "UI/UX Design"
+          }
+        }
+      },
+      "classDetail": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/class"
+              },
+              {
+                "$ref": "#/components/schemas/classID"
+              }
+            ]
           }
         }
       },
