@@ -2,7 +2,7 @@ module.exports = {
   unauthorized(message) {
     const status = 'Unauthorized';
     const error = new Error(`${status}. ${message}`);
-    error.code = '401';
+    error.code = 401;
     error.status = status;
     throw error;
   },
@@ -10,7 +10,7 @@ module.exports = {
   forbidden(message) {
     const status = 'Forbidden';
     const error = new Error(`${status}. ${message}`);
-    error.code = '403';
+    error.code = 403;
     error.status = status;
     throw error;
   },
@@ -18,7 +18,7 @@ module.exports = {
   internalError(message) {
     const status = 'Internal Server Error';
     const error = new Error(`${status}. ${message}`);
-    error.code = '500';
+    error.code = 500;
     error.status = status;
     throw error;
   },
@@ -26,7 +26,7 @@ module.exports = {
   badRequest(message) {
     const status = 'Bad Request';
     const error = new Error(`${status}. ${message}`);
-    error.code = '400';
+    error.code = 400;
     error.status = status;
     throw error;
   },
