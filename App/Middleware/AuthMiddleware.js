@@ -6,10 +6,7 @@ module.exports = {
   validateBodyRequest(req, res, next) {
     try {
       const {
-        name,
-        email,
-        password,
-        phone,
+        name, email, password, phone,
       } = req.body;
       if (!name) {
         ErrorHandling.unauthorized('Name must not be empty');

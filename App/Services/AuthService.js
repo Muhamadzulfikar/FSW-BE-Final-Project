@@ -58,7 +58,7 @@ module.exports = {
       ErrorHandling.unauthorized('Token must be not empty');
     }
     const token = bearerToken.split('Bearer ')[1];
-    const { id } = token && await this.validateToken(token);
+    const { id } = token && (await this.validateToken(token));
     const user = id && AuthRepositories.findUserById(id);
 
     return user;

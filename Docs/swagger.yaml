@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Academy  - OpenAPI 3.0
   description: |
-    API documentation for the Academy Website, providing endpoints to manage courses, students, and mor
+    API documentation for the Academy Website, providing endpoints to manage courses, students, and more
 
     Some useful links:
     - [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
@@ -12,7 +12,7 @@ info:
     url: https://www.isc.org/licenses/
   version: 1.0.0
 servers:
-  - url: http://localhost:8000/v1
+  - url: https://final-project-online-course.et.r.appspot.com/
 tags:
   - name: Root
     description: Root end-point
@@ -64,9 +64,24 @@ paths:
     get:
       tags:
         - Class
-      summary: Find all Class
+      summary: Find all Class if there are no params or spesific class if there are params
       description: This end point will serve all list of class
       operationId: getAllClass
+      parameters:
+      - name: class[category]=
+        in: query
+        description: The category of the classes
+        required: false
+        schema:
+          type: string
+          example: ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece
+      - name: class[level]=
+        in: query
+        description: The level of the classes
+        required: false
+        schema:
+          type: string
+          example: semua,beginner,intermediate,advanced
       responses:
         '200':
           description: successful operation
@@ -186,7 +201,7 @@ components:
           type: array
           items:
             type: string
-          example:
+            example:
             - Lorem ipsum dolor sit amet, consectetur adipiscing elit
             - Lorem ipsum dolor sit amet, consectetur adipiscing elit
             - Lorem ipsum dolor sit amet, consectetur adipiscing elit

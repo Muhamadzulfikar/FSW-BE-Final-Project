@@ -16,11 +16,9 @@ app.use('/v1', authRoute);
 app.use('/v1/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
-  res.status(200).json(
-    {
-      message: 'successfully',
-    },
-  );
+  res.status(200).json({
+    message: 'successfully',
+  });
 });
 
 // eslint-disable-next-line no-console
