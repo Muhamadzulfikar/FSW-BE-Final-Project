@@ -12,7 +12,18 @@ const {
 } = require('../Middleware/AuthMiddleware');
 
 route.post('/login', validateBodyLogin, isUserHasRegister, userLogin);
-route.post('/register', validateBodyRequest, isUserHasNotRegister, userRegister);
-route.post('/register/admin', isUserHasNotRegister, authorize, isSuperAdmin, userRegister);
+route.post(
+  '/register',
+  validateBodyRequest,
+  isUserHasNotRegister,
+  userRegister,
+);
+route.post(
+  '/register/admin',
+  isUserHasNotRegister,
+  authorize,
+  isSuperAdmin,
+  userRegister,
+);
 
 module.exports = route;

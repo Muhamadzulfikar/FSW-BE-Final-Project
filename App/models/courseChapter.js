@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class courseChapter extends Model {
@@ -13,34 +11,37 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  courseChapter.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
-    class_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
+  courseChapter.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
+      class_uuid: {
+        type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      chapter: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      duration: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
-    chapter: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-      },
+    {
+      sequelize,
+      modelName: 'classChapter',
+      tableName: 'class_chapter',
+      timestamps: true,
     },
-    duration: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-      },
-    },
-  }, {
-    sequelize,
-    modelName: 'classChapter',
-    tableName: 'class_chapter',
-    timestamps: true,
-  });
+  );
   return courseChapter;
 };

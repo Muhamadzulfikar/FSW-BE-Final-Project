@@ -9,67 +9,70 @@ module.exports = (sequelize) => {
      * The `models/index` file will call this method automatically.
      */
   }
-  User.init({
-    name: {
-      type: DataTypes.STRING,
-      validate: {
-        len: {
-          args: [5, 255],
-          msg: 'name must be between 5 and 255 characters',
-        },
-        notEmpty: {
-          msg: 'name must not be empty',
-        },
-      },
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isEmail: {
-          msg: 'Email is invalid',
-        },
-        notEmpty: {
-          msg: 'Email must not be empty',
+  User.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [5, 255],
+            msg: 'name must be between 5 and 255 characters',
+          },
+          notEmpty: {
+            msg: 'name must not be empty',
+          },
         },
       },
-    },
-    password: {
-      type: DataTypes.CHAR(60),
-      validate: {
-        len: {
-          args: [60, 60],
-        },
-        notEmpty: {
-          msg: 'password must not be empty',
-        },
-      },
-    },
-    phone: {
-      type: DataTypes.STRING,
-      validate: {
-        len: {
-          args: [10, 13],
-        },
-        notEmpty: {
-          msg: 'Phone number must be not empty',
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          isEmail: {
+            msg: 'Email is invalid',
+          },
+          notEmpty: {
+            msg: 'Email must not be empty',
+          },
         },
       },
-    },
-    role: {
-      type: DataTypes.ENUM('user', 'admin', 'super admin'),
-      validate: {
-        isIn: [['user', 'admin', 'super admin']],
-        notEmpty: true,
+      password: {
+        type: DataTypes.CHAR(60),
+        validate: {
+          len: {
+            args: [60, 60],
+          },
+          notEmpty: {
+            msg: 'password must not be empty',
+          },
+        },
       },
-      defaultValue: 'user',
+      phone: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [10, 13],
+          },
+          notEmpty: {
+            msg: 'Phone number must be not empty',
+          },
+        },
+      },
+      role: {
+        type: DataTypes.ENUM('user', 'admin', 'super admin'),
+        validate: {
+          isIn: [['user', 'admin', 'super admin']],
+          notEmpty: true,
+        },
+        defaultValue: 'user',
+      },
     },
-  }, {
-    sequelize,
-    modelName: 'User',
-    tableName: 'users',
-    timestamps: true,
-  });
+    {
+      sequelize,
+      modelName: 'User',
+      tableName: 'users',
+      timestamps: true,
+    },
+  );
 
   User.beforeCreate((car) => car.id === uuidv4());
 

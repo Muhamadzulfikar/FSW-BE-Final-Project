@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Academy  - OpenAPI 3.0",
-    "description": "API documentation for the Academy Website, providing endpoints to manage courses, students, and mor\n\nSome useful links:\n- [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)\n- [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)\n",
+    "description": "API documentation for the Academy Website, providing endpoints to manage courses, students, and more\n\nSome useful links:\n- [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)\n- [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)\n",
     "license": {
       "name": "ISC License",
       "url": "https://www.isc.org/licenses/"
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/v1"
+      "url": "https://final-project-online-course.et.r.appspot.com/"
     }
   ],
   "tags": [
@@ -97,9 +97,31 @@
         "tags": [
           "Class"
         ],
-        "summary": "Find all Class",
+        "summary": "Find all Class if there are no params or spesific class if there are params",
         "description": "This end point will serve all list of class",
         "operationId": "getAllClass",
+        "parameters": [
+          {
+            "name": "class[category]=",
+            "in": "query",
+            "description": "The category of the classes",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece"
+            }
+          },
+          {
+            "name": "class[level]=",
+            "in": "query",
+            "description": "The level of the classes",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "semua,beginner,intermediate,advanced"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -275,13 +297,13 @@
           "classTarget": {
             "type": "array",
             "items": {
-              "type": "string"
-            },
-            "example": [
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-            ]
+              "type": "string",
+              "example": [
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+              ]
+            }
           },
           "telegram": {
             "type": "string",
