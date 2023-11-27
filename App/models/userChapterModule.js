@@ -1,58 +1,52 @@
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  class courseChapter extends Model {
+  class userChapterModule extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      /**
-       * Belongs To Relationship
-       */
-      this.belongsTo(models.course, {
-        foreignKey: 'course_uuid',
-        as: 'course',
+      this.belongsTo(models.chapterModule, {
+        foreignKey: 'chapter_module_uuid',
+        as: 'chapter_module',
       });
 
-      /**
-       * Has Many Relationship
-       */
-      this.hasMany(models.chapterModule, {
-        foreignKey: 'course_chapter_id',
-        as: 'course_chapter',
+      this.belongsTo(models.user, {
+        foreignKey: 'user_uuid',
+        as: 'user',
       });
     }
   }
-  courseChapter.init({
-    id: {
-      type: DataTypes.INTEGER,
+  userChapterModule.init({
+    uuid: {
       primaryKey: true,
+      type: DataTypes.UUID,
     },
-    course_uuid: {
+    chapter_module_uuid: {
       type: DataTypes.UUID,
       validate: {
         notEmpty: true,
       },
     },
-    chapter: {
-      type: DataTypes.STRING,
+    user_uuid: {
+      type: DataTypes.UUID,
       validate: {
         notEmpty: true,
       },
     },
-    duration: {
-      type: DataTypes.INTEGER,
+    is_complete: {
+      type: DataTypes.BOOLEAN,
       validate: {
         notEmpty: true,
       },
     },
   }, {
     sequelize,
-    modelName: 'courseChapter',
-    tableName: 'course_chapters',
+    modelName: 'userChapterModule',
+    tableName: 'user_chapter_modules',
     timestamps: true,
   });
-  return courseChapter;
+  return userChapterModule;
 };

@@ -9,8 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-      // define association here
+    static associate(models) {
+      this.belongsTo(models.course, {
+        foreignKey: 'course_uuid',
+        as: 'course',
+      });
     }
   }
   courseDetail.init({
@@ -18,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    class_uuid: {
+    course_uuid: {
       type: DataTypes.UUID,
       validate: {
         notEmpty: true,
@@ -53,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'courseDetail',
-    tableName: 'course_detail',
+    tableName: 'course_details',
     timestamps: true,
   });
   return courseDetail;

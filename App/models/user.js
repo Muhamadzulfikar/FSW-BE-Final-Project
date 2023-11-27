@@ -1,15 +1,31 @@
 const { Model, DataTypes } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 
+/** @param {any} sequelize  */
 module.exports = (sequelize) => {
-  class User extends Model {
+  class user extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    static associate(models) {
+      this.hasMany(models.userChapterModule, {
+        foreignKey: 'user_uuid',
+        as: 'user',
+      });
+
+      this.hasMany(models.userCourse, {
+        foreignKey: 'user_uuid',
+        as: 'user',
+      });
+    }
   }
-  User.init({
+  user.init({
+    uuid: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -56,6 +72,22 @@ module.exports = (sequelize) => {
         },
       },
     },
+    country: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        min: 5,
+        max: 255,
+      },
+    },
+    city: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        min: 5,
+        max: 255,
+      },
+    },
     role: {
       type: DataTypes.ENUM('user', 'admin', 'super admin'),
       validate: {
@@ -66,12 +98,12 @@ module.exports = (sequelize) => {
     },
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'user',
     tableName: 'users',
     timestamps: true,
   });
 
-  User.beforeCreate((car) => car.id === uuidv4());
+  user.beforeCreate((car) => car.uuid === uuidv4());
 
-  return User;
+  return user;
 };

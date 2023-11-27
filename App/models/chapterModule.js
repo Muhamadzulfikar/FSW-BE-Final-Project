@@ -1,16 +1,22 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class chapterModule extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-      // define association here
+    static associate(models) {
+      this.belongsTo(models.courseChapter, {
+        foreignKey: 'course_chapter_id',
+        as: 'course_chapter',
+      });
+
+      this.hasMany(models.userChapterModule, {
+        foreignKey: 'chapter_module_uuid',
+        as: 'chapter_module',
+      });
     }
   }
   chapterModule.init({
@@ -18,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.STRING,
     },
-    class_chapter_id: {
+    course_chapter_id: {
       type: DataTypes.INTEGER,
       validate: {
         notEmpty: true,
