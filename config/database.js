@@ -1,16 +1,11 @@
-const {
-  DB_USERNAME = 'admin',
-  DB_PASSWORD = 'admin123',
-  DB_HOST = '127.0.0.1',
-  DB_NAME = 'course_managements',
-} = process.env;
+require('dotenv').config();
 
 module.exports = {
   development: {
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-    host: DB_HOST,
+    username: process.env.DB_USERNAME || 'admin',
+    password: process.env.DB_PASSWORD || 'admin123',
+    database: process.env.DB_NAME || '127.0.0.1',
+    host: process.env.DB_HOST || 'course_managements',
     dialect: 'postgres',
   },
   test: {
@@ -21,10 +16,10 @@ module.exports = {
     dialect: 'postgres',
   },
   production: {
-    username: 'root',
-    password: null,
-    database: 'database_production',
-    host: '127.0.0.1',
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
     dialect: 'postgres',
   },
 };

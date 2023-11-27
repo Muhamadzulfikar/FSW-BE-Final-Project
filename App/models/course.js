@@ -37,15 +37,11 @@ module.exports = (sequelize) => {
       });
     }
   }
-  course.init({
-    uuid: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
-    course_category_id: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: true,
+  course.init(
+    {
+      uuid: {
+        type: DataTypes.UUID,
+        primaryKey: true,
       },
     },
     image: {
@@ -99,6 +95,13 @@ module.exports = (sequelize) => {
       validate: {
         notEmpty: true,
       },
+      isPremium: {
+        type: DataTypes.BOOLEAN,
+        validate: {
+          isNull: false,
+        },
+      },
+      code: DataTypes.STRING,
     },
     code: {
       type: DataTypes.STRING,

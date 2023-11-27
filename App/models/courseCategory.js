@@ -14,23 +14,25 @@ module.exports = (sequelize) => {
       });
     }
   }
-  courseCategory.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      validate: {
-        min: 5,
-        max: 255,
+  courseCategory.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
       },
-    },
-    image: {
-      type: DataTypes.STRING,
-      validate: {
-        min: 5,
-        max: 255,
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          min: 5,
+          max: 255,
+        },
+      },
+      image: {
+        type: DataTypes.STRING,
+        validate: {
+          min: 5,
+          max: 255,
+        },
       },
     },
   }, {

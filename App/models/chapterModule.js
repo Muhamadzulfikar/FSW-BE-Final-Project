@@ -29,28 +29,35 @@ module.exports = (sequelize) => {
       validate: {
         notEmpty: true,
       },
-    },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 225,
+      class_chapter_id: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      title: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 225,
+        },
+      },
+      course_link: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
       },
     },
-    course_link: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
+    {
+      sequelize,
+      modelName: 'chapterModule',
+      tableName: 'chapter_modules',
+      timestamps: true,
     },
-  }, {
-    sequelize,
-    modelName: 'chapterModule',
-    tableName: 'chapter_modules',
-    timestamps: true,
-  });
+  );
   return chapterModule;
 };
