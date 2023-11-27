@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
        */
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        as: 'course',
+        // as: 'course',
       });
 
       /**

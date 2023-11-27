@@ -10,12 +10,10 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.chapterModule, {
         foreignKey: 'chapter_module_uuid',
-        as: 'chapter_module',
       });
 
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
-        as: 'user',
       });
     }
   }

@@ -14,7 +14,6 @@ module.exports = (sequelize) => {
 
       this.belongsTo(models.courseCategory, {
         foreignKey: 'course_category_id',
-        as: 'course_category',
       });
 
       /**
@@ -23,17 +22,14 @@ module.exports = (sequelize) => {
 
       this.hasMany(models.userCourse, {
         foreignKey: 'course_uuid',
-        as: 'course',
       });
 
       this.hasMany(models.courseDetail, {
         foreignKey: 'course_uuid',
-        as: 'course',
       });
 
       this.hasMany(models.courseChapter, {
         foreignKey: 'course_uuid',
-        as: 'course',
       });
     }
   }
