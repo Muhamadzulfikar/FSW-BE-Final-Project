@@ -31,9 +31,7 @@
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "Root"
-        ],
+        "tags": ["Root"],
         "summary": "Test your ping to the server here",
         "operationId": "testPing",
         "responses": {
@@ -62,9 +60,7 @@
     },
     "/categories": {
       "get": {
-        "tags": [
-          "Category"
-        ],
+        "tags": ["Category"],
         "summary": "Find all Category",
         "description": "This end point will serve all list of categories",
         "operationId": "getAllCategories",
@@ -94,9 +90,7 @@
     },
     "/classes": {
       "get": {
-        "tags": [
-          "Class"
-        ],
+        "tags": ["Class"],
         "summary": "Find all Class if there are no params or spesific class if there are params",
         "description": "This end point will serve all list of class",
         "operationId": "getAllClass",
@@ -148,9 +142,7 @@
     },
     "/classes/{classID}": {
       "get": {
-        "tags": [
-          "Class"
-        ],
+        "tags": ["Class"],
         "summary": "Find detail class by ID",
         "description": "This end point will serve data of detailed class",
         "operationId": "getDetailClass",
