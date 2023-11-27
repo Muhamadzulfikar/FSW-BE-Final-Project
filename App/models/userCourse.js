@@ -19,11 +19,15 @@ module.exports = (sequelize) => {
       });
     }
   }
-  userCourse.init(
-    {
-      uuid: {
-        type: DataTypes.UUID,
-        primaryKey: true,
+  userCourse.init({
+    uuid: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+    },
+    user_uuid: {
+      type: DataTypes.UUID,
+      validate: {
+        notEmpty: true,
       },
     },
     course_uuid: {
@@ -31,25 +35,18 @@ module.exports = (sequelize) => {
       validate: {
         notEmpty: true,
       },
-      class_uuid: {
-        type: DataTypes.UUID,
-        validate: {
-          notEmpty: true,
-        },
-      },
-      is_onboarding: {
-        type: DataTypes.BOOLEAN,
-        validate: {
-          notEmpty: true,
-        },
+    },
+    is_onboarding: {
+      type: DataTypes.BOOLEAN,
+      validate: {
+        notEmpty: true,
       },
     },
-    {
-      sequelize,
-      modelName: 'userCourse',
-      tableName: 'user_course',
-      timestamps: true,
-    },
-  );
+  }, {
+    sequelize,
+    modelName: 'userCourse',
+    tableName: 'user_course',
+    timestamps: true,
+  });
   return userCourse;
 };
