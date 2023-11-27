@@ -1,5 +1,5 @@
-const AuthService = require('../Services/AuthService');
-const ErrorHandling = require('../Error/ErrorHandling');
+const authService = require('../Services/authService');
+const errorHandling = require('../Error/errorHandling');
 const responseError = require('../Error/responseError');
 
 module.exports = {
@@ -9,16 +9,16 @@ module.exports = {
         name, email, password, phone,
       } = req.body;
       if (!name) {
-        ErrorHandling.unauthorized('Name must not be empty');
+        errorHandling.unauthorized('Name must not be empty');
       }
       if (!email) {
-        ErrorHandling.unauthorized('Email must not be empty');
+        errorHandling.unauthorized('Email must not be empty');
       }
       if (!password) {
-        ErrorHandling.unauthorized('Password must not be empty');
+        errorHandling.unauthorized('Password must not be empty');
       }
       if (!phone) {
-        ErrorHandling.unauthorized('Phone number must not be empty');
+        errorHandling.unauthorized('Phone number must not be empty');
       }
       next();
     } catch (error) {
@@ -30,10 +30,10 @@ module.exports = {
     try {
       const { email, password } = req.body;
       if (!email || email === '') {
-        ErrorHandling.unauthorized('Email must not be empty');
+        errorHandling.unauthorized('Email must not be empty');
       }
       if (!password || password === '') {
-        ErrorHandling.unauthorized('Password must not be empty');
+        errorHandling.unauthorized('Password must not be empty');
       }
       next();
     } catch (error) {
@@ -43,9 +43,9 @@ module.exports = {
 
   async isUserHasNotRegister(req, res, next) {
     try {
-      const user = await AuthService.findUser(req.body);
+      const user = await authService.findUser(req.body);
       if (user) {
-        ErrorHandling.unauthorized('User Has Already Exists');
+        errorHandling.unauthorized('User Has Already Exists');
       }
       next();
     } catch (error) {
@@ -55,9 +55,9 @@ module.exports = {
 
   async isUserHasRegister(req, res, next) {
     try {
-      const user = await AuthService.findUser(req.body);
+      const user = await authService.findUser(req.body);
       if (!user) {
-        ErrorHandling.unauthorized('Cannot Find User');
+        errorHandling.unauthorized('Cannot Find User');
       }
       req.user = user;
       next();
@@ -68,9 +68,9 @@ module.exports = {
 
   async authorize(req, res, next) {
     try {
-      const user = await AuthService.authorize(req.headers.authorization);
+      const user = await authService.authorize(req.headers.authorization);
       if (!user) {
-        ErrorHandling.unauthorized('User Not Found');
+        errorHandling.unauthorized('User Not Found');
       }
       req.user = user;
       next();
@@ -78,8 +78,8 @@ module.exports = {
       if (error.code) {
         responseError(res, error);
       } else {
-        res.status('401').json({
-          code: '403',
+        res.status(401).json({
+          code: 401,
           status: 'Unauthorize',
           message: error.message,
         });
@@ -91,7 +91,7 @@ module.exports = {
     try {
       const { user } = req;
       if (user.role !== 'super admin') {
-        ErrorHandling.forbidden(`${user.name} Is Not Super Admin`);
+        errorHandling.forbidden(`${user.name} Is Not Super Admin`);
       }
       next();
     } catch (error) {
@@ -103,7 +103,7 @@ module.exports = {
     try {
       const { user } = req;
       if (user.role !== 'super admin' || user.role !== 'admin') {
-        ErrorHandling.forbidden(`${user.name} Is Not Super Admin`);
+        errorHandling.forbidden(`${user.name} Is Not Super Admin`);
       }
       next();
     } catch (error) {
