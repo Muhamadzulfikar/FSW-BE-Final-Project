@@ -33,81 +33,84 @@ module.exports = (sequelize) => {
       });
     }
   }
-  course.init({
-    uuid: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
-    course_category_id: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: true,
+  course.init(
+    {
+      uuid: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+      },
+      course_category_id: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      image: {
+        type: DataTypes.STRING,
+        validate: {
+          min: 5,
+          max: 255,
+          notEmpty: true,
+        },
+      },
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
+      },
+      author: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
+      },
+      price: {
+        type: DataTypes.DOUBLE,
+        validate: {
+          notEmpty: true,
+          min: 1,
+        },
+      },
+      level: {
+        type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
+        validate: {
+          notEmpty: true,
+          isIn: [['advanced', 'beginner', 'intermediate']],
+        },
+      },
+      rating: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
+      },
+      isPremium: {
+        type: DataTypes.BOOLEAN,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      code: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
       },
     },
-    image: {
-      type: DataTypes.STRING,
-      validate: {
-        min: 5,
-        max: 255,
-        notEmpty: true,
-      },
+    {
+      sequelize,
+      modelName: 'course',
+      tableName: 'courses',
     },
-    name: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
-    },
-    author: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
-    },
-    price: {
-      type: DataTypes.DOUBLE,
-      validate: {
-        notEmpty: true,
-        min: 1,
-      },
-    },
-    level: {
-      type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
-      validate: {
-        notEmpty: true,
-        isIn: [['advanced', 'beginner', 'intermediate']],
-      },
-    },
-    rating: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
-    },
-    isPremium: {
-      type: DataTypes.BOOLEAN,
-      validate: {
-        notEmpty: true,
-      },
-    },
-    code: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
-    },
-  }, {
-    sequelize,
-    modelName: 'course',
-    tableName: 'courses',
-  });
+  );
   return course;
 };
