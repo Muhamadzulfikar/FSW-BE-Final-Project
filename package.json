@@ -7,8 +7,10 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "lint": "npx eslint .",
-    "test": "npx jest --coverage"
+    "test": "npx jest --coverage",
+    "fix": "npx eslint --fix ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
