@@ -47,12 +47,6 @@ module.exports = (sequelize) => {
       validate: {
         notEmpty: true,
       },
-      duration: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
-        },
-      },
     },
   }, {
     sequelize,
