@@ -1,12 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
-const AuthService = require('../Services/AuthService');
+const authService = require('../Services/authService');
 const responseError = require('../Error/responseError');
 
 module.exports = {
   async userLogin(req, res) {
     try {
       const { body, user } = req;
-      const login = await AuthService.userLogin(body.password, user);
+      const login = await authService.userLogin(body.password, user);
       res.status(200).json(login);
     } catch (error) {
       responseError(res, error);
@@ -19,7 +19,7 @@ module.exports = {
       if (req.user) {
         req.body.role = 'admin';
       }
-      const register = await AuthService.userRegister(req.body);
+      const register = await authService.userRegister(req.body);
       res.status(201).json({
         status: 'Ok',
         message: 'Successfully register',

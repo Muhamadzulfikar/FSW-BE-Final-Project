@@ -1,30 +1,25 @@
 openapi: 3.0.3
 info:
   title: Academy  - OpenAPI 3.0
-  description: >
-    API documentation for the Academy Website, providing endpoints to manage
-    courses, students, and mor
-
+  description: |
+    API documentation for the Academy Website, providing endpoints to manage courses, students, and more
 
     Some useful links:
-
-    - [BackEnd
-    repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
-
+    - [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)
     - [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)
   license:
     name: ISC License
     url: https://www.isc.org/licenses/
   version: 1.0.0
 servers:
-  - url: http://localhost:8000/v1
+  - url: https://final-project-online-course.et.r.appspot.com/
 tags:
   - name: Root
     description: Root end-point
   - name: Category
-    description: Everything about cars management
+    description: Everything about category management
   - name: Class
-    description: Everything about user management
+    description: Everything about class management
 paths:
   /:
     get:
@@ -33,18 +28,18 @@ paths:
       summary: Test your ping to the server here
       operationId: testPing
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ping'
-        '500':
+                $ref: "#/components/schemas/ping"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /categories:
     get:
       tags:
@@ -53,38 +48,53 @@ paths:
       description: This end point will serve all list of categories
       operationId: getAllCategories
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/categories'
-        '500':
+                $ref: "#/components/schemas/categories"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /classes:
     get:
       tags:
         - Class
-      summary: Find all Class
+      summary: Find all Class if there are no params or spesific class if there are params
       description: This end point will serve all list of class
       operationId: getAllClass
+      parameters:
+        - name: class[category]=
+          in: query
+          description: The category of the classes
+          required: false
+          schema:
+            type: string
+            example: ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece
+        - name: class[level]=
+          in: query
+          description: The level of the classes
+          required: false
+          schema:
+            type: string
+            example: semua,beginner,intermediate,advanced
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/classes'
-        '500':
+                $ref: "#/components/schemas/classes"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /classes/{classID}:
     get:
       tags:
@@ -98,23 +108,20 @@ paths:
           description: ID of class to fetch
           required: true
           schema:
-            $ref: '#/components/schemas/paramsID'
+            $ref: "#/components/schemas/paramsID"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/okStatus'
-                  - $ref: '#/components/schemas/class'
-                  - $ref: '#/components/schemas/classID'
-        '500':
+                $ref: "#/components/schemas/classDetail"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
 components:
   schemas:
     paramsID:
@@ -129,22 +136,10 @@ components:
           example: OK
         code:
           type: number
-          example: 200      
-        message:
-          type: string
-          example: Ping succesfully
-    okStatus:
-      type: object
-      properties:
-        status:
-          type: string
-          example: OK
-        code:
-          type: number
           example: 200
         message:
           type: string
-          example: Success
+          example: Ping succesfully
     category:
       type: object
       properties:
@@ -173,20 +168,20 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/category'
+            $ref: "#/components/schemas/category"
     modul:
       type: object
       properties:
-        title: 
+        title:
           type: string
           example: title
-        link: 
+        link:
           type: string
           example: https://youtube.com
     classModule:
       type: object
       properties:
-        chapter: 
+        chapter:
           type: string
           example: chapter 1 - Pendahuluan
         estimation:
@@ -194,26 +189,22 @@ components:
           example: 60
         module:
           type: array
-          items: 
-            $ref: '#/components/schemas/modul'
+          items:
+            $ref: "#/components/schemas/modul"
     classID:
       type: object
       properties:
         description:
           type: string
-          example: >-
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
         classTarget:
           type: array
           items:
             type: string
-          example:
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+            example:
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
         telegram:
           type: string
           example: telegram.co.id
@@ -223,7 +214,7 @@ components:
         classModule:
           type: array
           items:
-            $ref: '#/components/schemas/classModule'
+            $ref: "#/components/schemas/classModule"
     class:
       type: object
       properties:
@@ -249,7 +240,7 @@ components:
         rating:
           type: number
           example: 4.9
-        module:
+        totalModule:
           type: number
           example: 5
         totalMinute:
@@ -264,6 +255,22 @@ components:
         category:
           type: string
           example: UI/UX Design
+    classDetail:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Success
+        data:
+          allOf:
+            - $ref: "#/components/schemas/class"
+            - $ref: "#/components/schemas/classID"
     classes:
       type: object
       properties:
@@ -279,7 +286,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/class'
+            $ref: "#/components/schemas/class"
     unauthorized:
       type: object
       properties:

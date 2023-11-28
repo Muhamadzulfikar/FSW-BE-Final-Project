@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Academy  - OpenAPI 3.0",
-    "description": "API documentation for the Academy Website, providing endpoints to manage courses, students, and mor\n\nSome useful links:\n- [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)\n- [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)\n",
+    "description": "API documentation for the Academy Website, providing endpoints to manage courses, students, and more\n\nSome useful links:\n- [BackEnd repository](https://github.com/Muhamadzulfikar/FSW-BE-Final-Project)\n- [ERD link](https://dbdiagram.io/d/655ed5293be14957878fc325)\n",
     "license": {
       "name": "ISC License",
       "url": "https://www.isc.org/licenses/"
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/v1"
+      "url": "https://final-project-online-course.et.r.appspot.com/"
     }
   ],
   "tags": [
@@ -21,19 +21,17 @@
     },
     {
       "name": "Category",
-      "description": "Everything about cars management"
+      "description": "Everything about category management"
     },
     {
       "name": "Class",
-      "description": "Everything about user management"
+      "description": "Everything about class management"
     }
   ],
   "paths": {
     "/": {
       "get": {
-        "tags": [
-          "Root"
-        ],
+        "tags": ["Root"],
         "summary": "Test your ping to the server here",
         "operationId": "testPing",
         "responses": {
@@ -62,9 +60,7 @@
     },
     "/categories": {
       "get": {
-        "tags": [
-          "Category"
-        ],
+        "tags": ["Category"],
         "summary": "Find all Category",
         "description": "This end point will serve all list of categories",
         "operationId": "getAllCategories",
@@ -94,12 +90,32 @@
     },
     "/classes": {
       "get": {
-        "tags": [
-          "Class"
-        ],
-        "summary": "Find all Class",
+        "tags": ["Class"],
+        "summary": "Find all Class if there are no params or spesific class if there are params",
         "description": "This end point will serve all list of class",
         "operationId": "getAllClass",
+        "parameters": [
+          {
+            "name": "class[category]=",
+            "in": "query",
+            "description": "The category of the classes",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece"
+            }
+          },
+          {
+            "name": "class[level]=",
+            "in": "query",
+            "description": "The level of the classes",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "semua,beginner,intermediate,advanced"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -126,9 +142,7 @@
     },
     "/classes/{classID}": {
       "get": {
-        "tags": [
-          "Class"
-        ],
+        "tags": ["Class"],
         "summary": "Find detail class by ID",
         "description": "This end point will serve data of detailed class",
         "operationId": "getDetailClass",
@@ -149,17 +163,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/okStatus"
-                    },
-                    {
-                      "$ref": "#/components/schemas/class"
-                    },
-                    {
-                      "$ref": "#/components/schemas/classID"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/classDetail"
                 }
               }
             }
@@ -199,23 +203,6 @@
           "message": {
             "type": "string",
             "example": "Ping succesfully"
-          }
-        }
-      },
-      "okStatus": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "example": "OK"
-          },
-          "code": {
-            "type": "number",
-            "example": 200
-          },
-          "message": {
-            "type": "string",
-            "example": "Success"
           }
         }
       },
@@ -302,13 +289,13 @@
           "classTarget": {
             "type": "array",
             "items": {
-              "type": "string"
-            },
-            "example": [
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-            ]
+              "type": "string",
+              "example": [
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+              ]
+            }
           },
           "telegram": {
             "type": "string",
@@ -358,7 +345,7 @@
             "type": "number",
             "example": 4.9
           },
-          "module": {
+          "totalModule": {
             "type": "number",
             "example": 5
           },
@@ -377,6 +364,33 @@
           "category": {
             "type": "string",
             "example": "UI/UX Design"
+          }
+        }
+      },
+      "classDetail": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/class"
+              },
+              {
+                "$ref": "#/components/schemas/classID"
+              }
+            ]
           }
         }
       },

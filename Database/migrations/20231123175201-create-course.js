@@ -1,48 +1,49 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('courses', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        autoIncrement: true,
+      },
+      course_category_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'course_categories',
+          key: 'id',
+        },
       },
       uuid: {
         type: Sequelize.UUID,
         unique: true,
         allowNull: false,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      email: {
+      author: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
       },
-      password: {
-        type: Sequelize.CHAR(60),
-        unique: true,
+      price: {
+        type: Sequelize.DOUBLE,
+      },
+      level: {
+        type: Sequelize.ENUM('beginner', 'intermediate', 'advanced'),
         allowNull: false,
       },
-      phone: {
+      rating: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      country: {
+      isPremium: {
+        type: Sequelize.BOOLEAN,
+      },
+      code: {
         type: Sequelize.STRING,
-        allowNull: true,
-      },
-      city: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      role: {
-        type: Sequelize.ENUM('user', 'admin', 'super admin'),
-        allowNull: false,
-        defaultValue: 'user',
       },
       createdAt: {
         allowNull: false,
@@ -55,6 +56,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('courses');
   },
 };
