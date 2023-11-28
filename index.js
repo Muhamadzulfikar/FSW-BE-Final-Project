@@ -22,7 +22,10 @@ app.get('/', (req, res) => {
   });
 });
 
-app.put('/v1/progress-course', userChapterModuleController.updateProgressChapter);
+app.put(
+  '/v1/progress-course',
+  userChapterModuleController.updateProgressChapter,
+);
 
 // eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

@@ -17,34 +17,37 @@ module.exports = (sequelize) => {
       });
     }
   }
-  userChapterModule.init({
-    uuid: {
-      primaryKey: true,
-      type: DataTypes.UUID,
-    },
-    chapter_module_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
+  userChapterModule.init(
+    {
+      uuid: {
+        primaryKey: true,
+        type: DataTypes.UUID,
+      },
+      chapter_module_uuid: {
+        type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      user_uuid: {
+        type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      is_complete: {
+        type: DataTypes.BOOLEAN,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
-    user_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
-      },
+    {
+      sequelize,
+      modelName: 'userChapterModule',
+      tableName: 'user_chapter_modules',
+      timestamps: true,
     },
-    is_complete: {
-      type: DataTypes.BOOLEAN,
-      validate: {
-        notEmpty: true,
-      },
-    },
-  }, {
-    sequelize,
-    modelName: 'userChapterModule',
-    tableName: 'user_chapter_modules',
-    timestamps: true,
-  });
+  );
   return userChapterModule;
 };

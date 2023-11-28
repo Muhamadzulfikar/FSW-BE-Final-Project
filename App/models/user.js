@@ -19,87 +19,90 @@ module.exports = (sequelize) => {
       });
     }
   }
-  user.init({
-    uuid: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      validate: {
-        len: {
-          args: [5, 255],
-          msg: 'name must be between 5 and 255 characters',
-        },
-        notEmpty: {
-          msg: 'name must not be empty',
+  user.init(
+    {
+      uuid: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [5, 255],
+            msg: 'name must be between 5 and 255 characters',
+          },
+          notEmpty: {
+            msg: 'name must not be empty',
+          },
         },
       },
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isEmail: {
-          msg: 'Email is invalid',
-        },
-        notEmpty: {
-          msg: 'Email must not be empty',
-        },
-      },
-    },
-    password: {
-      type: DataTypes.CHAR(60),
-      validate: {
-        len: {
-          args: [60, 60],
-        },
-        notEmpty: {
-          msg: 'password must not be empty',
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        validate: {
+          isEmail: {
+            msg: 'Email is invalid',
+          },
+          notEmpty: {
+            msg: 'Email must not be empty',
+          },
         },
       },
-    },
-    phone: {
-      type: DataTypes.STRING,
-      validate: {
-        len: {
-          args: [10, 13],
+      password: {
+        type: DataTypes.CHAR(60),
+        validate: {
+          len: {
+            args: [60, 60],
+          },
+          notEmpty: {
+            msg: 'password must not be empty',
+          },
         },
-        notEmpty: {
-          msg: 'Phone number must be not empty',
+      },
+      phone: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [10, 13],
+          },
+          notEmpty: {
+            msg: 'Phone number must be not empty',
+          },
         },
       },
-    },
-    country: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+      country: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
+      },
+      city: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
+      },
+      role: {
+        type: DataTypes.ENUM('user', 'admin', 'super admin'),
+        validate: {
+          isIn: [['user', 'admin', 'super admin']],
+          notEmpty: true,
+        },
+        defaultValue: 'user',
       },
     },
-    city: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
+    {
+      sequelize,
+      modelName: 'user',
+      tableName: 'users',
+      timestamps: true,
     },
-    role: {
-      type: DataTypes.ENUM('user', 'admin', 'super admin'),
-      validate: {
-        isIn: [['user', 'admin', 'super admin']],
-        notEmpty: true,
-      },
-      defaultValue: 'user',
-    },
-  }, {
-    sequelize,
-    modelName: 'user',
-    tableName: 'users',
-    timestamps: true,
-  });
+  );
 
   user.beforeCreate((car) => car.uuid === uuidv4());
 
