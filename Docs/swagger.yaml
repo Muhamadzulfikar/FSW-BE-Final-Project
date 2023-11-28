@@ -28,18 +28,18 @@ paths:
       summary: Test your ping to the server here
       operationId: testPing
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ping'
-        '500':
+                $ref: "#/components/schemas/ping"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /categories:
     get:
       tags:
@@ -48,18 +48,18 @@ paths:
       description: This end point will serve all list of categories
       operationId: getAllCategories
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/categories'
-        '500':
+                $ref: "#/components/schemas/categories"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /classes:
     get:
       tags:
@@ -68,33 +68,33 @@ paths:
       description: This end point will serve all list of class
       operationId: getAllClass
       parameters:
-      - name: class[category]=
-        in: query
-        description: The category of the classes
-        required: false
-        schema:
-          type: string
-          example: ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece
-      - name: class[level]=
-        in: query
-        description: The level of the classes
-        required: false
-        schema:
-          type: string
-          example: semua,beginner,intermediate,advanced
+        - name: class[category]=
+          in: query
+          description: The category of the classes
+          required: false
+          schema:
+            type: string
+            example: ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece
+        - name: class[level]=
+          in: query
+          description: The level of the classes
+          required: false
+          schema:
+            type: string
+            example: semua,beginner,intermediate,advanced
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/classes'
-        '500':
+                $ref: "#/components/schemas/classes"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
   /classes/{classID}:
     get:
       tags:
@@ -108,20 +108,20 @@ paths:
           description: ID of class to fetch
           required: true
           schema:
-            $ref: '#/components/schemas/paramsID'
+            $ref: "#/components/schemas/paramsID"
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/classDetail'
-        '500':
+                $ref: "#/components/schemas/classDetail"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/internalError'
+                $ref: "#/components/schemas/internalError"
 components:
   schemas:
     paramsID:
@@ -168,7 +168,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/category'
+            $ref: "#/components/schemas/category"
     modul:
       type: object
       properties:
@@ -190,7 +190,7 @@ components:
         module:
           type: array
           items:
-            $ref: '#/components/schemas/modul'
+            $ref: "#/components/schemas/modul"
     classID:
       type: object
       properties:
@@ -202,9 +202,9 @@ components:
           items:
             type: string
             example:
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
-            - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              - Lorem ipsum dolor sit amet, consectetur adipiscing elit
         telegram:
           type: string
           example: telegram.co.id
@@ -214,7 +214,7 @@ components:
         classModule:
           type: array
           items:
-            $ref: '#/components/schemas/classModule'
+            $ref: "#/components/schemas/classModule"
     class:
       type: object
       properties:
@@ -269,8 +269,8 @@ components:
           example: Success
         data:
           allOf:
-            - $ref: '#/components/schemas/class'
-            - $ref: '#/components/schemas/classID'
+            - $ref: "#/components/schemas/class"
+            - $ref: "#/components/schemas/classID"
     classes:
       type: object
       properties:
@@ -286,7 +286,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/class'
+            $ref: "#/components/schemas/class"
     unauthorized:
       type: object
       properties:

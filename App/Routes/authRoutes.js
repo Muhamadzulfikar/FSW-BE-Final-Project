@@ -1,7 +1,7 @@
 const express = require('express');
 
 const route = express.Router();
-const { userLogin, userRegister } = require('../Controllers/AuthController');
+const { userLogin, userRegister } = require('../Controllers/authController');
 const {
   validateBodyLogin,
   isUserHasRegister,
@@ -9,7 +9,7 @@ const {
   validateBodyRequest,
   authorize,
   isSuperAdmin,
-} = require('../Middleware/AuthMiddleware');
+} = require('../Middleware/authMiddleware');
 
 route.post('/login', validateBodyLogin, isUserHasRegister, userLogin);
 route.post(
