@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
        */
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        as: 'course',
+        // as: 'course',
       });
 
       /**
@@ -35,17 +35,23 @@ module.exports = (sequelize) => {
       validate: {
         notEmpty: true,
       },
-    },
-    chapter: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
+      class_uuid: {
+        type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
     duration: {
       type: DataTypes.INTEGER,
       validate: {
         notEmpty: true,
+      },
+      duration: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
   }, {

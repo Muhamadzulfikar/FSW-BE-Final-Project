@@ -10,12 +10,10 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        as: 'course',
       });
 
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
-        as: 'user',
       });
     }
   }

@@ -1,6 +1,4 @@
-const {
-  Model,
-} = require('sequelize');
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class courseDetail extends Model {
@@ -12,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        as: 'course',
+        // as: 'course',
       });
     }
   }
@@ -26,31 +24,37 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
       },
-    },
-    description: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+      class_uuid: {
+        type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
       },
-    },
-    class_target: {
-      type: DataTypes.JSON,
-      validate: {
-        notEmpty: true,
+      description: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
       },
-    },
-    telegram: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
+      class_target: {
+        type: DataTypes.JSON,
+        validate: {
+          notEmpty: true,
+        },
       },
-    },
-    onboarding: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
+      telegram: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      onboarding: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
   }, {

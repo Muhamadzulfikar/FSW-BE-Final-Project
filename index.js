@@ -2,7 +2,7 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
 const swaggerDocument = require('./Docs/swagger.json');
-const authRoute = require('./App/Routes/Auth.routes');
+const authRoute = require('./App/Routes/authRoutes');
 require('dotenv').config();
 
 const port = process.env.PORT || process.env.HOSTPORT;
@@ -16,11 +16,9 @@ app.use('/v1', authRoute);
 app.use('/v1/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
-  res.status(200).json(
-    {
-      message: 'successfully',
-    },
-  );
+  res.status(200).json({
+    message: 'successfully',
+  });
 });
 
 // eslint-disable-next-line no-console
