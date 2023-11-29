@@ -1,11 +1,11 @@
-const courseCategory = require('../models/courseCategory');
+const { courseCategory } = require('../models/index');
 
 module.exports = {
   getAllCourseCategories() {
-    return courseCategory.action();
-  },
-
-  getCourseCategoryById(id) {
-    return courseCategory.action(id);
+    return courseCategory.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+    });
   },
 };
