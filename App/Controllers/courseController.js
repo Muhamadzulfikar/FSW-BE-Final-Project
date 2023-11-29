@@ -31,12 +31,14 @@ module.exports = {
       const course = courseRepository.getCourseById(id);
       const totalModule = courseChapterRepository.getTotalModule;
       const totalMinute = courseChapterRepository.getTotalMinute;
-      res.status(200).json(this.bodyResponse({
-        ...course,
-        id,
-        total_module: totalModule,
-        total_minute: totalMinute,
-      }));
+      res.status(200).json(
+        this.bodyResponse({
+          ...course,
+          id,
+          total_module: totalModule,
+          total_minute: totalMinute,
+        }),
+      );
     } catch (error) {
       res.status(error.code).json({
         code: error.code,

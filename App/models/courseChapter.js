@@ -25,34 +25,37 @@ module.exports = (sequelize) => {
       });
     }
   }
-  courseChapter.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
-    course_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
+  courseChapter.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
       },
-      class_uuid: {
+      course_uuid: {
         type: DataTypes.UUID,
+        validate: {
+          notEmpty: true,
+        },
+        class_uuid: {
+          type: DataTypes.UUID,
+          validate: {
+            notEmpty: true,
+          },
+        },
+      },
+      duration: {
+        type: DataTypes.INTEGER,
         validate: {
           notEmpty: true,
         },
       },
     },
-    duration: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: true,
-      },
+    {
+      sequelize,
+      modelName: 'courseChapter',
+      tableName: 'course_chapters',
+      timestamps: true,
     },
-  }, {
-    sequelize,
-    modelName: 'courseChapter',
-    tableName: 'course_chapters',
-    timestamps: true,
-  });
+  );
   return courseChapter;
 };
