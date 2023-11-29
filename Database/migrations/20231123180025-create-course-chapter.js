@@ -14,12 +14,15 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        allowNull: false,
       },
       chapter: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       duration: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
