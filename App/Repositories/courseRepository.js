@@ -1,23 +1,50 @@
-const course = require('../models/course');
+const { course, courseCategory } = require('../models');
 
 module.exports = {
   getAllCourses() {
-    return course.action();
+    return course.findAll({
+      include: [
+        {
+          model: courseCategory,
+          as: 'category',
+        },
+      ],
+    });
   },
 
   getCourseById(id) {
     return course.action(id);
   },
 
-  filterCourseByCategory(category) {
-    return course.action(category);
+  CourseByCategory(categoryId) {
+    return course.findAll({
+      where: {
+        course_category_id: categoryId,
+      },
+
+      include: [
+        {
+          model: courseCategory,
+          as: 'category',
+        },
+      ],
+    });
   },
 
-  filterCourseByLevel(level) {
-    return course.action(level);
+  CourseByLevel(level) {
+    return course.findAll({
+      where: {
+        level,
+      },
+    });
   },
 
-  filterCourseByCategoryAndLevel(category, level) {
-    return course.action(category, level);
+  CourseByCategoryAndLevel(categoryId, level) {
+    return course.findAll({
+      where: {
+        course_category_id: categoryId,
+        level,
+      },
+    });
   },
 };

@@ -1,20 +1,18 @@
 const courseChapterRepository = require('../Repositories/courseChapterRepository');
 const courseRepository = require('../Repositories/courseRepository');
+const courseService = require('../Services/courseService');
 
 module.exports = {
-  bodyResponse(bodyData) {
-    return {
-      status: 'OK',
-      code: 200,
-      message: 'Success',
-      data: bodyData,
-    };
-  },
 
   async getAllCourses(req, res) {
     try {
-      const courses = await courseRepository.getAllCourses();
-      res.status(200).json(this.bodyResponse(courses));
+      const courses = await courseService.getAllListCourses();
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courses,
+      });
     } catch (error) {
       res.status(error.code).json({
         code: error.code,
@@ -50,21 +48,30 @@ module.exports = {
 
   async filterCourse(req, res) {
     try {
-      const { category, level } = req.query;
-      if (category && level) {
-        const courses = await courseRepository.filterCourseByCategoryAndLevel(category);
-        res.status(200).json(this.bodyResponse(courses));
+      const { categoryId, level } = req.query;
+      let courses;
+      if (!categoryId && !level) {
+        const allCourses = await courseService.getAllListCourses();
+        return res.status(200).json({
+          status: 'OK',
+          code: 200,
+          message: 'Success',
+          data: allCourses,
+        });
       }
-
-      if (category) {
-        const courses = await courseRepository.filterCourseByCategory(category);
-        res.status(200).json(this.bodyResponse(courses));
+      if (categoryId && level) {
+        courses = await courseService.filterCourseByCategoryAndLevel(categoryId, level);
+      } else if (categoryId) {
+        courses = await courseService.filterCourseByCategory(categoryId);
+      } else if (level) {
+        courses = await courseService.filterCourseByLevel(level);
       }
-
-      if (level) {
-        const courses = await courseRepository.filterCourseByLevel(level);
-        res.status(200).json(this.bodyResponse(courses));
-      }
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courses,
+      });
     } catch (error) {
       res.status(error.code).json({
         code: error.code,
