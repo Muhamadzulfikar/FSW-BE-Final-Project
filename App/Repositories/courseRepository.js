@@ -1,4 +1,9 @@
-const { course, courseCategory } = require('../models');
+const {
+  course,
+  courseDetail,
+  courseChapter,
+  chapterModule,
+} = require('../models');
 
 module.exports = {
   getAllCourses() {
@@ -13,7 +18,24 @@ module.exports = {
   },
 
   getCourseById(id) {
-    return course.action(id);
+    return course.findByPk(id, {
+      include: [
+        {
+          model: courseDetail,
+          attributes: ['description', 'class_target', 'telegram', 'onboarding'],
+        },
+        {
+          model: courseChapter,
+          attributes: ['duration', 'chapter'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['title', 'course_link'],
+            },
+          ],
+        },
+      ],
+    });
   },
 
   CourseByCategory(categoryId) {

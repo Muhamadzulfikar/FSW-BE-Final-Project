@@ -2,7 +2,8 @@ const express = require('express');
 const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
 const swaggerDocument = require('./Docs/swagger.json');
-const authRoute = require('./App/Routes/authRoutes');
+// const authRoute = require('./App/Routes/authRoutes');
+const courseRoute = require('./App/Routes/courseRoutes');
 const userChapterModuleController = require('./App/Controllers/userChapterModuleController');
 const courseController = require('./App/Controllers/courseController');
 require('dotenv').config();
@@ -13,7 +14,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/v1', authRoute);
+// app.use('/v1', authRoute);
+app.use('/v1', courseRoute);
 
 app.use('/v1/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 

@@ -1,11 +1,19 @@
-const courseChapter = require('../models/courseChapter');
+const { courseChapter } = require('../models');
 
 module.exports = {
-  getTotalModule() {
-    return courseChapter.action();
+  getTotalModule(courseUuid) {
+    return courseChapter.count({
+      where: {
+        course_uuid: courseUuid,
+      },
+    });
   },
 
-  getTotalMinute() {
-    return courseChapter.action();
+  getTotalMinute(courseUuid) {
+    return courseChapter.sum('duration', {
+      where: {
+        course_uuid: courseUuid,
+      },
+    });
   },
 };

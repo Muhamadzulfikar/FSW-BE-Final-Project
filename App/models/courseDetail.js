@@ -1,6 +1,6 @@
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class courseDetail extends Model {
     /**
      * Helper method for defining associations.
@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        // as: 'course',
       });
     }
   }
@@ -25,12 +24,6 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: true,
         },
-        class_uuid: {
-          type: DataTypes.UUID,
-          validate: {
-            notEmpty: true,
-          },
-        },
         description: {
           type: DataTypes.STRING,
           validate: {
@@ -40,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
         class_target: {
-          type: DataTypes.JSON,
+          type: DataTypes.ARRAY(DataTypes.STRING),
           validate: {
             notEmpty: true,
           },
