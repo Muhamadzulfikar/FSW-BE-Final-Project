@@ -1,4 +1,4 @@
-const course = require('../models/course');
+const course = require('../models/index');
 
 module.exports = {
   getAllCourses() {

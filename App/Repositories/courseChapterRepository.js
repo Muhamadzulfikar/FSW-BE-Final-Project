@@ -1,4 +1,4 @@
-const courseChapter = require('../models/courseChapter');
+const courseChapter = require('../models/index');
 
 module.exports = {
   getTotalModule() {
