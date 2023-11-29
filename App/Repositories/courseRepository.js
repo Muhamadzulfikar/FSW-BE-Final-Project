@@ -3,6 +3,7 @@ const {
   courseDetail,
   courseChapter,
   chapterModule,
+  courseCategory,
 } = require('../models');
 
 module.exports = {
@@ -11,8 +12,11 @@ module.exports = {
       include: [
         {
           model: courseCategory,
-          as: 'category',
+          attributes: ['name'],
         },
+      ],
+      order: [
+        ['id', 'ASC'],
       ],
     });
   },

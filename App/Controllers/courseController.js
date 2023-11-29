@@ -48,6 +48,12 @@ module.exports = {
         onboarding: courseOnboarding,
       } = course.courseDetails;
 
+      const courseModule = course.courseChapters.map((courseChapter) => ({
+        chapter: courseChapter.chapter,
+        estimation: courseChapter.duration,
+        module: courseChapter.chapterModules,
+      }));
+
       const responseData = {
         id: course.uuid,
         name: course.name,
@@ -59,19 +65,19 @@ module.exports = {
         totalModule: totalCourseModule,
         totalMinute: durationCourse,
         isPremium: course.is_premium,
-        classCode: course.code,
+        courseCode: course.code,
         category: course.courseCategory?.name,
         description: courseDescription,
         classTarget: courseTarget,
         telegram: telegramLink,
         onboarding: courseOnboarding,
-        classModule: course.courseChapters,
+        courseModule,
       };
 
-      const hash = crypto.createHash('sha256');
-      const sortedStringifiedData = JSON.stringify(responseData, Object.keys(responseData).sort());
-      hash.update(sortedStringifiedData);
-      errorHandling.internalError(req.get('if-none-match'));
+      // const hash = crypto.createHash('sha256');
+      // const sortedStringifiedData = JSON.stringify(responseData, Object.keys(responseData).sort());
+      // hash.update(sortedStringifiedData);
+      // errorHandling.internalError(req.get('if-none-match'));
 
       res.status(200).json({
         status: 'OK',

@@ -14,7 +14,6 @@ module.exports = (sequelize) => {
 
       this.belongsTo(models.courseCategory, {
         foreignKey: 'course_category_id',
-        as: 'category',
       });
 
       /**
@@ -35,6 +34,9 @@ module.exports = (sequelize) => {
     }
   }
   course.init({
+    id: {
+      type: DataTypes.INTEGER,
+    },
     uuid: {
       type: DataTypes.UUID,
       primaryKey: true,
