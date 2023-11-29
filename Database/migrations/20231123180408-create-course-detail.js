@@ -10,6 +10,7 @@ module.exports = {
       },
       course_uuid: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'courses',
           key: 'uuid',
@@ -19,7 +20,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       class_target: {
-        type: Sequelize.JSON,
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
       telegram: {

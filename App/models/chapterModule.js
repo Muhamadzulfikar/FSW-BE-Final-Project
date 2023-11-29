@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class chapterModule extends Model {
@@ -53,5 +54,8 @@ module.exports = (sequelize) => {
       timestamps: true,
     },
   );
+
+  chapterModule.beforeCreate((ChapterModule) => ChapterModule.uuid === uuidv4());
+
   return chapterModule;
 };
