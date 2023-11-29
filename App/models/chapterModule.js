@@ -17,38 +17,41 @@ module.exports = (sequelize) => {
       });
     }
   }
-  chapterModule.init({
-    uuid: {
-      primaryKey: true,
-      type: DataTypes.STRING,
-    },
-    course_chapter_id: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: true,
+  chapterModule.init(
+    {
+      uuid: {
+        primaryKey: true,
+        type: DataTypes.STRING,
+      },
+      course_chapter_id: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      title: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 225,
+        },
+      },
+      course_link: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          min: 5,
+          max: 255,
+        },
       },
     },
-    title: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 225,
-      },
+    {
+      sequelize,
+      modelName: 'chapterModule',
+      tableName: 'chapter_modules',
+      timestamps: true,
     },
-    course_link: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
-      },
-    },
-  }, {
-    sequelize,
-    modelName: 'chapterModule',
-    tableName: 'chapter_modules',
-    timestamps: true,
-  });
+  );
   return chapterModule;
 };
