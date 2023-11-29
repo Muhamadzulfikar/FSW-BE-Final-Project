@@ -10,6 +10,7 @@ module.exports = {
       },
       course_category_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'course_categories',
           key: 'id',
@@ -22,15 +23,19 @@ module.exports = {
       },
       image: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       author: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       price: {
         type: Sequelize.DOUBLE,
+        allowNull: false,
       },
       level: {
         type: Sequelize.ENUM('beginner', 'intermediate', 'advanced'),
@@ -38,12 +43,15 @@ module.exports = {
       },
       rating: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       isPremium: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       code: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -5,6 +5,7 @@ const swaggerDocument = require('./Docs/swagger.json');
 const authRoutes = require('./App/Routes/authRoutes');
 const courseRoutes = require('./App/Routes/courseRoutes');
 const userChapterModuleController = require('./App/Controllers/userChapterModuleController');
+const courseController = require('./App/Controllers/courseController');
 require('dotenv').config();
 
 const port = process.env.PORT || process.env.HOSTPORT;
@@ -23,6 +24,8 @@ app.get('/', (req, res) => {
     message: 'successfully',
   });
 });
+
+app.get('/courses', courseController.filterCourse);
 
 app.put(
   '/v1/progress-course',

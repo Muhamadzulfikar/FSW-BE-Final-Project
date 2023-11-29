@@ -19,6 +19,7 @@ module.exports = {
           model: 'users',
           key: 'uuid',
         },
+        allowNull: false,
       },
       course_uuid: {
         type: Sequelize.UUID,
@@ -26,9 +27,11 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        allowNull: false,
       },
       is_onboarding: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

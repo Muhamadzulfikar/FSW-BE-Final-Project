@@ -19,6 +19,7 @@ module.exports = {
           model: 'user_courses',
           key: 'uuid',
         },
+        allowNull: false,
       },
       payment_method: {
         type: Sequelize.ENUM('credit card', 'bank transfer'),
@@ -26,6 +27,7 @@ module.exports = {
       },
       is_paid: {
         type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -1,23 +1,72 @@
-const course = require('../models/index');
+const {
+  course,
+  courseDetail,
+  courseChapter,
+  chapterModule,
+} = require('../models');
 
 module.exports = {
   getAllCourses() {
-    return course.action();
+    return course.findAll({
+      include: [
+        {
+          model: courseCategory,
+          as: 'category',
+        },
+      ],
+    });
   },
 
   getCourseById(id) {
-    return course.action(id);
+    return course.findByPk(id, {
+      include: [
+        {
+          model: courseDetail,
+          attributes: ['description', 'class_target', 'telegram', 'onboarding'],
+        },
+        {
+          model: courseChapter,
+          attributes: ['duration', 'chapter'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['title', 'course_link'],
+            },
+          ],
+        },
+      ],
+    });
   },
 
-  filterCourseByCategory(category) {
-    return course.action(category);
+  CourseByCategory(categoryId) {
+    return course.findAll({
+      where: {
+        course_category_id: categoryId,
+      },
+
+      include: [
+        {
+          model: courseCategory,
+          as: 'category',
+        },
+      ],
+    });
   },
 
-  filterCourseByLevel(level) {
-    return course.action(level);
+  CourseByLevel(level) {
+    return course.findAll({
+      where: {
+        level,
+      },
+    });
   },
 
-  filterCourseByCategoryAndLevel(category, level) {
-    return course.action(category, level);
+  CourseByCategoryAndLevel(categoryId, level) {
+    return course.findAll({
+      where: {
+        course_category_id: categoryId,
+        level,
+      },
+    });
   },
 };
