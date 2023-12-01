@@ -18,6 +18,7 @@ module.exports = {
       order: [
         ['id', 'ASC'],
       ],
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     });
   },
 
@@ -39,6 +40,7 @@ module.exports = {
           ],
         },
       ],
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
     });
   },
 
