@@ -30,12 +30,12 @@ module.exports = {
 
   async getAllListCourses(ETagUser) {
     const ETagCache = cache.get('courses');
-    if (ETagCache) {
+    if (ETagCache && ETagUser) {
       this.ifNoneMatch(ETagUser, ETagCache);
     }
     const courses = await courseRepository.getAllCourses();
 
-    const dataPromises = courses.map(async (course) => ({
+    const data = Promise.all(courses.map(async (course) => ({
       id: course.uuid,
       category: course.courseCategory.name,
       image: course.image,
@@ -48,18 +48,19 @@ module.exports = {
       classCode: course.code,
       totalModule: await courseChapterRepository.getTotalModule(course.uuid),
       totalMinute: await courseChapterRepository.getTotalMinute(course.uuid),
-    }));
+    })));
 
-    const data = await Promise.all(dataPromises);
-    const ETagServer = this.generateEtag(data);
+    const responseData = await data;
+
+    const ETagServer = this.generateEtag(responseData);
     cache.set('courses', ETagServer);
 
-    return { ...data, ETag: ETagServer };
+    return [...responseData, { ETag: ETagServer }];
   },
 
   async getCourseDetailById(id, ETagUser) {
     const EtagCache = cache.get('course-detail');
-    if (EtagCache) {
+    if (EtagCache && ETagUser) {
       this.ifNoneMatch(ETagUser, EtagCache);
     }
 
