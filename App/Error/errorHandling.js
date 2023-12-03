@@ -30,4 +30,12 @@ module.exports = {
     error.status = status;
     throw error;
   },
+
+  notModified() {
+    const status = 'Not Modified';
+    const error = new Error(`${status}. Data Not Modified`);
+    error.code = 304;
+    error.status = status;
+    throw error;
+  },
 };

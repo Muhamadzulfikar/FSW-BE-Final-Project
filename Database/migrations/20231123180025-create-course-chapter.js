@@ -14,20 +14,25 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        allowNull: false,
       },
       chapter: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       duration: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('NOW()'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('NOW()'),
       },
     });
   },

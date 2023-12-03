@@ -1,6 +1,6 @@
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class courseDetail extends Model {
     /**
      * Helper method for defining associations.
@@ -10,58 +10,54 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        // as: 'course',
       });
     }
   }
-  courseDetail.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
-    course_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
+  courseDetail.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
       },
-      class_uuid: {
+      course_uuid: {
         type: DataTypes.UUID,
         validate: {
           notEmpty: true,
         },
-      },
-      description: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
-          min: 5,
-          max: 255,
+        description: {
+          type: DataTypes.STRING,
+          validate: {
+            notEmpty: true,
+            min: 5,
+            max: 255,
+          },
         },
-      },
-      class_target: {
-        type: DataTypes.JSON,
-        validate: {
-          notEmpty: true,
+        class_target: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          validate: {
+            notEmpty: true,
+          },
         },
-      },
-      telegram: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
+        telegram: {
+          type: DataTypes.STRING,
+          validate: {
+            notEmpty: true,
+          },
         },
-      },
-      onboarding: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
+        onboarding: {
+          type: DataTypes.STRING,
+          validate: {
+            notEmpty: true,
+          },
         },
       },
     },
-  }, {
-    sequelize,
-    modelName: 'courseDetail',
-    tableName: 'course_details',
-    timestamps: true,
-  });
+    {
+      sequelize,
+      modelName: 'courseDetail',
+      tableName: 'course_details',
+      timestamps: true,
+    },
+  );
   return courseDetail;
 };

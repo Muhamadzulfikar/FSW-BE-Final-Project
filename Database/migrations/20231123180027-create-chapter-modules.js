@@ -19,20 +19,25 @@ module.exports = {
           model: 'course_chapters',
           key: 'id',
         },
+        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       course_link: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('NOW()'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('NOW()'),
       },
     });
   },
