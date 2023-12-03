@@ -35,6 +35,12 @@ module.exports = (sequelize) => {
           notEmpty: true,
         },
       },
+      chapter: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
       duration: {
         type: DataTypes.INTEGER,
         validate: {
