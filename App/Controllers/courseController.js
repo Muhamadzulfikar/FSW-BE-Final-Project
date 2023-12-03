@@ -3,13 +3,12 @@ const courseService = require('../Services/courseService');
 module.exports = {
   async getAllCourses(req, res) {
     try {
-      const eTagUser = req.get('If-None-Match') ? req.get('If-None-Match') : '';
-      const courses = await courseService.getAllListCourses(eTagUser);
+      const data = await courseService.getAllListCourses();
       res.status(200).json({
         status: 'OK',
         code: 200,
         message: 'Success',
-        data: courses,
+        data,
       });
     } catch (error) {
       res.status(error.code).json({
@@ -22,8 +21,7 @@ module.exports = {
 
   async getCourseDetailById(req, res) {
     try {
-      const eTagUser = req.get('If-None-Match') ? req.get('If-None-Match') : '';
-      const courseDetail = await courseService.getCourseDetailById(req.params.id, eTagUser);
+      const courseDetail = await courseService.getCourseDetailById(req.params.id);
 
       res.status(200).json({
         status: 'OK',
@@ -40,26 +38,19 @@ module.exports = {
     }
   },
 
-  async filterCourse(req, res) {
+  async filterCourses(req, res) {
     try {
-      const { categoryId, level } = req.query;
       let courses;
-      if (!categoryId && !level) {
-        const allCourses = await courseService.getAllListCourses();
-        res.status(200).json({
-          status: 'OK',
-          code: 200,
-          message: 'Success',
-          data: allCourses,
-        });
+      const { categoryIds, levels } = req;
+
+      if (categoryIds && levels) {
+        courses = await courseService.filterCourseByCategoryAndLevel(categoryIds, levels);
+      } else if (categoryIds) {
+        courses = await courseService.filterCourseByCategory(categoryIds);
+      } else if (levels) {
+        courses = await courseService.filterCourseByLevel(levels);
       }
-      if (categoryId && level) {
-        courses = await courseService.filterCourseByCategoryAndLevel(categoryId, level);
-      } else if (categoryId) {
-        courses = await courseService.filterCourseByCategory(categoryId);
-      } else if (level) {
-        courses = await courseService.filterCourseByLevel(level);
-      }
+
       res.status(200).json({
         status: 'OK',
         code: 200,

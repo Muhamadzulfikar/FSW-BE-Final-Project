@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
         foreignKey: 'course_uuid',
       });
 
-      this.hasMany(models.courseDetail, {
+      this.hasOne(models.courseDetail, {
         foreignKey: 'course_uuid',
       });
 
