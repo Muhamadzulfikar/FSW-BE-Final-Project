@@ -1,35 +1,44 @@
-module.exports = {
-  bodyResponse(bodyData) {
-    return {
-      status: 'OK',
-      code: 200,
-      message: 'Success',
-      data: bodyData,
-    };
-  },
+const { ValidationError } = require('sequelize');
+const courseCategoryRepository = require('../Repositories/courseCategoryRepository');
 
+module.exports = {
   async getAllCourseCategory(req, res) {
     try {
-      res.status(200).json(this.bodyResponse([]));
+      const data = await courseCategoryRepository.getAllCourseCategories();
+      res.status(200).json(
+        {
+          status: 'Ok',
+          code: 200,
+          message: 'Success',
+          data,
+        },
+      );
     } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
-      });
-    }
-  },
-
-  async getCourseCategoryById(req, res) {
-    try {
-      const { id } = req.params;
-      res.status(200).json(this.bodyResponse([id]));
-    } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
-      });
+      if (error instanceof Error) {
+        res.status(500).json(
+          {
+            status: 'ERROR',
+            code: 500,
+            message: error.message,
+          },
+        );
+      } else if (error instanceof ValidationError) {
+        res.status(400).json(
+          {
+            status: 'ERROR',
+            code: 400,
+            message: error.message,
+          },
+        );
+      } else {
+        res.status(500).json(
+          {
+            status: 'ERROR',
+            code: 500,
+            message: 'Internal Server Error',
+          },
+        );
+      }
     }
   },
 };

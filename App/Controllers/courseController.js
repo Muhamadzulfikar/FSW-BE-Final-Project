@@ -1,20 +1,15 @@
-const courseChapterRepository = require('../Repositories/courseChapterRepository');
-const courseRepository = require('../Repositories/courseRepository');
+const courseService = require('../Services/courseService');
 
 module.exports = {
-  bodyResponse(bodyData) {
-    return {
-      status: 'OK',
-      code: 200,
-      message: 'Success',
-      data: bodyData,
-    };
-  },
-
   async getAllCourses(req, res) {
     try {
-      const courses = await courseRepository.getAllCourses();
-      res.status(200).json(this.bodyResponse(courses));
+      const data = await courseService.getAllListCourses();
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data,
+      });
     } catch (error) {
       res.status(error.code).json({
         code: error.code,
@@ -26,17 +21,14 @@ module.exports = {
 
   async getCourseDetailById(req, res) {
     try {
-      // get course detail by ID
-      const { id } = req.params;
-      const course = courseRepository.getCourseById(id);
-      const totalModule = courseChapterRepository.getTotalModule;
-      const totalMinute = courseChapterRepository.getTotalMinute;
-      res.status(200).json(this.bodyResponse({
-        ...course,
-        id,
-        total_module: totalModule,
-        total_minute: totalMinute,
-      }));
+      const courseDetail = await courseService.getCourseDetailById(req.params.id);
+
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courseDetail,
+      });
     } catch (error) {
       res.status(error.code).json({
         code: error.code,
@@ -46,23 +38,25 @@ module.exports = {
     }
   },
 
-  async filterCourse(req, res) {
+  async filterCourses(req, res) {
     try {
-      const { category, level } = req.query;
-      if (category && level) {
-        const courses = await courseRepository.filterCourseByCategoryAndLevel(category);
-        res.status(200).json(this.bodyResponse(courses));
+      let courses;
+      const { categoryIds, levels } = req;
+
+      if (categoryIds && levels) {
+        courses = await courseService.filterCourseByCategoryAndLevel(categoryIds, levels);
+      } else if (categoryIds) {
+        courses = await courseService.filterCourseByCategory(categoryIds);
+      } else if (levels) {
+        courses = await courseService.filterCourseByLevel(levels);
       }
 
-      if (category) {
-        const courses = await courseRepository.filterCourseByCategory(category);
-        res.status(200).json(this.bodyResponse(courses));
-      }
-
-      if (level) {
-        const courses = await courseRepository.filterCourseByLevel(level);
-        res.status(200).json(this.bodyResponse(courses));
-      }
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courses,
+      });
     } catch (error) {
       res.status(error.code).json({
         code: error.code,

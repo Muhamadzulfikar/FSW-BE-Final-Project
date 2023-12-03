@@ -13,7 +13,6 @@ module.exports = (sequelize) => {
        */
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
-        // as: 'course',
       });
 
       /**
@@ -21,38 +20,40 @@ module.exports = (sequelize) => {
        */
       this.hasMany(models.chapterModule, {
         foreignKey: 'course_chapter_id',
-        as: 'course_chapter',
       });
     }
   }
-  courseChapter.init({
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-    },
-    course_uuid: {
-      type: DataTypes.UUID,
-      validate: {
-        notEmpty: true,
+  courseChapter.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
       },
-      class_uuid: {
+      course_uuid: {
         type: DataTypes.UUID,
         validate: {
           notEmpty: true,
         },
       },
-    },
-    duration: {
-      type: DataTypes.INTEGER,
-      validate: {
-        notEmpty: true,
+      chapter: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      duration: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: true,
+        },
       },
     },
-  }, {
-    sequelize,
-    modelName: 'courseChapter',
-    tableName: 'course_chapters',
-    timestamps: true,
-  });
+    {
+      sequelize,
+      modelName: 'courseChapter',
+      tableName: 'course_chapters',
+      timestamps: true,
+    },
+  );
   return courseChapter;
 };
