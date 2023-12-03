@@ -24,6 +24,7 @@ module.exports = {
     });
   },
 
+  // eslint-disable-next-line consistent-return
   async getAllListCourses() {
     try {
       const courses = await courseRepository.getAllCourses();
@@ -33,6 +34,7 @@ module.exports = {
     }
   },
 
+  // eslint-disable-next-line consistent-return
   async getCourseDetailById(id) {
     try {
       const course = await courseRepository.getCourseById(id);
