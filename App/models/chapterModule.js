@@ -20,6 +20,9 @@ module.exports = (sequelize) => {
   }
   chapterModule.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+      },
       uuid: {
         primaryKey: true,
         type: DataTypes.STRING,
