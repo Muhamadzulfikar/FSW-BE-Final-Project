@@ -1,4 +1,4 @@
-const { courseCategory } = require('../models/index');
+const { courseCategory } = require('../models');
 
 module.exports = {
   getAllCourseCategories() {
