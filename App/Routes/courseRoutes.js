@@ -6,8 +6,7 @@ const { filterByCategoriesAndLevel } = require('../Middleware/courseMiddleware')
 const route = express.Router();
 
 route.get('/course-categories', courseCategoryController.getAllCourseCategory);
-route.get('/courses', courseController.getAllCourses);
+route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', courseController.getCourseDetailById);
-route.get('/courses/filter', filterByCategoriesAndLevel, courseController.filterCourses);
 
 module.exports = route;

@@ -1,41 +1,47 @@
+const courseCategoryRepository = require('../../Repositories/courseCategoryRepository');
 const courseCategoryController = require('../courseCategoryController');
 
-describe('courseCategoryController', () => {
-  describe('#getAllCourseCategory', () => {
-    it('should return code 200 and message Success', () => {
-      const mockRequest = {};
-      const mockResponse = {
-        status: 'OK',
-        code: 200,
-        message: 'Success',
-        data: [],
-      };
+describe('getAllCourseCategories', () => {
+  it('should return all course categories', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expected = [
+      { id: 1, name: 'Category 1' },
+      { id: 2, name: 'Category 2' },
+    ];
 
-      courseCategoryController.getAllCourseCategory(mockRequest, mockResponse);
+    courseCategoryRepository.getAllCourseCategories = jest.fn().mockResolvedValue(expected);
 
-      expect(mockResponse.code).toHaveBeenCalledWith(200);
-      expect(mockResponse.message).toHaveBeenCalledWith('Success');
-      expect(mockResponse.data).toHaveBeenCalledWith([]);
+    await courseCategoryController.getAllCourseCategory(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'Ok',
+      code: 200,
+      message: 'Success',
+      data: expected,
     });
   });
 
-  describe('#getCourseCategoryById', () => {
-    it('should return code 200 and message Success', () => {
-      const mockRequest = { params: 1 };
-      const mockResponse = {
-        status: 'OK',
-        code: 200,
-        message: 'Success',
-        data: {
-          id: 1,
-        },
-      };
+  it('should return error when error occured', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
 
-      courseCategoryController.getCourseCategoryById(mockRequest, mockResponse);
+    courseCategoryRepository.getAllCourseCategories = jest.fn().mockRejectedValue(new Error('Error'));
 
-      expect(mockResponse.code).toHaveBeenCalledWith(200);
-      expect(mockResponse.message).toHaveBeenCalledWith('Success');
-      expect(mockResponse.data).toHaveBeenCalledWith({ id: 1 });
+    await courseCategoryController.getAllCourseCategory(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'Internal Server Error',
+      code: 500,
+      message: 'Error',
     });
   });
 });
