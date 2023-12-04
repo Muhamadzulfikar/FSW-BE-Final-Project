@@ -31,7 +31,9 @@
   "paths": {
     "/": {
       "get": {
-        "tags": ["Root"],
+        "tags": [
+          "Root"
+        ],
         "summary": "Test your ping to the server here",
         "operationId": "testPing",
         "responses": {
@@ -58,9 +60,11 @@
         }
       }
     },
-    "/categories": {
+    "/v1/course-categories": {
       "get": {
-        "tags": ["Category"],
+        "tags": [
+          "Category"
+        ],
         "summary": "Find all Category",
         "description": "This end point will serve all list of categories",
         "operationId": "getAllCategories",
@@ -88,31 +92,33 @@
         }
       }
     },
-    "/classes": {
+    "/v1/courses": {
       "get": {
-        "tags": ["Class"],
+        "tags": [
+          "Class"
+        ],
         "summary": "Find all Class if there are no params or spesific class if there are params",
         "description": "This end point will serve all list of class",
         "operationId": "getAllClass",
         "parameters": [
           {
-            "name": "class[category]=",
+            "name": "categoryId",
             "in": "query",
             "description": "The category of the classes",
             "required": false,
             "schema": {
               "type": "string",
-              "example": "ui/uxdesign,webdevelopment,androiddevelopment,datascience,businessintelligece"
+              "example": "1,3"
             }
           },
           {
-            "name": "class[level]=",
+            "name": "level",
             "in": "query",
             "description": "The level of the classes",
             "required": false,
             "schema": {
               "type": "string",
-              "example": "semua,beginner,intermediate,advanced"
+              "example": "beginner,intermediate"
             }
           }
         ],
@@ -140,15 +146,17 @@
         }
       }
     },
-    "/classes/{classID}": {
+    "/v1/course/{id}": {
       "get": {
-        "tags": ["Class"],
+        "tags": [
+          "Class"
+        ],
         "summary": "Find detail class by ID",
         "description": "This end point will serve data of detailed class",
         "operationId": "getDetailClass",
         "parameters": [
           {
-            "name": "classID",
+            "name": "id",
             "in": "path",
             "description": "ID of class to fetch",
             "required": true,
@@ -187,7 +195,7 @@
       "paramsID": {
         "type": "string",
         "format": "uuid",
-        "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+        "example": "b74507f3-ec93-4d10-a62f-9d20479a3f56"
       },
       "ping": {
         "type": "object",
