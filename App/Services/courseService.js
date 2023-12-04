@@ -84,30 +84,33 @@ module.exports = {
     }
   },
 
+  // eslint-disable-next-line consistent-return
   async filterCourseByCategoryAndLevel(categoryIds, levels) {
     try {
       const courses = await courseRepository.CourseByCategoryAndLevel(categoryIds, levels);
       return this.courseResponse(courses);
     } catch (error) {
-      throw errorHandling.badRequest(error);
+      errorHandling.badRequest(error);
     }
   },
 
+  // eslint-disable-next-line consistent-return
   async filterCourseByCategory(categoryIds) {
     try {
       const courses = await courseRepository.CourseByCategory(categoryIds);
       return this.courseResponse(courses);
     } catch (error) {
-      throw errorHandling.badRequest(error);
+      errorHandling.badRequest(error);
     }
   },
 
+  // eslint-disable-next-line consistent-return
   async filterCourseByLevel(levels) {
     try {
       const courses = await courseRepository.CourseByLevel(levels);
       return this.courseResponse(courses);
     } catch (error) {
-      throw errorHandling.badRequest(error);
+      errorHandling.badRequest(error);
     }
   },
 };
