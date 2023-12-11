@@ -30,7 +30,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       if (!email || email === '') {
-        errorHandling.unauthorized('Email must not be empty');
+        errorHandling.unauthorized('Email or phone must not be empty');
       }
       if (!password || password === '') {
         errorHandling.unauthorized('Password must not be empty');

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authRepositories = require('../Repositories/authRepositories');
 const errorHandling = require('../Error/errorHandling');
+require('dotenv').config();
 
 module.exports = {
   async userLogin(password, user) {
@@ -12,10 +13,13 @@ module.exports = {
       errorHandling.unauthorized('Password not match');
     }
 
-    const token = await this.createToken({ id: user.id });
-    const userWithToken = { ...user.dataValues, token };
+    const token = await this.createToken({ id: user.uuid });
+    const responseData = {
+      name: user.name,
+      token,
+    };
 
-    return userWithToken;
+    return responseData;
   },
 
   async userRegister(body) {
@@ -28,14 +32,22 @@ module.exports = {
     return register;
   },
 
+  // eslint-disable-next-line consistent-return
   findUser(body) {
-    const { email } = body;
-    return authRepositories.findUser(email);
+    try {
+      const { email } = body;
+      if (!email.includes('@')) {
+        const phoneNumber = email;
+        return authRepositories.findUserByPhone(phoneNumber);
+      }
+      return authRepositories.findUser(email);
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
   },
 
   async encryptPassword(password) {
-    const salt = process.env.SALT;
-    const encryptedPassword = bcrypt.hash(password, salt);
+    const encryptedPassword = bcrypt.hash(password, 10);
 
     return encryptedPassword;
   },
@@ -54,7 +66,7 @@ module.exports = {
   },
 
   async authorize(bearerToken) {
-    if (bearerToken) {
+    if (!bearerToken) {
       errorHandling.unauthorized('Token must be not empty');
     }
     const token = bearerToken.split('Bearer ')[1];

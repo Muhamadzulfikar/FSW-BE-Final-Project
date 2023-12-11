@@ -1,15 +1,19 @@
-const { User } = require('../models/index');
+const { user } = require('../models');
 
 module.exports = {
   findUser(emailUser) {
-    return User.findOne({ where: { email: emailUser } });
+    return user.findOne({ where: { email: emailUser } });
+  },
+
+  findUserByPhone(phoneNumber) {
+    return user.findOne({ where: { phone: phoneNumber } });
   },
 
   findUserById(id) {
-    return User.findByPk(id);
+    return user.findByPk(id);
   },
 
   userRegister(body) {
-    return User.create(body);
+    return user.create(body);
   },
 };
