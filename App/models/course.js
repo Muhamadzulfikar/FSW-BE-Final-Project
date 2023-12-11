@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class course extends Model {
@@ -112,5 +113,7 @@ module.exports = (sequelize) => {
     modelName: 'course',
     tableName: 'courses',
   });
+  // eslint-disable-next-line no-return-assign, no-param-reassign
+  course.beforeCreate((courseUUID) => (courseUUID.uuid = uuidv4()));
   return course;
 };
