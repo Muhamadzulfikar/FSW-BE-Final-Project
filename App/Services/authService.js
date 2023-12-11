@@ -16,26 +16,34 @@ module.exports = {
     const token = await this.createToken({ id: user.uuid });
     const responseData = {
       name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
       token,
     };
 
     return responseData;
   },
 
+  // eslint-disable-next-line consistent-return
   async userRegister(body) {
-    const { password } = body;
-    const bodyRequest = body;
-    const encrypt = await this.encryptPassword(password);
-    bodyRequest.password = encrypt;
-    const register = authRepositories.userRegister(body);
+    try {
+      const { password } = body;
+      const bodyRequest = body;
+      const encrypt = await this.encryptPassword(password);
+      bodyRequest.password = encrypt;
+      const register = await authRepositories.userRegister(body);
 
-    return register;
+      return register;
+    } catch (error) {
+      errorHandling.unauthorized(error);
+    }
   },
 
   // eslint-disable-next-line consistent-return
-  findUser(body) {
+  findUser(email) {
     try {
-      const { email } = body;
       if (!email.includes('@')) {
         const phoneNumber = email;
         return authRepositories.findUserByPhone(phoneNumber);
