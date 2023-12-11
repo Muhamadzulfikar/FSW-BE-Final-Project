@@ -104,7 +104,7 @@ module.exports = (sequelize) => {
     },
   );
 
-  user.beforeCreate((car) => car.uuid === uuidv4());
+  user.beforeCreate((User) => User.uuid === uuidv4());
 
   return user;
 };
