@@ -45,7 +45,7 @@ module.exports = (sequelize) => {
     {
       sequelize,
       modelName: 'userCourse',
-      tableName: 'user_course',
+      tableName: 'user_courses',
       timestamps: true,
     },
   );
