@@ -53,6 +53,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      intro_video: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

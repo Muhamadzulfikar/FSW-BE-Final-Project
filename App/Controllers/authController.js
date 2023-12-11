@@ -15,7 +15,7 @@ module.exports = {
 
   async userRegister(req, res) {
     try {
-      req.body.id = uuidv4();
+      req.body.uuid = uuidv4();
       if (req.user) {
         req.body.role = 'admin';
       }

@@ -1,4 +1,3 @@
-const { Op } = require('sequelize');
 const {
   course,
   courseDetail,
@@ -25,8 +24,11 @@ const baseCourseQuery = {
 };
 
 module.exports = {
-  getAllCourses() {
-    return course.findAll(baseCourseQuery);
+  getAllCourses(filter) {
+    return course.findAll({
+      where: filter,
+      ...baseCourseQuery,
+    });
   },
 
   getCourseById(id) {
@@ -54,42 +56,6 @@ module.exports = {
         },
       ],
       attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
-    });
-  },
-
-  CourseByCategory(categoryIds) {
-    return course.findAll({
-      where: {
-        course_category_id: {
-          [Op.in]: categoryIds,
-        },
-      },
-      ...baseCourseQuery,
-    });
-  },
-
-  CourseByLevel(levels) {
-    return course.findAll({
-      where: {
-        level: {
-          [Op.in]: levels,
-        },
-      },
-      ...baseCourseQuery,
-    });
-  },
-
-  CourseByCategoryAndLevel(categoryIds, levels) {
-    return course.findAll({
-      where: {
-        course_category_id: {
-          [Op.in]: categoryIds,
-        },
-        level: {
-          [Op.in]: levels,
-        },
-      },
-      ...baseCourseQuery,
     });
   },
 };

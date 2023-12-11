@@ -1,6 +1,9 @@
 const authService = require('../Services/authService');
 const errorHandling = require('../Error/errorHandling');
 const responseError = require('../Error/responseError');
+const mailService = require('../Services/mailService');
+const generateOTP = require('../Services/otpService');
+const authRepositories = require('../Repositories/authRepositories');
 
 module.exports = {
   validateBodyRequest(req, res, next) {
@@ -26,11 +29,36 @@ module.exports = {
     }
   },
 
+  sendOtp(req, res, next) {
+    try {
+      const { email } = req.body;
+      const otp = generateOTP();
+      mailService(email, otp);
+      req.otp = otp;
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
+
+  async validateOtp(req, res, next) {
+    try {
+      const { email, otp } = req.body;
+      const validate = await authRepositories.validateOtp(email, otp);
+      if (!validate) {
+        errorHandling.unauthorized('Otp Invalid');
+      }
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
+
   validateBodyLogin(req, res, next) {
     try {
       const { email, password } = req.body;
       if (!email || email === '') {
-        errorHandling.unauthorized('Email must not be empty');
+        errorHandling.unauthorized('Email or phone must not be empty');
       }
       if (!password || password === '') {
         errorHandling.unauthorized('Password must not be empty');
@@ -43,7 +71,7 @@ module.exports = {
 
   async isUserHasNotRegister(req, res, next) {
     try {
-      const user = await authService.findUser(req.body);
+      const user = await authService.findUser(req.body.email);
       if (user) {
         errorHandling.unauthorized('User Has Already Exists');
       }
@@ -55,7 +83,7 @@ module.exports = {
 
   async isUserHasRegister(req, res, next) {
     try {
-      const user = await authService.findUser(req.body);
+      const user = await authService.findUser(req.body.email);
       if (!user) {
         errorHandling.unauthorized('Cannot Find User');
       }

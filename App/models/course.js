@@ -107,6 +107,14 @@ module.exports = (sequelize) => {
         max: 255,
       },
     },
+    intro_video: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true,
+        min: 5,
+        max: 255,
+      },
+    },
   }, {
     sequelize,
     modelName: 'course',

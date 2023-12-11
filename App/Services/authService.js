@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authRepositories = require('../Repositories/authRepositories');
 const errorHandling = require('../Error/errorHandling');
+require('dotenv').config();
 
 module.exports = {
   async userLogin(password, user) {
@@ -12,30 +13,49 @@ module.exports = {
       errorHandling.unauthorized('Password not match');
     }
 
-    const token = await this.createToken({ id: user.id });
-    const userWithToken = { ...user.dataValues, token };
+    const token = await this.createToken({ id: user.uuid });
+    const responseData = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
+      token,
+    };
 
-    return userWithToken;
+    return responseData;
   },
 
+  // eslint-disable-next-line consistent-return
   async userRegister(body) {
-    const { password } = body;
-    const bodyRequest = body;
-    const encrypt = await this.encryptPassword(password);
-    bodyRequest.password = encrypt;
-    const register = authRepositories.userRegister(body);
+    try {
+      const { password } = body;
+      const bodyRequest = body;
+      const encrypt = await this.encryptPassword(password);
+      bodyRequest.password = encrypt;
+      const register = await authRepositories.userRegister(body);
 
-    return register;
+      return register;
+    } catch (error) {
+      errorHandling.unauthorized(error);
+    }
   },
 
-  findUser(body) {
-    const { email } = body;
-    return authRepositories.findUser(email);
+  // eslint-disable-next-line consistent-return
+  findUser(email) {
+    try {
+      if (!email.includes('@')) {
+        const phoneNumber = email;
+        return authRepositories.findUserByPhone(phoneNumber);
+      }
+      return authRepositories.findUser(email);
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
   },
 
   async encryptPassword(password) {
-    const salt = process.env.SALT;
-    const encryptedPassword = bcrypt.hash(password, salt);
+    const encryptedPassword = bcrypt.hash(password, 10);
 
     return encryptedPassword;
   },
@@ -54,7 +74,7 @@ module.exports = {
   },
 
   async authorize(bearerToken) {
-    if (bearerToken) {
+    if (!bearerToken) {
       errorHandling.unauthorized('Token must be not empty');
     }
     const token = bearerToken.split('Bearer ')[1];

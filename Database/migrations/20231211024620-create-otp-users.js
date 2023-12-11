@@ -1,32 +1,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_course_payments', {
+    await queryInterface.createTable('otp_users', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
       uuid: {
         type: Sequelize.UUID,
         unique: true,
         allowNull: false,
       },
-      user_course_uuid: {
+      user_uuid: {
         type: Sequelize.UUID,
         references: {
-          model: 'user_courses',
+          model: 'users',
           key: 'uuid',
         },
         allowNull: false,
       },
-      payment_method: {
-        type: Sequelize.ENUM('credit card', 'bank transfer'),
-        allowNull: false,
-      },
-      is_paid: {
-        type: Sequelize.BOOLEAN,
+      otp_code: {
+        type: Sequelize.STRING(6),
         allowNull: false,
       },
       expiredAt: {
@@ -38,14 +34,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('NOW()'),
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('NOW()'),
-      },
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('user_course_payments');
+    await queryInterface.dropTable('otp_users');
   },
 };

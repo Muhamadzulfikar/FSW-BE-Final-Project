@@ -1,21 +1,35 @@
+const { Op } = require('sequelize');
 const errorHandling = require('../Error/errorHandling');
 
 module.exports = {
   filterByCategoriesAndLevel(req, res, next) {
     try {
-      const { categoryId, level } = req.query;
-      if ((categoryId && typeof categoryId !== 'string') || (level && typeof level !== 'string')) {
-        errorHandling.badRequest('params must be string');
-      }
+      const {
+        categoryId,
+        level,
+        premium,
+        search,
+      } = req.query;
 
       const categoryIds = categoryId && categoryId.split(',').map(Number);
       const levels = level && level.split(',');
+      const isPremium = premium === '1';
       if (levels && levels.some((l) => !['beginner', 'intermediate', 'advanced'].includes(l))) {
         errorHandling.badRequest('level must be valid enum (beginner, intermediate, advanced)');
       }
 
-      req.categoryIds = categoryIds;
-      req.levels = levels;
+      const filter = {};
+      if (categoryIds) filter.course_category_id = categoryIds;
+      if (levels) filter.level = levels;
+      if (isPremium) filter.isPremium = isPremium;
+      if (search) {
+        const filterSearch = search.charAt(0).toUpperCase() + search.slice(1);
+        filter.name = {
+          [Op.like]: `%${filterSearch}%`,
+        };
+      }
+
+      req.filter = filter;
 
       next();
     } catch (error) {

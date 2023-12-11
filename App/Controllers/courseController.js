@@ -3,18 +3,8 @@ const courseService = require('../Services/courseService');
 module.exports = {
   async getAllCourses(req, res) {
     try {
-      let courses;
-      const { categoryIds, levels } = req;
-
-      if (!categoryIds && !levels) {
-        courses = await courseService.getAllListCourses();
-      } else if (categoryIds && levels) {
-        courses = await courseService.filterCourseByCategoryAndLevel(categoryIds, levels);
-      } else if (categoryIds) {
-        courses = await courseService.filterCourseByCategory(categoryIds);
-      } else if (levels) {
-        courses = await courseService.filterCourseByLevel(levels);
-      }
+      const { filter } = req;
+      const courses = await courseService.getAllListCourses(filter);
 
       res.status(200).json({
         status: 'OK',
