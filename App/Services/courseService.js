@@ -51,7 +51,7 @@ module.exports = {
       } = course.courseDetail.dataValues;
 
       const courseModules = course.courseChapters.map((courseChapter) => ({
-        chapter: courseChapter.chapter,
+        chapter: courseChapter.id,
         estimation: courseChapter.duration,
         module: courseChapter.chapterModules.map((courseModule) => ({
           title: courseModule.title,
@@ -80,6 +80,95 @@ module.exports = {
       };
 
       return responseData;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async getCourseById(id) {
+    try {
+      const courses = await courseRepository.getCourseByIdAdmin(id);
+      return courses;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async filterCourseByCategoryAndLevel(categoryIds, levels) {
+    try {
+      const courses = await courseRepository.CourseByCategoryAndLevel(categoryIds, levels);
+      return this.courseResponse(courses);
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async filterCourseByCategory(categoryIds) {
+    try {
+      const courses = await courseRepository.CourseByCategory(categoryIds);
+      return this.courseResponse(courses);
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async filterCourseByLevel(levels) {
+    try {
+      const courses = await courseRepository.CourseByLevel(levels);
+      return this.courseResponse(courses);
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async getListCourseAdmin() {
+    try {
+      const courses = await courseRepository.getCoursesAdmin();
+      return courses;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async createCourseAdmin(dataCourse) {
+    try {
+      const course = await courseRepository.createCourse(dataCourse);
+      return course;
+    } catch (error) {
+      return errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async updateCourseAdmin(uuid, dataCourse) {
+    try {
+      const course = await courseRepository.updateCourse(uuid, dataCourse);
+      return course;
+    } catch (error) {
+      return errorHandling.badRequest(error);
+    }
+  },
+
+  async deleteCourseAdmin(uuid) {
+    try {
+      const course = await courseRepository.deleteCourse(uuid);
+      return course;
+    } catch (error) {
+      return errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
+  async buyCourseUser() {
+    try {
+      const courses = await courseRepository.buyCourseUserDetail();
+      return this.courseResponse(courses);
     } catch (error) {
       errorHandling.badRequest(error);
     }
