@@ -14,6 +14,7 @@ const mockCourses = [
     rating: '4.5',
     isPremium: false,
     code: 'UIUX0123',
+    intro_video: 'https://www.youtube.com/embed/zHAa-m16NGk?si=2Q7pA2uoS65WhmR3',
   },
   {
     course_category_id: 3,
@@ -26,6 +27,7 @@ const mockCourses = [
     rating: '4.2',
     isPremium: false,
     code: 'WD0123',
+    intro_video: 'https://www.youtube.com/embed/poFls1gDGCk?si=DLK1PEyNylcokk2_',
   },
   {
     course_category_id: 3,
@@ -38,6 +40,7 @@ const mockCourses = [
     rating: '4.7',
     isPremium: true,
     code: 'WD0124',
+    intro_video: 'https://www.youtube.com/embed/mRttyh1GQ5I?si=zq_7Y5VPUHU2aZE8',
   },
   {
     course_category_id: 4,
@@ -50,18 +53,20 @@ const mockCourses = [
     rating: '4.5',
     isPremium: false,
     code: 'AND0123',
+    intro_video: 'https://www.youtube.com/embed/PFVKjUUZMf8?si=qCs81z5SYwQeaais',
   },
   {
     course_category_id: 5,
     uuid: randomUUID(),
     image: 'https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/u2yzw0k8wadkeu17ueml.png',
-    name: 'swiftUI Development',
+    name: 'SwiftUI Development',
     author: 'Samuel Wijaya',
     price: 270000,
     level: 'advanced',
     rating: '4.8',
     isPremium: true,
     code: 'IOS0123',
+    intro_video: 'https://www.youtube.com/embed/wSxl5tNp23U?si=kY5UOoMuwnGxuu8W',
   },
   {
     course_category_id: 6,
@@ -74,6 +79,7 @@ const mockCourses = [
     rating: '4.5',
     isPremium: false,
     code: 'DS0123',
+    intro_video: 'https://www.youtube.com/embed/t3uVPX6rwgM?si=sxXq8LNBDtlP-ZFv',
   },
 ];
 
