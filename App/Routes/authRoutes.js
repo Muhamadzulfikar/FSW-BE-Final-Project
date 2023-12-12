@@ -2,6 +2,7 @@ const express = require('express');
 
 const route = express.Router();
 const { userLogin, userRegister } = require('../Controllers/authController');
+const { user } = require('../Controllers/userController');
 const {
   validateBodyLogin,
   isUserHasRegister,
@@ -25,5 +26,6 @@ route.post(
   isSuperAdmin,
   userRegister,
 );
+route.get('/profile', authorize, user);
 
 module.exports = route;
