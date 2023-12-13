@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { randomInt } = require('crypto');
+const { createTransport } = require('nodemailer');
 const authRepositories = require('../Repositories/authRepositories');
 const errorHandling = require('../Error/errorHandling');
 require('dotenv').config();
@@ -41,6 +43,31 @@ module.exports = {
     }
   },
 
+  sendOtp(emailUser) {
+    try {
+      const otp = randomInt(100_000, 999_999);
+      this.sendMail(emailUser, otp);
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
+  },
+
+  async sendMail(emailUser, otpGenerated) {
+    const client = createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+    await client.sendMail({
+      from: 'Skill Hub <noreply@gmail.com>',
+      to: emailUser,
+      subject: 'OTP Verification',
+      html: `<p>${otpGenerated}</p>`,
+    });
+  },
+
   // eslint-disable-next-line consistent-return
   findUser(email) {
     try {
@@ -79,8 +106,16 @@ module.exports = {
     }
     const token = bearerToken.split('Bearer ')[1];
     const { id } = token && (await this.validateToken(token));
-    const user = id && authRepositories.findUserById(id);
+    const user = id && await authRepositories.findUserById(id);
 
-    return user;
+    const response = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
+    };
+
+    return response;
   },
 };
