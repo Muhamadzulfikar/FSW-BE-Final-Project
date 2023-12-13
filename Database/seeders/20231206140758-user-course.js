@@ -1,22 +1,42 @@
 'use strict';
 
-const { randomUUID } = require('crypto');
+const { faker } = require('@faker-js/faker');
+const { user, course } = require('../../App/models');
 
-const mockUserCourse = [
-  {
-    uuid: randomUUID(),
-    user_uuid: '3156c172-38e2-49ae-afae-5138d764d2ce',
-    course_uuid: 'ecf4d6c9-996f-405a-9863-492c35b6d791',
-    is_onboarding: true,
-  },
-];
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.bulkInsert('user_courses', mockUserCourse, {});
+    const userCourseData = [];
+
+    // Retrieve user and course data
+    const users = await user.findAll();
+    const courses = await course.findAll();
+
+    // Check if there are any users or courses
+    if (users.length === 0 || courses.length === 0) {
+      return;
+    }
+
+    // Generate user course data
+    // eslint-disable-next-line no-shadow
+    users.forEach((user) => {
+      // eslint-disable-next-line no-shadow
+      courses.forEach((course) => {
+        userCourseData.push({
+          uuid: faker.string.uuid(),
+          user_uuid: user.uuid,
+          course_uuid: course.uuid,
+          is_onboarding: true,
+        });
+      });
+    });
+
+    // Insert user courses into the 'user_courses' table
+    await queryInterface.bulkInsert('user_courses', userCourseData, {});
   },
 
   async down(queryInterface) {
+    // Delete all records from the 'user_courses' table
     await queryInterface.bulkDelete('user_courses', null, {});
   },
 };

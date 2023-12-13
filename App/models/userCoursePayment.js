@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class userCoursePayment extends Model {
@@ -40,6 +41,7 @@ module.exports = (sequelize) => {
       },
       expiredAt: {
         type: DataTypes.DATE,
+        defaultValue: Date.now() + 43200,
         validate: {
           notEmpty: true,
         },
@@ -51,5 +53,7 @@ module.exports = (sequelize) => {
       tableName: 'user_course_payments',
     },
   );
+  // eslint-disable-next-line no-return-assign, no-param-reassign, no-undef
+  userCoursePayment.beforeCreate((userPaymentUUID) => (userPaymentUUID.uuid = uuidv4()));
   return userCoursePayment;
 };

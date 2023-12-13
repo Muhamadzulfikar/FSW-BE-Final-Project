@@ -130,7 +130,8 @@ module.exports = {
   async isSuperAdminAndAdmin(req, res, next) {
     try {
       const { user } = req;
-      if (user.role !== 'super admin' || user.role !== 'admin') {
+      // res.json(user.role);
+      if (user.role !== 'super admin' && user.role !== 'admin') {
         errorHandling.forbidden(`${user.name} Is Not Super Admin`);
       }
       next();

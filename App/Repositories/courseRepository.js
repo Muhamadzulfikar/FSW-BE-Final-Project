@@ -70,6 +70,7 @@ module.exports = {
     return course.findAll({
       where: {
         course_category_id: {
+          // eslint-disable-next-line no-undef
           [Op.in]: categoryIds,
         },
       },
@@ -81,6 +82,7 @@ module.exports = {
     return course.findAll({
       where: {
         level: {
+          // eslint-disable-next-line no-undef
           [Op.in]: levels,
         },
       },
@@ -92,9 +94,11 @@ module.exports = {
     return course.findAll({
       where: {
         course_category_id: {
+          // eslint-disable-next-line no-undef
           [Op.in]: categoryIds,
         },
         level: {
+          // eslint-disable-next-line no-undef
           [Op.in]: levels,
         },
       },
@@ -148,9 +152,6 @@ module.exports = {
 
   deleteCourse(uuid) {
     return course.destroy({ where: { uuid }, returnig: true });
-  },
-
-  buyCourseUserDetail() {
   },
 
 };

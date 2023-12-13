@@ -23,11 +23,12 @@ module.exports = {
       },
       payment_method: {
         type: Sequelize.ENUM('credit card', 'bank transfer'),
-        allowNull: false,
+        allowNull: true,
       },
       is_paid: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: false,
       },
       expiredAt: {
         type: Sequelize.DATE,

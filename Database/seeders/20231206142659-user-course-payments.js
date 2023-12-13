@@ -1,23 +1,39 @@
 'use strict';
 
-const { randomUUID } = require('crypto');
+const { faker } = require('@faker-js/faker');
+const { userCourse } = require('../../App/models');
 
-const mockUserCoursePayments = [
-  {
-    id: 1,
-    uuid: randomUUID(),
-    user_course_uuid: '87e21882-579b-4f44-ba1c-8ac8c4c7f8b2',
-    payment_method: 'credit card',
-    is_paid: true,
-  },
-];
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.bulkInsert('user_course_payments', mockUserCoursePayments, {});
+    const coursePayments = [];
+
+    // Retrieve user courses
+    const userCourses = await userCourse.findAll();
+
+    // Check if there are any user courses
+    if (userCourses.length === 0) {
+      return;
+    }
+
+    // Generate course payment data
+    // eslint-disable-next-line no-shadow
+    userCourses.forEach((userCourse) => {
+      coursePayments.push({
+        uuid: faker.string.uuid(),
+        user_course_uuid: userCourse.uuid,
+        payment_method: 'credit card',
+        is_paid: true,
+        expiredAt: new Date(),
+      });
+    });
+
+    // Insert course payments into the 'user_course_payments' table
+    await queryInterface.bulkInsert('user_course_payments', coursePayments, {});
   },
 
   async down(queryInterface) {
+    // Delete all records from the 'user_course_payments' table
     await queryInterface.bulkDelete('user_course_payments', null, {});
   },
 };

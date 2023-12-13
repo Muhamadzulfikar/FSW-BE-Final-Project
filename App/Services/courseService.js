@@ -164,13 +164,4 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
-  async buyCourseUser() {
-    try {
-      const courses = await courseRepository.buyCourseUserDetail();
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
 };
