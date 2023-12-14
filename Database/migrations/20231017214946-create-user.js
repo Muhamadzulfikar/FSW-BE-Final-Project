@@ -24,11 +24,11 @@ module.exports = {
       },
       password: {
         type: Sequelize.CHAR(60),
-        unique: true,
         allowNull: false,
       },
       phone: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
       },
       country: {
