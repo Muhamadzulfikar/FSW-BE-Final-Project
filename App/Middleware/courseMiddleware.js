@@ -11,9 +11,12 @@ module.exports = {
         search,
       } = req.query;
 
+      let isPremium;
       const categoryIds = categoryId && categoryId.split(',').map(Number);
       const levels = level && level.split(',');
-      const isPremium = premium === '1';
+      if (premium) {
+        isPremium = premium === '1';
+      }
       if (levels && levels.some((l) => !['beginner', 'intermediate', 'advanced'].includes(l))) {
         errorHandling.badRequest('level must be valid enum (beginner, intermediate, advanced)');
       }
@@ -21,7 +24,7 @@ module.exports = {
       const filter = {};
       if (categoryIds) filter.course_category_id = categoryIds;
       if (levels) filter.level = levels;
-      if (isPremium) filter.isPremium = isPremium;
+      if (isPremium != null) filter.isPremium = isPremium;
       if (search) {
         const filterSearch = search.charAt(0).toUpperCase() + search.slice(1);
         filter.name = {

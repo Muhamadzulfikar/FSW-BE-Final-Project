@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       payment_method: {
         type: DataTypes.ENUM('credit card', 'bank transfer'),
         validate: {
-          notEmpty: true,
           isIn: [['credit card', 'bank transfer']],
         },
       },

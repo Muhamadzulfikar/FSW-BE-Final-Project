@@ -1,7 +1,8 @@
 const express = require('express');
 
 const route = express.Router();
-const { userLogin, userRegister } = require('../Controllers/authController');
+const { userLogin, userRegister, validateOtp } = require('../Controllers/authController');
+const { user } = require('../Controllers/userController');
 const {
   validateBodyLogin,
   isUserHasRegister,
@@ -18,6 +19,9 @@ route.post(
   isUserHasNotRegister,
   userRegister,
 );
+
+route.post('/validate-register', authorize, validateOtp);
+
 route.post(
   '/register/admin',
   isUserHasNotRegister,

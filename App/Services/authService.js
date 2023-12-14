@@ -1,7 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { randomInt } = require('crypto');
+const { ValidationError } = require('sequelize');
+const { createTransport } = require('nodemailer');
 const authRepositories = require('../Repositories/authRepositories');
 const errorHandling = require('../Error/errorHandling');
+const otpTemplate = require('./email/otpTemplate');
 require('dotenv').config();
 
 module.exports = {
@@ -31,14 +35,51 @@ module.exports = {
     try {
       const { password } = body;
       const bodyRequest = body;
+      const otp = randomInt(100_000, 999_999);
+
       const encrypt = await this.encryptPassword(password);
       bodyRequest.password = encrypt;
       const register = await authRepositories.userRegister(body);
 
-      return register;
+      authRepositories.storeOtp(register.uuid, otp);
+      this.sendMail(register, otp);
+
+      const token = this.createTokenRegister({ id: register.uuid });
+
+      return token;
     } catch (error) {
-      errorHandling.unauthorized(error);
+      if (error instanceof ValidationError) {
+        errorHandling.badRequest(error.errors[0].message);
+      }
+      errorHandling.badRequest(error);
     }
+  },
+
+  async sendMail(user, otpGenerated) {
+    const client = createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+    client.sendMail({
+      from: 'Skill Hub <noreply@gmail.com>',
+      to: user.email,
+      subject: 'OTP Verification',
+      html: otpTemplate(user.name, otpGenerated),
+    });
+  },
+
+  async validateOtp(otp, user) {
+    const { userUuid } = user;
+    const validate = await authRepositories.validateOtp(otp, userUuid);
+
+    if (!validate) {
+      errorHandling.badRequest('OTP is not valid');
+    }
+
+    return `${user.name} Successfully register`;
   },
 
   // eslint-disable-next-line consistent-return
@@ -69,7 +110,13 @@ module.exports = {
 
   async createToken(payload) {
     const jwtSignatureKey = process.env.JWT_SIGNATURE_KEY;
-    const createToken = jwt.sign(payload, jwtSignatureKey, { expiresIn: 1800 });
+    const createToken = jwt.sign(payload, jwtSignatureKey, { expiresIn: '1d' });
+    return createToken;
+  },
+
+  async createTokenRegister(payload) {
+    const jwtSignatureKey = process.env.JWT_SIGNATURE_KEY;
+    const createToken = jwt.sign(payload, jwtSignatureKey, { expiresIn: '3m' });
     return createToken;
   },
 
@@ -81,6 +128,15 @@ module.exports = {
     const { id } = token && (await this.validateToken(token));
     const user = id && authRepositories.findUserById(id);
 
-    return user;
+    const response = {
+      userUuid: user.uuid,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
+    };
+
+    return response;
   },
 };
