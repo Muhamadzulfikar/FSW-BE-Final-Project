@@ -65,7 +65,7 @@ module.exports = {
   getCourseByIdAdmin(id) {
     return course.findByPk(id);
   },
-  
+
   getCoursesAdmin() {
     return userCoursePayment.findAll({
       include: [
@@ -113,7 +113,7 @@ module.exports = {
   deleteCourse(uuid) {
     return course.destroy({ where: { uuid }, returnig: true });
   },
-  
+
   buyCourseUserDetail() {
   },
 };
