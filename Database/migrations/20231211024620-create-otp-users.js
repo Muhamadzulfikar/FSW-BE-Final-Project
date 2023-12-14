@@ -15,11 +15,11 @@ module.exports = {
       },
       user_uuid: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'users',
           key: 'uuid',
         },
-        allowNull: false,
       },
       otp_code: {
         type: Sequelize.STRING(6),

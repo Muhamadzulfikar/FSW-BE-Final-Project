@@ -18,7 +18,6 @@ module.exports = {
         rating: course.rating,
         isPremium: course.isPremium,
         classCode: course.code,
-        introVideo: course.intro_video,
         totalModule,
         totalMinute,
       };
@@ -75,6 +74,7 @@ module.exports = {
         description,
         classTarget: courseTarget,
         telegram,
+        introVideo: course.intro_video,
         onboarding,
         courseModules,
       };

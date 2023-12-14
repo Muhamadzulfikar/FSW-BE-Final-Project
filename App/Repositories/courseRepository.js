@@ -65,47 +65,7 @@ module.exports = {
   getCourseByIdAdmin(id) {
     return course.findByPk(id);
   },
-
-  CourseByCategory(categoryIds) {
-    return course.findAll({
-      where: {
-        course_category_id: {
-          // eslint-disable-next-line no-undef
-          [Op.in]: categoryIds,
-        },
-      },
-      ...baseCourseQuery,
-    });
-  },
-
-  CourseByLevel(levels) {
-    return course.findAll({
-      where: {
-        level: {
-          // eslint-disable-next-line no-undef
-          [Op.in]: levels,
-        },
-      },
-      ...baseCourseQuery,
-    });
-  },
-
-  CourseByCategoryAndLevel(categoryIds, levels) {
-    return course.findAll({
-      where: {
-        course_category_id: {
-          // eslint-disable-next-line no-undef
-          [Op.in]: categoryIds,
-        },
-        level: {
-          // eslint-disable-next-line no-undef
-          [Op.in]: levels,
-        },
-      },
-      ...baseCourseQuery,
-    });
-  },
-
+  
   getCoursesAdmin() {
     return userCoursePayment.findAll({
       include: [
@@ -153,5 +113,7 @@ module.exports = {
   deleteCourse(uuid) {
     return course.destroy({ where: { uuid }, returnig: true });
   },
-
+  
+  buyCourseUserDetail() {
+  },
 };
