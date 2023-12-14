@@ -54,7 +54,7 @@ module.exports = {
       errorHandling.badRequest(error);
     }
   },
-
+  
   async sendMail(user, otpGenerated) {
     const client = createTransport({
       service: 'Gmail',
@@ -63,6 +63,7 @@ module.exports = {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
+    
     client.sendMail({
       from: 'Skill Hub <noreply@gmail.com>',
       to: user.email,
@@ -126,8 +127,16 @@ module.exports = {
     }
     const token = bearerToken.split('Bearer ')[1];
     const { id } = token && (await this.validateToken(token));
-    const user = id && authRepositories.findUserById(id);
+    const user = id && await authRepositories.findUserById(id);
 
+    const response = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      country: user.country,
+      city: user.city,
+    };
+    
     const response = {
       userUuid: user.uuid,
       name: user.name,
@@ -136,7 +145,7 @@ module.exports = {
       country: user.country,
       city: user.city,
     };
-
+    
     return response;
   },
 };

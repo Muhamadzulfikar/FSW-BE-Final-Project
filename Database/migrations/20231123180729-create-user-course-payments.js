@@ -27,7 +27,7 @@ module.exports = {
       },
       is_paid: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
         defaultValue: false,
       },
       expiredAt: {

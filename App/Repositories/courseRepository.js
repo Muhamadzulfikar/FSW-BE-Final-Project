@@ -4,6 +4,9 @@ const {
   courseChapter,
   chapterModule,
   courseCategory,
+  userCourse,
+  userCoursePayment,
+  user,
 } = require('../models');
 
 const baseCourseQuery = {
@@ -44,7 +47,7 @@ module.exports = {
         },
         {
           model: courseChapter,
-          attributes: ['duration', 'chapter'],
+          attributes: ['duration', 'id'],
           order: ['id', 'ASC'],
           include: [
             {
@@ -62,7 +65,7 @@ module.exports = {
   getCourseByIdAdmin(id) {
     return course.findByPk(id);
   },
-
+  
   getCoursesAdmin() {
     return userCoursePayment.findAll({
       include: [
@@ -110,8 +113,7 @@ module.exports = {
   deleteCourse(uuid) {
     return course.destroy({ where: { uuid }, returnig: true });
   },
-
+  
   buyCourseUserDetail() {
   },
-
 };

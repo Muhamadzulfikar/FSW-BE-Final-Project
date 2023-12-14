@@ -29,5 +29,6 @@ route.post(
   isSuperAdmin,
   userRegister,
 );
+route.get('/profile', authorize, user);
 
 module.exports = route;
