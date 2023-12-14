@@ -16,7 +16,7 @@ module.exports = {
         price: course.price,
         level: course.level,
         rating: course.rating,
-        isPremium: course.is_premium,
+        isPremium: course.isPremium,
         classCode: course.code,
         totalModule,
         totalMinute,
@@ -25,9 +25,9 @@ module.exports = {
   },
 
   // eslint-disable-next-line consistent-return
-  async getAllListCourses() {
+  async getAllListCourses(filter) {
     try {
-      const courses = await courseRepository.getAllCourses();
+      const courses = await courseRepository.getAllCourses(filter);
       return this.courseResponse(courses);
     } catch (error) {
       errorHandling.badRequest(error);
@@ -74,41 +74,12 @@ module.exports = {
         description,
         classTarget: courseTarget,
         telegram,
+        introVideo: course.intro_video,
         onboarding,
         courseModules,
       };
 
       return responseData;
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
-  async filterCourseByCategoryAndLevel(categoryIds, levels) {
-    try {
-      const courses = await courseRepository.CourseByCategoryAndLevel(categoryIds, levels);
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
-  async filterCourseByCategory(categoryIds) {
-    try {
-      const courses = await courseRepository.CourseByCategory(categoryIds);
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
-  async filterCourseByLevel(levels) {
-    try {
-      const courses = await courseRepository.CourseByLevel(levels);
-      return this.courseResponse(courses);
     } catch (error) {
       errorHandling.badRequest(error);
     }

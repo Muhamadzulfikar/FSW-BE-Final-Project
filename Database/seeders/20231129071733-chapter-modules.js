@@ -12,7 +12,7 @@ module.exports = {
         uuid: faker.string.uuid(),
         course_chapter_id: CourseChapter.id,
         title: faker.lorem.words(),
-        course_link: faker.internet.url(),
+        course_link: 'https://www.youtube.com/embed/ixOd42SEUF0?si=_v0vQX45ze4C6Ws5',
       });
     });
     await queryInterface.bulkInsert('chapter_modules', chapterModules, {});
