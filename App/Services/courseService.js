@@ -107,6 +107,16 @@ module.exports = {
   },
 
   // eslint-disable-next-line consistent-return
+  async getListCourseManagement() {
+    try {
+      const courses = await courseRepository.getCoursesAdminManagement();
+      return courses;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
+
+  // eslint-disable-next-line consistent-return
   async createCourseAdmin(dataCourse) {
     try {
       const bodyCourse = dataCourse;

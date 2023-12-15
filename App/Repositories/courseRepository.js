@@ -102,6 +102,25 @@ module.exports = {
         user_course_uuid: item.user_course_uuid,
       })));
   },
+
+  getCoursesAdminManagement() {
+    return course.findAll({
+      include: [
+        {
+          model: courseCategory,
+          attributes: ['name'],
+        },
+      ],
+    })
+      .then((data) => data.map((item) => ({
+        code: item.code,
+        course_category: item.courseCategory.name,
+        course_name: item.name,
+        isPremium: item.isPremium,
+        level: item.level,
+        price: item.price,
+      })));
+  },
   createCourse(dataCourse) {
     return course.create(dataCourse);
   },

@@ -9,7 +9,12 @@ module.exports = {
       const userCourse = await paymentCourseService.buyCourseUser(userUuid, courseUuid);
       const userCourseUuid = userCourse.uuid;
       const paymentCourse = await paymentCourseService.paymentCourseUser(userCourseUuid);
-      res.status(200).json(paymentCourse);
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: paymentCourse,
+      });
     } catch (error) {
       res.status(400).json({
         code: 400,
