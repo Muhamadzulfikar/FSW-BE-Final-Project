@@ -44,9 +44,18 @@ module.exports = {
       authRepositories.storeOtp(register.uuid, otp);
       this.sendMail(register, otp);
 
-      const token = this.createTokenRegister({ id: register.uuid });
+      const token = await this.createTokenRegister({ id: register.uuid });
 
-      return token;
+      const responseData = {
+        name: register.name,
+        email: register.email,
+        phone: register.phone,
+        country: register.country,
+        city: register.city,
+        token,
+      };
+
+      return responseData;
     } catch (error) {
       if (error instanceof ValidationError) {
         errorHandling.badRequest(error.errors[0].message);
@@ -54,7 +63,7 @@ module.exports = {
       errorHandling.badRequest(error);
     }
   },
-  
+
   async sendMail(user, otpGenerated) {
     const client = createTransport({
       service: 'Gmail',
@@ -63,7 +72,7 @@ module.exports = {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
-    
+
     client.sendMail({
       from: 'Skill Hub <noreply@gmail.com>',
       to: user.email,
@@ -130,22 +139,42 @@ module.exports = {
     const user = id && await authRepositories.findUserById(id);
 
     const response = {
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      country: user.country,
-      city: user.city,
-    };
-    
-    const response = {
       userUuid: user.uuid,
       name: user.name,
       email: user.email,
       phone: user.phone,
       country: user.country,
       city: user.city,
+      role: user.role,
     };
-    
+
+    return response;
+  },
+
+  async validateJwt(bearerToken) {
+    let response;
+    try {
+      if (!bearerToken) {
+        errorHandling.unauthorized('Token must be not empty');
+      }
+      const token = bearerToken.split('Bearer ')[1];
+      const { id, exp } = await this.validateToken(token);
+      await authRepositories.findUserById(id);
+
+      const d = new Date(exp * 1000);
+      const hours = d.getHours();
+      const minutes = d.getMinutes();
+      const seconds = d.getSeconds();
+
+      const expiredAt = `Please Validation OTP Before ${hours}:${minutes}:${seconds}`;
+
+      response = {
+        expiredAt,
+      };
+    } catch (error) {
+      errorHandling.unauthorized(error);
+    }
+
     return response;
   },
 };

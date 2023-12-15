@@ -13,7 +13,6 @@ route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses
 route.get('/course/:id', authorize, courseController.getCourseDetailById);
 
 route.get('/course-dashboard', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseAdmin);
-
 route.get('/course', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getManagementCourse);
 route.post('/course', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.createCourse);
 route.put('/course/:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
