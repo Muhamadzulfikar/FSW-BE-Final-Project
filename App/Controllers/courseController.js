@@ -72,6 +72,24 @@ module.exports = {
     }
   },
 
+  async getManagementCourse(req, res) {
+    try {
+      const courses = await courseService.getListCourseManagement();
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courses,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
   async createCourse(req, res) {
     try {
       const dataCourse = req.body;
