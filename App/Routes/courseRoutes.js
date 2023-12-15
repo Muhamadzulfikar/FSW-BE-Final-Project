@@ -20,5 +20,5 @@ route.put('/course/:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseC
 route.delete('/course:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
 
 route.post('/buy-course', authorize, paymentCourseController.buyCourse);
-route.put('/payment/:id', authorize, paymentCourseController.payment);
+route.put('/payment/:id', paymentCourseController.payment);
 module.exports = route;

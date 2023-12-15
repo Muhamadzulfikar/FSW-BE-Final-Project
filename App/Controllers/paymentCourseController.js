@@ -29,12 +29,11 @@ module.exports = {
     try {
       const userCourseUuid = req.params.id;
       const dataPayment = req.body;
-      const courses = await paymentCourseService.paymentCourseDone(userCourseUuid, dataPayment);
+      await paymentCourseService.paymentCourseDone(userCourseUuid, dataPayment);
       res.status(200).json({
         status: 'OK',
         code: 200,
         message: 'Success',
-        data: courses,
       });
     } catch (error) {
       res.status(error.code).json({
