@@ -5,8 +5,7 @@ module.exports = {
     try {
       const { course_uuid: courseUuid } = req.body;
       // console.log(courseUuid);
-      const { uuid: userUuid } = req.user;
-      // eslint-disable-next-line no-unused-vars
+      const { userUuid } = req.user;
       const userCourse = await paymentCourseService.buyCourseUser(userUuid, courseUuid);
       const userCourseUuid = userCourse.uuid;
       const paymentCourse = await paymentCourseService.paymentCourseUser(userCourseUuid);

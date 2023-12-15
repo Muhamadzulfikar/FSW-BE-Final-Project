@@ -1,3 +1,4 @@
+const { ValidationError, DatabaseError } = require('sequelize');
 const courseRepository = require('../Repositories/courseRepository');
 const errorHandling = require('../Error/errorHandling');
 
@@ -96,36 +97,6 @@ module.exports = {
   },
 
   // eslint-disable-next-line consistent-return
-  async filterCourseByCategoryAndLevel(categoryIds, levels) {
-    try {
-      const courses = await courseRepository.CourseByCategoryAndLevel(categoryIds, levels);
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
-  async filterCourseByCategory(categoryIds) {
-    try {
-      const courses = await courseRepository.CourseByCategory(categoryIds);
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
-  async filterCourseByLevel(levels) {
-    try {
-      const courses = await courseRepository.CourseByLevel(levels);
-      return this.courseResponse(courses);
-    } catch (error) {
-      errorHandling.badRequest(error);
-    }
-  },
-
-  // eslint-disable-next-line consistent-return
   async getListCourseAdmin() {
     try {
       const courses = await courseRepository.getCoursesAdmin();
@@ -148,10 +119,19 @@ module.exports = {
   // eslint-disable-next-line consistent-return
   async createCourseAdmin(dataCourse) {
     try {
-      const course = await courseRepository.createCourse(dataCourse);
+      const bodyCourse = dataCourse;
+      const courseName = dataCourse.name.split(' ');
+      bodyCourse.name = courseName.map((name) => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+      const course = await courseRepository.createCourse(bodyCourse);
       return course;
     } catch (error) {
-      return errorHandling.badRequest(error);
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error);
+      }
+      if (error instanceof ValidationError) {
+        errorHandling.badRequest(error.errors[0].message);
+      }
+      errorHandling.internalError(error);
     }
   },
 
