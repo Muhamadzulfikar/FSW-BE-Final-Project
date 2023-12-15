@@ -8,12 +8,14 @@ module.exports = (sequelize) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    static associate(models) {
+      this.belongsTo(models.user, {
+        foreignKey: 'user_uuid',
+      });
+    }
   }
   otpUser.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-      },
       uuid: {
         primaryKey: true,
         type: DataTypes.UUID,
@@ -24,7 +26,7 @@ module.exports = (sequelize) => {
           notEmpty: true,
         },
       },
-      otp: {
+      otp_code: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: true,
@@ -41,10 +43,14 @@ module.exports = (sequelize) => {
       sequelize,
       modelName: 'otpUser',
       tableName: 'otp_users',
+      timestamps: false,
     },
   );
 
-  otpUser.beforeCreate((OtpUser) => OtpUser.uuid === uuidv4());
+  otpUser.beforeCreate((otpUserInstance) => {
+    otpUserInstance.set('expiredAt', new Date(Date.now() + 24 * 60 * 60 * 1000));
+    otpUserInstance.set('uuid', uuidv4());
+  });
 
   return otpUser;
 };

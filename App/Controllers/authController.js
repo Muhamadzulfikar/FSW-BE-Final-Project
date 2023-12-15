@@ -20,13 +20,23 @@ module.exports = {
         req.body.role = 'admin';
       }
       const register = await authService.userRegister(req.body);
+      res.status(201).json(register);
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
+
+  async validateOtp(req, res) {
+    try {
+      const { otp } = req.body;
+      const validate = await authService.validateOtp(otp, req.user);
       res.status(201).json({
         status: 'Ok',
-        message: 'Successfully register',
-        data: register,
+        message: validate,
+        data: {},
       });
     } catch (error) {
-      res.status(422).json(error);
+      responseError(res, error);
     }
   },
 };
