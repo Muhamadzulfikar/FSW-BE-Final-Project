@@ -30,6 +30,10 @@
     {
       "name": "Payment",
       "description": "Everything about payment"
+    },
+    {
+      "name": "Auth",
+      "description": "Everything about payment"
     }
   ],
   "paths": {
@@ -481,8 +485,19 @@
       "put": {
         "tags": ["Payment"],
         "summary": "Make Payment",
-        "description": "This end point will post data to UserCoursePayment",
+        "description": "This endpoint will update data in UserCoursePayment",
         "operationId": "payment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of userClass to fetch",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/paramsID"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Data of the userCoursePayment to be updated",
           "required": true,
@@ -500,27 +515,53 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "Created"
-                    },
-                    "code": {
-                      "type": "number",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Success"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/resBuyCourse"
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/resPayment"
+                },
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "description": "This endpoint will login a user",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Data of the userCoursePayment to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resLogin"
                 },
                 "example": {
                   "status": "Created",
@@ -528,11 +569,65 @@
                   "message": "Success",
                   "data": [
                     {
-                      "expiredAt": "2023-12-13 14:54:26.057+07",
-                      "uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
-                      "user_course_uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
-                      "payment_method": "credit card",
-                      "is_paid": false
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231238",
+                      "country": "Indonesia",
+                      "city": "Jember",
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register",
+        "description": "This endpoint will register a user",
+        "operationId": "register",
+        "requestBody": {
+          "description": "post a data to user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231238",
+                      "country": null,
+                      "city": null,
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
                     }
                   ]
                 }
@@ -574,6 +669,35 @@
           "message": {
             "type": "string",
             "example": "Ping succesfully"
+          }
+        }
+      },
+      "resLogin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fahrel"
+          },
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081231238"
+          },
+          "country": {
+            "type": "string",
+            "example": "Indonesia"
+          },
+          "city": {
+            "type": "string",
+            "example": "Jember"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
           }
         }
       },
@@ -1061,10 +1185,40 @@
           "is_paid": {
             "type": "boolean",
             "example": true
-          },
-          "expiredAt": {
+          }
+        }
+      },
+      "reqRegister": {
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string",
-            "example": "2023-12-13 14:54:26.057+07"
+            "example": "Fahrel"
+          },
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "fahrel123"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081231237"
+          }
+        }
+      },
+      "reqLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "fahrel123"
           }
         }
       },
