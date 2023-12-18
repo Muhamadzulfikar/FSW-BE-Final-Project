@@ -1,7 +1,15 @@
 const express = require('express');
 
 const route = express.Router();
-const { userLogin, userRegister } = require('../Controllers/authController');
+const { user } = require('../Controllers/userController');
+
+const {
+  userLogin,
+  userRegister,
+  validateOtp,
+  validateJwt,
+} = require('../Controllers/authController');
+
 const {
   validateBodyLogin,
   isUserHasRegister,
@@ -18,6 +26,10 @@ route.post(
   isUserHasNotRegister,
   userRegister,
 );
+
+route.post('/validate-register', authorize, validateOtp);
+route.get('/validate-jwt', validateJwt);
+
 route.post(
   '/register/admin',
   isUserHasNotRegister,
@@ -25,5 +37,6 @@ route.post(
   isSuperAdmin,
   userRegister,
 );
+route.get('/profile', authorize, user);
 
 module.exports = route;

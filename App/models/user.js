@@ -17,6 +17,10 @@ module.exports = (sequelize) => {
       this.hasMany(models.userCourse, {
         foreignKey: 'user_uuid',
       });
+
+      this.hasMany(models.otpUser, {
+        foreignKey: 'user_uuid',
+      });
     }
   }
   user.init(
@@ -70,11 +74,18 @@ module.exports = (sequelize) => {
             msg: 'Phone number must be not empty',
           },
         },
+        unique: true,
+      },
+      is_verify: {
+        type: DataTypes.BOOLEAN,
+        validate: {
+          notEmpty: true,
+        },
+        defaultValue: false,
       },
       country: {
         type: DataTypes.STRING,
         validate: {
-          notEmpty: true,
           min: 5,
           max: 255,
         },
@@ -82,7 +93,6 @@ module.exports = (sequelize) => {
       city: {
         type: DataTypes.STRING,
         validate: {
-          notEmpty: true,
           min: 5,
           max: 255,
         },
@@ -104,7 +114,7 @@ module.exports = (sequelize) => {
     },
   );
 
-  user.beforeCreate((car) => car.uuid === uuidv4());
+  user.beforeCreate((User) => User.uuid === uuidv4());
 
   return user;
 };

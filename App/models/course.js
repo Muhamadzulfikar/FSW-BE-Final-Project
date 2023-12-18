@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class course extends Model {
@@ -43,68 +44,137 @@ module.exports = (sequelize) => {
     },
     course_category_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: {
+          msg: 'course_category_id must be an integer',
+        },
+        min: {
+          args: [1],
+          msg: 'course_category_id must be greater than 0',
+        },
       },
     },
     image: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        min: 5,
-        max: 255,
-        notEmpty: true,
+        notEmpty: {
+          msg: 'image must not be empty',
+        },
+        isUrl: {
+          msg: 'image must be a valid url',
+        },
       },
     },
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+        notEmpty: {
+          msg: 'name must not be empty',
+        },
+        len: {
+          args: [5, 255],
+          msg: 'name must be between 5 and 255 characters',
+        },
       },
     },
     author: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+        notEmpty: {
+          msg: 'author must not be empty',
+        },
+        len: {
+          args: [5, 255],
+          msg: 'author must be between 5 and 255 characters',
+        },
       },
     },
     price: {
       type: DataTypes.DOUBLE,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        min: 1,
+        isDecimal: {
+          msg: 'price must be a decimal',
+        },
+        notEmpty: {
+          msg: 'price must not be empty',
+        },
+        min: {
+          args: [20000],
+          msg: 'price must be greater than 20000',
+        },
       },
     },
     level: {
       type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        isIn: [['advanced', 'beginner', 'intermediate']],
+        notEmpty: {
+          msg: 'level must not be empty',
+        },
+        isIn: {
+          args: [['beginner', 'intermediate', 'advanced']],
+          msg: 'level must be beginner, intermediate, or advanced',
+        },
       },
     },
     rating: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+        notEmpty: {
+          msg: 'rating must not be empty',
+        },
+        isInt: {
+          msg: 'rating must be an integer',
+        },
+        min: {
+          args: [1],
+          msg: 'rating must be greater than 0',
+        },
+        max: {
+          args: [5],
+          msg: 'rating must be less than 6',
+        },
       },
     },
     isPremium: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       validate: {
-        notEmpty: true,
+        notEmpty: {
+          msg: 'isPremium must not be empty',
+        },
       },
     },
     code: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        notEmpty: true,
-        min: 5,
-        max: 255,
+        notEmpty: {
+          msg: 'code must not be empty',
+        },
+        len: {
+          args: [5, 255],
+          msg: 'code must be between 5 and 255 characters',
+        },
+      },
+    },
+    intro_video: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'intro_video must not be empty',
+        },
+        isUrl: {
+          msg: 'intro_video must be a valid url',
+        },
       },
     },
   }, {
@@ -112,5 +182,7 @@ module.exports = (sequelize) => {
     modelName: 'course',
     tableName: 'courses',
   });
+  // eslint-disable-next-line no-return-assign, no-param-reassign
+  course.beforeCreate((courseUUID) => (courseUUID.uuid = uuidv4()));
   return course;
 };

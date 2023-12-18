@@ -1,3 +1,4 @@
+const { ValidationError, DatabaseError } = require('sequelize');
 const courseRepository = require('../Repositories/courseRepository');
 const errorHandling = require('../Error/errorHandling');
 
@@ -16,7 +17,7 @@ module.exports = {
         price: course.price,
         level: course.level,
         rating: course.rating,
-        isPremium: course.is_premium,
+        isPremium: course.isPremium,
         classCode: course.code,
         totalModule,
         totalMinute,
@@ -24,17 +25,15 @@ module.exports = {
     });
   },
 
-  // eslint-disable-next-line consistent-return
-  async getAllListCourses() {
+  async getAllListCourses(filter) {
     try {
-      const courses = await courseRepository.getAllCourses();
+      const courses = await courseRepository.getAllCourses(filter);
       return this.courseResponse(courses);
     } catch (error) {
       errorHandling.badRequest(error);
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async getCourseDetailById(id) {
     try {
       const course = await courseRepository.getCourseById(id);
@@ -50,7 +49,7 @@ module.exports = {
       } = course.courseDetail.dataValues;
 
       const courseModules = course.courseChapters.map((courseChapter) => ({
-        chapter: courseChapter.chapter,
+        chapter: courseChapter.id,
         estimation: courseChapter.duration,
         module: courseChapter.chapterModules.map((courseModule) => ({
           title: courseModule.title,
@@ -74,6 +73,7 @@ module.exports = {
         description,
         classTarget: courseTarget,
         telegram,
+        introVideo: course.intro_video,
         onboarding,
         courseModules,
       };
@@ -84,33 +84,67 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
-  async filterCourseByCategoryAndLevel(categoryIds, levels) {
+  async getCourseById(id) {
     try {
-      const courses = await courseRepository.CourseByCategoryAndLevel(categoryIds, levels);
-      return this.courseResponse(courses);
+      const courses = await courseRepository.getCourseByIdAdmin(id);
+      return courses;
     } catch (error) {
       errorHandling.badRequest(error);
     }
   },
 
-  // eslint-disable-next-line consistent-return
-  async filterCourseByCategory(categoryIds) {
+  async getListCourseAdmin() {
     try {
-      const courses = await courseRepository.CourseByCategory(categoryIds);
-      return this.courseResponse(courses);
+      const courses = await courseRepository.getCoursesAdmin();
+      return courses;
     } catch (error) {
       errorHandling.badRequest(error);
     }
   },
 
-  // eslint-disable-next-line consistent-return
-  async filterCourseByLevel(levels) {
+  async getListCourseManagement() {
     try {
-      const courses = await courseRepository.CourseByLevel(levels);
-      return this.courseResponse(courses);
+      const courses = await courseRepository.getCoursesAdminManagement();
+      return courses;
     } catch (error) {
       errorHandling.badRequest(error);
     }
   },
+
+  async createCourseAdmin(dataCourse) {
+    try {
+      const bodyCourse = dataCourse;
+      const courseName = dataCourse.name.split(' ');
+      bodyCourse.name = courseName.map((name) => name.charAt(0).toUpperCase() + name.slice(1)).join(' ');
+      const course = await courseRepository.createCourse(bodyCourse);
+      return course;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error);
+      }
+      if (error instanceof ValidationError) {
+        errorHandling.badRequest(error.errors[0].message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async updateCourseAdmin(uuid, dataCourse) {
+    try {
+      const course = await courseRepository.updateCourse(uuid, dataCourse);
+      return course;
+    } catch (error) {
+      return errorHandling.badRequest(error);
+    }
+  },
+
+  async deleteCourseAdmin(uuid) {
+    try {
+      const course = await courseRepository.deleteCourse(uuid);
+      return course;
+    } catch (error) {
+      return errorHandling.badRequest(error);
+    }
+  },
+
 };

@@ -9,16 +9,16 @@ module.exports = {
         name, email, password, phone,
       } = req.body;
       if (!name) {
-        errorHandling.unauthorized('Name must not be empty');
+        errorHandling.badRequest('Name must not be empty');
       }
       if (!email) {
-        errorHandling.unauthorized('Email must not be empty');
+        errorHandling.badRequest('Email must not be empty');
       }
       if (!password) {
-        errorHandling.unauthorized('Password must not be empty');
+        errorHandling.badRequest('Password must not be empty');
       }
       if (!phone) {
-        errorHandling.unauthorized('Phone number must not be empty');
+        errorHandling.badRequest('Phone number must not be empty');
       }
       next();
     } catch (error) {
@@ -30,7 +30,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       if (!email || email === '') {
-        errorHandling.unauthorized('Email must not be empty');
+        errorHandling.unauthorized('Email or phone must not be empty');
       }
       if (!password || password === '') {
         errorHandling.unauthorized('Password must not be empty');
@@ -43,9 +43,9 @@ module.exports = {
 
   async isUserHasNotRegister(req, res, next) {
     try {
-      const user = await authService.findUser(req.body);
+      const user = await authService.findUser(req.body.email);
       if (user) {
-        errorHandling.unauthorized('User Has Already Exists');
+        errorHandling.unauthorized('User Already Exists');
       }
       next();
     } catch (error) {
@@ -55,7 +55,7 @@ module.exports = {
 
   async isUserHasRegister(req, res, next) {
     try {
-      const user = await authService.findUser(req.body);
+      const user = await authService.findUser(req.body.email);
       if (!user) {
         errorHandling.unauthorized('Cannot Find User');
       }
@@ -102,7 +102,7 @@ module.exports = {
   async isSuperAdminAndAdmin(req, res, next) {
     try {
       const { user } = req;
-      if (user.role !== 'super admin' || user.role !== 'admin') {
+      if (user.role !== 'super admin' && user.role !== 'admin') {
         errorHandling.forbidden(`${user.name} Is Not Super Admin`);
       }
       next();

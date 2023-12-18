@@ -26,6 +26,14 @@
     {
       "name": "Class",
       "description": "Everything about class management"
+    },
+    {
+      "name": "Payment",
+      "description": "Everything about payment"
+    },
+    {
+      "name": "Auth",
+      "description": "Everything about payment"
     }
   ],
   "paths": {
@@ -188,6 +196,456 @@
           }
         }
       }
+    },
+    "/v1/course-dashboard": {
+      "get": {
+        "tags": [
+          "Class"
+        ],
+        "summary": "Get Dashboard Admin",
+        "description": "This end point will serve data of user's classes",
+        "operationId": "getAdminCourses",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userCoursePayments"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/course": {
+      "get": {
+        "tags": ["Class"],
+        "summary": "Get Management Class Admin",
+        "description": "This end point will serve data of classes",
+        "operationId": "getCourse",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adminManagementClass"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Class"],
+        "summary": "Create Class",
+        "description": "This end point will create data of class",
+        "operationId": "createAdminCourses",
+        "requestBody": {
+          "description": "Data of the course to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqClass"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reqClass"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/{id}": {
+      "put": {
+        "tags": ["Class"],
+        "summary": "Update Class",
+        "description": "This end point will update data of class",
+        "operationId": "updateAdminCourses",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the course to be updated",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Data of the course to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqClass"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Class"],
+        "summary": "Delete Class",
+        "description": "This end point will delete data of class",
+        "operationId": "deleteAdminCourses",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the course to be updated",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Data of the course to be deleted",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqClass"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/buy-course": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Make Payment",
+        "description": "This end point will post data to UserCourse",
+        "operationId": "buyCourse",
+        "requestBody": {
+          "description": "Data of the course to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqBuyCourse"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Created"
+                    },
+                    "code": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/resBuyCourse"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "expiredAt": "2023-12-13 14:54:26.057+07",
+                      "uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
+                      "user_course_uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
+                      "payment_method": "credit card",
+                      "is_paid": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/payment": {
+      "put": {
+        "tags": ["Payment"],
+        "summary": "Make Payment",
+        "description": "This endpoint will update data in UserCoursePayment",
+        "operationId": "payment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of userClass to fetch",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/paramsID"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Data of the userCoursePayment to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqPayment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resPayment"
+                },
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "description": "This endpoint will login a user",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Data of the userCoursePayment to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resLogin"
+                },
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231238",
+                      "country": "Indonesia",
+                      "city": "Jember",
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register",
+        "description": "This endpoint will register a user",
+        "operationId": "register",
+        "requestBody": {
+          "description": "post a data to user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231238",
+                      "country": null,
+                      "city": null,
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -211,6 +669,35 @@
           "message": {
             "type": "string",
             "example": "Ping succesfully"
+          }
+        }
+      },
+      "resLogin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fahrel"
+          },
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081231238"
+          },
+          "country": {
+            "type": "string",
+            "example": "Indonesia"
+          },
+          "city": {
+            "type": "string",
+            "example": "Jember"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
           }
         }
       },
@@ -268,6 +755,49 @@
           }
         }
       },
+      "user": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "1",
+            "example": "1"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+          },
+          "name":{
+            "type":"string",
+            "example": "John Doe"
+          },
+          "email":{
+            "type":"string",
+            "example":"JohnDoe@gmail.com"
+          },
+          "password":{
+            "type":"string",
+            "example":"$2b$10$6K5cZJrUfI2w6u1Qq2nQ6eQ3DZ5Y6rZQ8Qp9XbXv5wZaLqZ7kZcX."
+          },
+          "phone":{
+            "type":"string",
+            "example":"0812349271"
+          },
+          "country":{
+            "type":"string",
+            "example":"Indonesia"
+          },
+          "city":{
+            "type":"string",
+            "example":"Jakarta"
+          },
+          "role":{
+            "type":"string",
+            "example":"admin"
+          }
+        }
+      },
       "classModule": {
         "type": "object",
         "properties": {
@@ -284,6 +814,37 @@
             "items": {
               "$ref": "#/components/schemas/modul"
             }
+          }
+        }
+      },
+      "userClass": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "1",
+            "example": "1"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+          },
+          "user_uuid": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/user"
+            }
+          },
+          "class":{
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/class"
+            }
+          },
+          "is_onboarding":{
+            "type":"boolean",
+            "example":true
           }
         }
       },
@@ -321,6 +882,36 @@
           }
         }
       },
+      "userCoursePayments": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "1",
+            "example": "1"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+          },
+          "user_class_uuid": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/userClass"
+            }
+          },
+          "payment_method": {
+            "type": "string",
+            "example": "credit card"
+          },
+          "is_paid": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+
       "class": {
         "type": "object",
         "properties": {
@@ -331,7 +922,7 @@
           },
           "name": {
             "type": "string",
-            "example": "UI/UX Design"
+            "example": "Intro to Basic of User Interaction Design"
           },
           "image": {
             "type": "string",
@@ -375,7 +966,117 @@
           }
         }
       },
+      "classDetailNew": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0033d087-4a4c-4828-a987-e6e0c72d37e9"
+          },
+          "name": {
+            "type": "string",
+            "example": "Intro to Basic of User Interaction Design"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://www.image.com"
+          },
+          "author": {
+            "type": "string",
+            "example": "nameexample"
+          },
+          "price": {
+            "type": "number",
+            "example": 280000
+          },
+          "level": {
+            "type": "string",
+            "example": "Advanced"
+          },
+          "rating": {
+            "type": "number",
+            "example": 4.9
+          },
+          "totalModule": {
+            "type": "number",
+            "example": 5
+          },
+          "totalMinute": {
+            "type": "number",
+            "example": 60
+          },
+          "isPremium": {
+            "type": "boolean",
+            "example": true
+          },
+          "classCode": {
+            "type": "string",
+            "example": "UIUX0123"
+          },
+          "category": {
+            "type": "string",
+            "example": "UI/UX Design"
+          }
+        }
+      },
+      "adminManagementClass": {
+        "type": "object",
+        "properties": {
+          "classCode": {
+            "type": "string",
+            "example": "UIUX0123"
+          },
+          "category": {
+            "type": "string",
+            "example": "UI/UX Design"
+          },
+          "name": {
+            "type": "string",
+            "example": "Intro to Basic of User Interaction Design"
+          },
+          "isPremium": {
+            "type": "boolean",
+            "example": true
+          },
+          "level": {
+            "type": "string",
+            "example": "Advanced"
+          },
+          "price": {
+            "type": "number",
+            "example": 280000
+          }
+        }
+      },
       "classDetail": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/class"
+              },
+              {
+                "$ref": "#/components/schemas/classID"
+              }
+            ]
+          }
+        }
+      },
+      "adminClass": {
         "type": "object",
         "properties": {
           "status": {
@@ -422,6 +1123,140 @@
             "items": {
               "$ref": "#/components/schemas/class"
             }
+          }
+        }
+      },
+      "reqClass": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Intro to Basic of User Interaction Design"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://www.image.com"
+          },
+          "author": {
+            "type": "string",
+            "example": "nameexample"
+          },
+          "price": {
+            "type": "number",
+            "example": 280000
+          },
+          "level": {
+            "type": "string",
+            "example": "Advanced"
+          },
+          "rating": {
+            "type": "number",
+            "example": 4.9
+          },
+          "totalModule": {
+            "type": "number",
+            "example": 5
+          },
+          "totalMinute": {
+            "type": "number",
+            "example": 60
+          },
+          "isPremium": {
+            "type": "boolean",
+            "example": true
+          },
+          "classCode": {
+            "type": "string",
+            "example": "UIUX0123"
+          },
+          "category": {
+            "type": "string",
+            "example": "UI/UX Design"
+          }
+        }
+      },
+      "reqPayment": {
+        "type": "object",
+        "properties": {
+          "payment_method": {
+            "type": "string",
+            "example": "credit card"
+          },
+          "is_paid": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "reqRegister": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Fahrel"
+          },
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "fahrel123"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081231237"
+          }
+        }
+      },
+      "reqLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "fahrel@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "fahrel123"
+          }
+        }
+      },
+      "reqBuyCourse": {
+        "type": "object",
+        "properties": {
+          "course_uuid": {
+            "type": "string",
+            "example": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb"
+          },
+          "is_onboarding": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "resBuyCourse": {
+        "type": "object",
+        "properties": {
+          "expiredAt": {
+            "type": "string",
+            "example": "2023-12-13 14:54:26.057+07"
+          },
+          "uuid": {
+            "type": "string",
+            "example": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb"
+          },
+          "user_course_uuid": {
+            "type": "string",
+            "example": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb"
+          },
+          "payment_method": {
+            "type": "string",
+            "example": "credit card"
+          },
+          "is_paid": {
+            "type": "boolean",
+            "example": false
           }
         }
       },

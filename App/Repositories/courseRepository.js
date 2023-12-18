@@ -1,10 +1,12 @@
-const { Op } = require('sequelize');
 const {
   course,
   courseDetail,
   courseChapter,
   chapterModule,
   courseCategory,
+  userCourse,
+  userCoursePayment,
+  user,
 } = require('../models');
 
 const baseCourseQuery = {
@@ -25,8 +27,11 @@ const baseCourseQuery = {
 };
 
 module.exports = {
-  getAllCourses() {
-    return course.findAll(baseCourseQuery);
+  getAllCourses(filter) {
+    return course.findAll({
+      where: filter,
+      ...baseCourseQuery,
+    });
   },
 
   getCourseById(id) {
@@ -42,7 +47,7 @@ module.exports = {
         },
         {
           model: courseChapter,
-          attributes: ['duration', 'chapter'],
+          attributes: ['duration', 'id'],
           order: ['id', 'ASC'],
           include: [
             {
@@ -57,39 +62,75 @@ module.exports = {
     });
   },
 
-  CourseByCategory(categoryIds) {
-    return course.findAll({
-      where: {
-        course_category_id: {
-          [Op.in]: categoryIds,
-        },
-      },
-      ...baseCourseQuery,
-    });
+  getCourseByIdAdmin(id) {
+    return course.findByPk(id);
   },
 
-  CourseByLevel(levels) {
-    return course.findAll({
-      where: {
-        level: {
-          [Op.in]: levels,
+  getCoursesAdmin() {
+    return userCoursePayment.findAll({
+      include: [
+        {
+          model: userCourse,
+          attributes: ['user_uuid'],
+          include: [
+            {
+              model: user,
+              attributes: ['name', 'uuid'],
+            },
+            {
+              model: course,
+              attributes: ['course_category_id', 'name'],
+              include: [
+                {
+                  model: courseCategory,
+                  attributes: ['name'],
+                },
+              ],
+            },
+          ],
         },
-      },
-      ...baseCourseQuery,
-    });
+      ],
+    })
+      .then((data) => data.map((item) => ({
+        user: item.userCourse.user.name,
+        courseCategory: item.userCourse.course.courseCategory.name,
+        courseName: item.userCourse.course.name,
+        is_paid: item.is_paid,
+        paymentMethod: item.payment_method,
+        buyAt: item.createdAt,
+      })));
   },
 
-  CourseByCategoryAndLevel(categoryIds, levels) {
+  getCoursesAdminManagement() {
     return course.findAll({
-      where: {
-        course_category_id: {
-          [Op.in]: categoryIds,
+      include: [
+        {
+          model: courseCategory,
+          attributes: ['name'],
         },
-        level: {
-          [Op.in]: levels,
-        },
-      },
-      ...baseCourseQuery,
-    });
+      ],
+    })
+      .then((data) => data.map((item) => ({
+        code: item.code,
+        course_category: item.courseCategory.name,
+        course_name: item.name,
+        isPremium: item.isPremium,
+        level: item.level,
+        price: item.price,
+      })));
+  },
+  createCourse(dataCourse) {
+    return course.create(dataCourse);
+  },
+
+  updateCourse(uuid, dataCourse) {
+    return course.update(dataCourse, { where: { uuid }, returnig: true });
+  },
+
+  deleteCourse(uuid) {
+    return course.destroy({ where: { uuid }, returnig: true });
+  },
+
+  buyCourseUserDetail() {
   },
 };

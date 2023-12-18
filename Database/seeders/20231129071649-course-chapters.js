@@ -10,7 +10,7 @@ module.exports = {
     courses.forEach((Course) => {
       data.push({
         course_uuid: Course.uuid,
-        chapter: faker.number.int({ min: 1, max: 10 }),
+        chapter: `Chapter ${faker.number.int({ min: 1, max: 10 })}`,
         duration: faker.number.int({ min: 10, max: 60 }),
       });
     });
