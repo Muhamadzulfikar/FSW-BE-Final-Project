@@ -1,25 +1,22 @@
 const paymentCourseService = require('../Services/paymentCourseService');
 
 module.exports = {
-  async buyCourse(req, res) {
+  async enrollCourse(req, res) {
     try {
       const { course_uuid: courseUuid } = req.body;
-      // console.log(courseUuid);
       const { userUuid } = req.user;
-      const userCourse = await paymentCourseService.buyCourseUser(userUuid, courseUuid);
-      const userCourseUuid = userCourse.uuid;
-      const paymentCourse = await paymentCourseService.paymentCourseUser(userCourseUuid);
+      const course = await paymentCourseService.enrollCourse(userUuid, courseUuid);
       res.status(200).json({
         status: 'OK',
         code: 200,
         message: 'Success',
-        data: paymentCourse,
+        data: course,
       });
     } catch (error) {
-      res.status(400).json({
-        code: 400,
-        status: 'Bad Request',
-        message: error.message || 'Bad Request',
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
       });
     }
   },
