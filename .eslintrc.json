@@ -14,6 +14,7 @@
     "no-path-concat": "off",
     "global-require": "off",
     "prefer-template": "off",
-    "strict": "off"
+    "strict": "off",
+    "consistent-return": "off"
   }
 }

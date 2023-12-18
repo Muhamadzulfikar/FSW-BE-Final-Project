@@ -30,7 +30,6 @@ module.exports = {
     return responseData;
   },
 
-  // eslint-disable-next-line consistent-return
   async userRegister(body) {
     try {
       const { password } = body;
@@ -44,9 +43,18 @@ module.exports = {
       authRepositories.storeOtp(register.uuid, otp);
       this.sendMail(register, otp);
 
-      const token = this.createTokenRegister({ id: register.uuid });
+      const token = await this.createTokenRegister({ id: register.uuid });
 
-      return token;
+      const responseData = {
+        name: register.name,
+        email: register.email,
+        phone: register.phone,
+        country: register.country,
+        city: register.city,
+        token,
+      };
+
+      return responseData;
     } catch (error) {
       if (error instanceof ValidationError) {
         errorHandling.badRequest(error.errors[0].message);
@@ -63,6 +71,7 @@ module.exports = {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
+
     client.sendMail({
       from: 'Skill Hub <noreply@gmail.com>',
       to: user.email,
@@ -72,17 +81,21 @@ module.exports = {
   },
 
   async validateOtp(otp, user) {
-    const { userUuid } = user;
-    const validate = await authRepositories.validateOtp(otp, userUuid);
+    try {
+      if (!otp) errorHandling.badRequest('OTP must not be empty');
+      const { userUuid } = user;
+      const validate = await authRepositories.validateOtp(otp, userUuid);
 
-    if (!validate) {
-      errorHandling.badRequest('OTP is not valid');
+      if (!validate) {
+        errorHandling.badRequest('OTP is not valid');
+      }
+
+      return `${user.name} Successfully register`;
+    } catch (error) {
+      errorHandling.badRequest(error);
     }
-
-    return `${user.name} Successfully register`;
   },
 
-  // eslint-disable-next-line consistent-return
   findUser(email) {
     try {
       if (!email.includes('@')) {
@@ -126,7 +139,7 @@ module.exports = {
     }
     const token = bearerToken.split('Bearer ')[1];
     const { id } = token && (await this.validateToken(token));
-    const user = id && authRepositories.findUserById(id);
+    const user = id && await authRepositories.findUserById(id);
 
     const response = {
       userUuid: user.uuid,
@@ -135,7 +148,35 @@ module.exports = {
       phone: user.phone,
       country: user.country,
       city: user.city,
+      role: user.role,
     };
+
+    return response;
+  },
+
+  async validateJwt(bearerToken) {
+    let response;
+    try {
+      if (!bearerToken) {
+        errorHandling.unauthorized('Token must be not empty');
+      }
+      const token = bearerToken.split('Bearer ')[1];
+      const { id, exp } = await this.validateToken(token);
+      await authRepositories.findUserById(id);
+
+      const d = new Date(exp * 1000);
+      const hours = d.getHours();
+      const minutes = d.getMinutes();
+      const seconds = d.getSeconds();
+
+      const expiredAt = `Please Validation OTP Before ${hours}:${minutes}:${seconds}`;
+
+      response = {
+        expiredAt,
+      };
+    } catch (error) {
+      errorHandling.unauthorized(error);
+    }
 
     return response;
   },
