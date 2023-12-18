@@ -406,7 +406,7 @@
         }
       }
     },
-    "/v1/buy-course": {
+    "/v1/payment": {
       "post": {
         "tags": ["Payment"],
         "summary": "Make Payment",
@@ -481,7 +481,7 @@
         }
       }
     },
-    "/v1/payment": {
+    "/v1/payment/{id}": {
       "put": {
         "tags": ["Payment"],
         "summary": "Make Payment",
