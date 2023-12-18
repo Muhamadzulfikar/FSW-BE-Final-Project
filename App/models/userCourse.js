@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class userCourse extends Model {
@@ -15,6 +16,10 @@ module.exports = (sequelize) => {
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
       });
+
+      this.hasMany(models.userCoursePayment, {
+        foreignKey: 'user_course_uuid',
+      });
     }
   }
   userCourse.init(
@@ -25,14 +30,20 @@ module.exports = (sequelize) => {
       },
       user_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
-          notEmpty: true,
+          notEmpty: {
+            msg: 'User uuid cannot be empty',
+          },
         },
       },
       course_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
-          notEmpty: true,
+          notEmpty: {
+            msg: 'Course uuid cannot be empty',
+          },
         },
       },
       is_onboarding: {
@@ -49,5 +60,7 @@ module.exports = (sequelize) => {
       timestamps: true,
     },
   );
+  // eslint-disable-next-line no-return-assign, no-param-reassign, no-undef
+  userCourse.beforeCreate((userCourseUUID) => (userCourseUUID.uuid = uuidv4()));
   return userCourse;
 };
