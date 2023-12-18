@@ -12,12 +12,12 @@ route.get('/course-categories', courseCategoryController.getAllCourseCategory);
 route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', authorize, courseController.getCourseDetailById);
 
-route.get('/course-dashboard', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseAdmin);
-route.get('/course', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getManagementCourse);
-route.post('/course', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.createCourse);
-route.put('/course/:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
-route.delete('/course:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
+route.get('/admin/payment-status', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseAdmin);
+route.get('/admin/courses', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getManagementCourse);
+route.post('/admin/courses', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.createCourse);
+route.put('/admin/course/:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
+route.delete('/admin/course:id', authorize, authMiddleware.isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
 
-route.post('/buy-course', authorize, paymentCourseController.buyCourse);
-route.put('/payment/:id', paymentCourseController.payment);
+route.post('/courses/enrollment', authorize, paymentCourseController.enrollCourse);
+route.put('/courses/payment/:id', paymentCourseController.payment);
 module.exports = route;
