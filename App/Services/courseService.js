@@ -25,7 +25,6 @@ module.exports = {
     });
   },
 
-  // eslint-disable-next-line consistent-return
   async getAllListCourses(filter) {
     try {
       const courses = await courseRepository.getAllCourses(filter);
@@ -35,7 +34,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async getCourseDetailById(id) {
     try {
       const course = await courseRepository.getCourseById(id);
@@ -86,7 +84,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async getCourseById(id) {
     try {
       const courses = await courseRepository.getCourseByIdAdmin(id);
@@ -96,7 +93,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async getListCourseAdmin() {
     try {
       const courses = await courseRepository.getCoursesAdmin();
@@ -106,7 +102,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async getListCourseManagement() {
     try {
       const courses = await courseRepository.getCoursesAdminManagement();
@@ -116,7 +111,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async createCourseAdmin(dataCourse) {
     try {
       const bodyCourse = dataCourse;
@@ -135,7 +129,6 @@ module.exports = {
     }
   },
 
-  // eslint-disable-next-line consistent-return
   async updateCourseAdmin(uuid, dataCourse) {
     try {
       const course = await courseRepository.updateCourse(uuid, dataCourse);

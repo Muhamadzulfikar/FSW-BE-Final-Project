@@ -30,7 +30,6 @@ module.exports = {
     return responseData;
   },
 
-  // eslint-disable-next-line consistent-return
   async userRegister(body) {
     try {
       const { password } = body;
@@ -82,17 +81,21 @@ module.exports = {
   },
 
   async validateOtp(otp, user) {
-    const { userUuid } = user;
-    const validate = await authRepositories.validateOtp(otp, userUuid);
+    try {
+      if (!otp) errorHandling.badRequest('OTP must not be empty');
+      const { userUuid } = user;
+      const validate = await authRepositories.validateOtp(otp, userUuid);
 
-    if (!validate) {
-      errorHandling.badRequest('OTP is not valid');
+      if (!validate) {
+        errorHandling.badRequest('OTP is not valid');
+      }
+
+      return `${user.name} Successfully register`;
+    } catch (error) {
+      errorHandling.badRequest(error);
     }
-
-    return `${user.name} Successfully register`;
   },
 
-  // eslint-disable-next-line consistent-return
   findUser(email) {
     try {
       if (!email.includes('@')) {
