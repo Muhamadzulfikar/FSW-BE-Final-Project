@@ -7,7 +7,12 @@ module.exports = {
     try {
       const { body, user } = req;
       const login = await authService.userLogin(body.password, user);
-      res.status(200).json(login);
+      res.status(200).json({
+        status: 'Ok',
+        code: 200,
+        message: 'Successfully Login',
+        data: login,
+      });
     } catch (error) {
       responseError(res, error);
     }
@@ -22,6 +27,7 @@ module.exports = {
       const register = await authService.userRegister(req.body);
       res.status(201).json({
         status: 'Ok',
+        code: 201,
         message: 'Successfully Register, please check your email to validate your account',
         data: register,
       });
@@ -49,6 +55,7 @@ module.exports = {
       const user = await authService.validateJwt(req.headers.authorization);
       res.status(200).json({
         status: 'Ok',
+        code: 200,
         message: 'Jwt Valid',
         data: user,
       });
