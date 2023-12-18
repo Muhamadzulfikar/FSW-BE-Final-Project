@@ -16,6 +16,10 @@ module.exports = (sequelize) => {
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
       });
+
+      this.hasMany(models.userCoursePayment, {
+        foreignKey: 'user_course_uuid',
+      });
     }
   }
   userCourse.init(
@@ -26,14 +30,20 @@ module.exports = (sequelize) => {
       },
       user_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
-          notEmpty: true,
+          notEmpty: {
+            msg: 'User uuid cannot be empty',
+          },
         },
       },
       course_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
-          notEmpty: true,
+          notEmpty: {
+            msg: 'Course uuid cannot be empty',
+          },
         },
       },
       is_onboarding: {

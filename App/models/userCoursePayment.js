@@ -28,15 +28,18 @@ module.exports = (sequelize) => {
       },
       payment_method: {
         type: DataTypes.ENUM('credit card', 'bank transfer'),
+        allowNull: true,
         validate: {
           isIn: [['credit card', 'bank transfer']],
         },
       },
       is_paid: {
         type: DataTypes.BOOLEAN,
+        allowNull: true,
         validate: {
           notEmpty: true,
         },
+        defaultValue: false,
       },
       expiredAt: {
         type: DataTypes.DATE,
