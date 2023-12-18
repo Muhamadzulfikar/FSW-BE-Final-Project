@@ -92,14 +92,12 @@ module.exports = {
       ],
     })
       .then((data) => data.map((item) => ({
-        user_name: item.userCourse.user.name,
-        course_category: item.userCourse.course.courseCategory.name,
-        course_name: item.userCourse.course.name,
+        user: item.userCourse.user.name,
+        courseCategory: item.userCourse.course.courseCategory.name,
+        courseName: item.userCourse.course.name,
         is_paid: item.is_paid,
-        payment_method: item.payment_method,
-        buy_at: item.createdAt,
-        uuid: item.uuid,
-        user_course_uuid: item.user_course_uuid,
+        paymentMethod: item.payment_method,
+        buyAt: item.createdAt,
       })));
   },
 
