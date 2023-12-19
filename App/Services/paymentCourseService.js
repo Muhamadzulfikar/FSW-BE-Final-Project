@@ -61,4 +61,13 @@ module.exports = {
       errorHandling.badRequest(error);
     }
   },
+
+  async paymentHistoryUser(userUuid) {
+    try {
+      const course = await paymentCourseRepository.paymentHistoryDetailNew(userUuid);
+      return course;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
 };

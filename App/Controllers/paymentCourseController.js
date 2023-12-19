@@ -39,4 +39,24 @@ module.exports = {
       });
     }
   },
+
+  async paymentHistory(req, res) {
+    try {
+      const { userUuid } = req.user;
+      // eslint-disable-next-line max-len
+      const paymentHistory = await paymentCourseService.paymentHistoryUser(userUuid);
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: paymentHistory,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
 };

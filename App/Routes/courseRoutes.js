@@ -20,4 +20,7 @@ route.delete('/admin/course:id', authorize, authMiddleware.isSuperAdminAndAdmin,
 
 route.post('/courses/enrollment', authorize, paymentCourseController.enrollCourse);
 route.put('/courses/payment/:id', paymentCourseController.payment);
+
+route.get('/courses/payment-history', authorize, paymentCourseController.paymentHistory);
+
 module.exports = route;
