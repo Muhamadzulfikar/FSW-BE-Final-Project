@@ -6,10 +6,10 @@ module.exports = {
       const { course_uuid: courseUuid } = req.body;
       const { userUuid } = req.user;
       const course = await paymentCourseService.enrollCourse(userUuid, courseUuid);
-      res.status(200).json({
-        status: 'OK',
-        code: 200,
-        message: 'Success',
+      res.status(201).json({
+        status: 'Created',
+        code: 201,
+        message: 'Successfully Enrollment Course',
         data: course,
       });
     } catch (error) {
@@ -21,15 +21,16 @@ module.exports = {
     }
   },
 
-  async payment(req, res) {
+  async paymentCourse(req, res) {
     try {
-      const userCourseUuid = req.params.id;
-      const dataPayment = req.body;
-      await paymentCourseService.paymentCourseDone(userCourseUuid, dataPayment);
-      res.status(200).json({
+      const { paymentUuid } = req.params;
+      const { paymentMethod } = req;
+      const paymentCourse = await paymentCourseService.paymentCourse(paymentUuid, paymentMethod);
+      res.status(201).json({
         status: 'OK',
-        code: 200,
-        message: 'Success',
+        code: 201,
+        message: 'Successfully payment course',
+        data: paymentCourse,
       });
     } catch (error) {
       res.status(error.code).json({

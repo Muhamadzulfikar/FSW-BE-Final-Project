@@ -1,4 +1,4 @@
-const { ValidationError, DatabaseError } = require('sequelize');
+const { ValidationError, DatabaseError, ForeignKeyConstraintError } = require('sequelize');
 const courseRepository = require('../Repositories/courseRepository');
 const errorHandling = require('../Error/errorHandling');
 
@@ -119,9 +119,6 @@ module.exports = {
       const course = await courseRepository.createCourse(bodyCourse);
       return course;
     } catch (error) {
-      if (error instanceof DatabaseError) {
-        errorHandling.badRequest(error);
-      }
       if (error instanceof ValidationError) {
         errorHandling.badRequest(error.errors[0].message);
       }
@@ -144,6 +141,67 @@ module.exports = {
       return course;
     } catch (error) {
       return errorHandling.badRequest(error);
+    }
+  },
+
+  async isOnboarding(userUuid, courseUuid) {
+    try {
+      const payload = {
+        is_onboarding: true,
+      };
+
+      const isOnboarding = await courseRepository.isOnboarding(userUuid, courseUuid, payload);
+      return isOnboarding;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getUserCourse(userUuid, courseUuid) {
+    try {
+      const userCourse = await courseRepository.getUserCourse(userUuid, courseUuid);
+      return userCourse;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Course uuid format is not valid');
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async completingModule(userUuid, chapterModuleUuid) {
+    try {
+      const payload = {
+        chapter_module_uuid: chapterModuleUuid,
+        user_uuid: userUuid,
+        is_complete: true,
+      };
+
+      const completingModule = await courseRepository.completingModule(payload);
+      return completingModule;
+    } catch (error) {
+      if (error instanceof ForeignKeyConstraintError) {
+        errorHandling.badRequest('Chapter Module Uuid not found');
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getUserModule(userUuid, chapterModuleUuid) {
+    try {
+      const getUserModule = await courseRepository.getUserModule(userUuid, chapterModuleUuid);
+      return getUserModule;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        errorHandling.badRequest(error.errors[0].message);
+      }
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Chapter Module Uuid format is not valid');
+      }
+      errorHandling.internalError(error);
     }
   },
 

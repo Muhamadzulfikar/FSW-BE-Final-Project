@@ -137,6 +137,11 @@ module.exports = {
     if (!bearerToken) {
       errorHandling.unauthorized('Token must be not empty');
     }
+
+    if (bearerToken.split('Bearer ').length !== 2) {
+      errorHandling.unauthorized('Token must be required');
+    }
+
     const token = bearerToken.split('Bearer ')[1];
     const { id } = token && (await this.validateToken(token));
     const user = id && await authRepositories.findUserById(id);

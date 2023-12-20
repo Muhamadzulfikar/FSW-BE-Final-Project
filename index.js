@@ -4,7 +4,6 @@ const cors = require('cors');
 const swaggerDocument = require('./Docs/swagger.json');
 const authRoutes = require('./App/Routes/authRoutes');
 const courseRoutes = require('./App/Routes/courseRoutes');
-const userChapterModuleController = require('./App/Controllers/userChapterModuleController');
 require('dotenv').config();
 
 const port = process.env.PORT || process.env.HOSTPORT;
@@ -23,11 +22,6 @@ app.get('/', (req, res) => {
     message: 'successfully',
   });
 });
-
-app.put(
-  '/v1/progress-course',
-  userChapterModuleController.updateProgressChapter,
-);
 
 // eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   class userChapterModule extends Model {
@@ -24,6 +25,7 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
       },
       chapter_module_uuid: {
+        allowNull: false,
         type: DataTypes.UUID,
         validate: {
           notEmpty: true,
@@ -37,6 +39,7 @@ module.exports = (sequelize) => {
       },
       is_complete: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },
@@ -49,5 +52,10 @@ module.exports = (sequelize) => {
       timestamps: true,
     },
   );
+
+  userChapterModule.beforeCreate((userModule) => {
+    userModule.set('uuid', uuidv4());
+  });
+
   return userChapterModule;
 };

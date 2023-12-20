@@ -1,4 +1,4 @@
-const { ValidationError, ForeignKeyConstraintError } = require('sequelize');
+const { DatabaseError, ForeignKeyConstraintError } = require('sequelize');
 const paymentCourseRepository = require('../Repositories/paymentCourseRepository');
 const errorHandling = require('../Error/errorHandling');
 
@@ -20,6 +20,7 @@ module.exports = {
       const expired = `${date} ${month} ${d.getFullYear()} ${hours}:${minutes}`;
 
       const responseData = {
+        paymentUuid: invoice.uuid,
         image: course.image,
         type: course.courseCategory.name,
         name: course.name,
@@ -33,32 +34,63 @@ module.exports = {
 
       return responseData;
     } catch (error) {
-      if (error instanceof ValidationError) {
-        errorHandling.badRequest(error.errors[0].message);
-      }
       if (error instanceof ForeignKeyConstraintError) {
-        return error;
+        errorHandling.badRequest('Course Uuid not found');
       }
       errorHandling.internalError(error);
     }
   },
 
-  // eslint-disable-next-line consistent-return
-  async paymentCourseUser(userCourseUuid) {
+  async paymentCourse(paymentUuid, paymentMethod) {
     try {
-      const courses = await paymentCourseRepository.paymentCourseUser(userCourseUuid);
-      return courses;
+      const payload = {
+        payment_method: paymentMethod,
+        is_paid: true,
+      };
+
+      await paymentCourseRepository.paymentCourse(paymentUuid, payload);
+      const invoice = await paymentCourseRepository.InvoicePayment(paymentUuid);
+      const { course } = invoice.userCourse;
+      const tax = course.price * 0.1;
+      const total = course.price + tax;
+
+      const responseData = {
+        paymentUuid: invoice.uuid,
+        image: course.image,
+        type: course.courseCategory.name,
+        name: course.name,
+        author: course.author,
+        total,
+        paid: invoice.is_paid,
+        paymentMethod: invoice.payment_method,
+      };
+
+      return responseData;
     } catch (error) {
-      errorHandling.badRequest(error);
+      errorHandling.internalError(error);
     }
   },
 
-  async paymentCourseDone(userCourseUuid, dataPayment) {
+  async getPaymentById(paymentUuid) {
     try {
-      const course = await paymentCourseRepository.paymentCourseUser(userCourseUuid, dataPayment);
-      return course;
+      const payment = await paymentCourseRepository.getPaymentById(paymentUuid);
+      return payment;
     } catch (error) {
-      errorHandling.badRequest(error);
+      if (error instanceof DatabaseError) {
+        return errorHandling.badRequest('Payment uuid format is not valid');
+      }
+    }
+  },
+
+  async getPaymentByUserCourse(userCourseUuid) {
+    try {
+      const payment = await paymentCourseRepository.getPaymentByUserCourse(userCourseUuid);
+      return payment;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        return errorHandling.badRequest('User course uuid format is not valid');
+      }
+      errorHandling.internalError(error);
     }
   },
 

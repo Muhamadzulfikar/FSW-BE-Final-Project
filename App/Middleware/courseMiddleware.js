@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
 const errorHandling = require('../Error/errorHandling');
+const courseService = require('../Services/courseService');
+const responseError = require('../Error/responseError');
 
 module.exports = {
   filterByCategoriesAndLevel(req, res, next) {
@@ -41,6 +43,34 @@ module.exports = {
         status: error.status,
         message: error.message,
       });
+    }
+  },
+
+  async validateUserCourse(req, res, next) {
+    try {
+      const { userUuid } = req.user;
+      const { courseUuid } = req.params;
+      const getUserCourse = await courseService.getUserCourse(userUuid, courseUuid);
+
+      if (!getUserCourse) errorHandling.badRequest('User course not found');
+
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
+
+  async isCompletedCourseModule(req, res, next) {
+    try {
+      const { userUuid } = req.user;
+      const { chapter_module_uuid: chapterModuleUuid } = req.body;
+      const UserModule = await courseService.getUserModule(userUuid, chapterModuleUuid);
+
+      if (UserModule) errorHandling.badRequest('You already completed this module');
+
+      next();
+    } catch (error) {
+      responseError(res, error);
     }
   },
 };
