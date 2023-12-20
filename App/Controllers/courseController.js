@@ -54,6 +54,7 @@ module.exports = {
       });
     }
   },
+
   async getCourseAdmin(req, res) {
     try {
       const courses = await courseService.getListCourseAdmin();
@@ -138,6 +139,46 @@ module.exports = {
         code: 200,
         message: 'Success',
 
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async isOnboarding(req, res) {
+    try {
+      const { userUuid } = req.user;
+      const { courseUuid } = req.params;
+      await courseService.isOnboarding(userUuid, courseUuid);
+      res.status(201).json({
+        status: 'created',
+        code: 201,
+        message: 'Successfully Completed Onboarding',
+        data: true,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async completingModule(req, res) {
+    try {
+      const { userUuid } = req.user;
+      const { chapter_module_uuid: chapterModuleUuid } = req.body;
+      const userChapterModule = await courseService.completingModule(userUuid, chapterModuleUuid);
+      res.status(201).json({
+        status: 'created',
+        code: 201,
+        message: 'Successfully Completing Module',
+        data: userChapterModule,
       });
     } catch (error) {
       res.status(error.code).json({

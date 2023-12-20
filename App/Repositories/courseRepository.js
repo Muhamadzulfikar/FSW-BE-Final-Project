@@ -6,6 +6,7 @@ const {
   courseCategory,
   userCourse,
   userCoursePayment,
+  userChapterModule,
   user,
 } = require('../models');
 
@@ -131,6 +132,34 @@ module.exports = {
     return course.destroy({ where: { uuid }, returnig: true });
   },
 
-  buyCourseUserDetail() {
+  isOnboarding(userUuid, courseUuid, payload) {
+    return userCourse.update(payload, {
+      where: {
+        user_uuid: userUuid,
+        course_uuid: courseUuid,
+      },
+    });
+  },
+
+  getUserCourse(userUuid, courseUuid) {
+    return userCourse.findOne({
+      where: {
+        user_uuid: userUuid,
+        course_uuid: courseUuid,
+      },
+    });
+  },
+
+  completingModule(payload) {
+    return userChapterModule.create(payload);
+  },
+
+  getUserModule(userUuid, chapterModuleUuid) {
+    return userChapterModule.findOne({
+      where: {
+        user_uuid: userUuid,
+        chapter_module_uuid: chapterModuleUuid,
+      },
+    });
   },
 };
