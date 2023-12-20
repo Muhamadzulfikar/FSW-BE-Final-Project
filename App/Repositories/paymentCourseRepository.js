@@ -1,3 +1,4 @@
+const { ValidationError } = require('sequelize');
 const {
   userCourse,
   userCoursePayment,
@@ -8,6 +9,7 @@ const {
   user,
   sequelize,
 } = require('../models');
+const errorHandling = require('../Error/errorHandling');
 
 module.exports = {
   async enrollCoursePremium(userUuid, courseUuid) {
