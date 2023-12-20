@@ -23,4 +23,5 @@ route.put('/courses/payment/:paymentUuid', authorize, validatePaymentRequest, pa
 
 route.put('/courses/onboarding/:courseUuid', authorize, validateUserCourse, courseController.isOnboarding);
 route.post('/course-modules/module-completed', authorize, isCompletedCourseModule, courseController.completingModule);
+route.get('/courses/payment-history', authorize, paymentCourseController.paymentHistory);
 module.exports = route;

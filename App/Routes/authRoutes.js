@@ -1,7 +1,7 @@
 const express = require('express');
 
 const route = express.Router();
-const { user } = require('../Controllers/userController');
+const { user, updatePassword } = require('../Controllers/userController');
 
 const {
   userLogin,
@@ -38,5 +38,7 @@ route.post(
   userRegister,
 );
 route.get('/profile', authorize, user);
+
+route.put('/update-password', authorize, updatePassword);
 
 module.exports = route;
