@@ -48,7 +48,7 @@ module.exports = (sequelize) => {
   );
 
   otpUser.beforeCreate((otpUserInstance) => {
-    otpUserInstance.set('expiredAt', new Date(Date.now() + 24 * 60 * 60 * 1000));
+    otpUserInstance.set('expiredAt', new Date(Date.now() + 3 * 60 * 1000));
     otpUserInstance.set('uuid', uuidv4());
   });
 
