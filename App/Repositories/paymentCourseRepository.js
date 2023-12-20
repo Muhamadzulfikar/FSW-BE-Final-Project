@@ -8,6 +8,7 @@ const {
   courseCategory,
   courseChapter,
   chapterModule,
+  user,
   sequelize,
 } = require('../models');
 
@@ -109,37 +110,6 @@ module.exports = {
     }
   },
 
-  async paymentHistoryDetail(userCourseUuid, userUuid) {
-    try {
-      const userCourseUser = await userCourse.findAll({
-        where: {
-          user_uuid: userUuid,
-        },
-      });
-
-      // Periksa apakah userCourseUser tidak ditemukan
-      if (!userCourseUser.length) {
-        errorHandling.notFound('User not found');
-      }
-
-      const payments = await userCoursePayment.findAll({
-        where: {
-          user_course_uuid: userCourseUser,
-          userId: userCourseUser[0].id, // Gunakan ID pengguna dari hasil pencarian userCourse
-        },
-      });
-
-      return payments;
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        // Handle validation errors
-        errorHandling.badRequest(error.errors[0].message);
-      } else {
-        // Handle other errors
-        errorHandling.internalError(error);
-      }
-    }
-  },
   async paymentHistoryDetailNew(userUuid) {
     try {
       const userCourses = await userCourse.findAll({
@@ -149,7 +119,7 @@ module.exports = {
         include: [
           {
             model: course,
-            attributes: ['image', 'name', 'author', 'level'],
+            attributes: ['image', 'name', 'author', 'level', 'rating'],
             include: [
               {
                 model: courseCategory,
@@ -172,36 +142,72 @@ module.exports = {
         ],
       });
 
-      // eslint-disable-next-line max-len
-      const courseChapters = userCourses.map((userCourseItem) => userCourseItem.course.courseChapters);
-      const totalModule = courseChapters.length;
-      // eslint-disable-next-line max-len
-      const totalMinute = courseChapters.reduce((total, chapters) => total + chapters.reduce((sum, chapter) => sum + chapter.duration, 0), 0);
+      const courseUuids = userCourses.map((courseItem) => courseItem.uuid);
 
-      const payments = userCourses.map((userCourseItem) => {
-        const {
-          course: {
-            image, name, author, level,
+      const payments = await userCoursePayment.findAll({
+        where: {
+          user_course_uuid: courseUuids,
+        },
+        include: [
+          {
+            model: userCourse,
+            include: [
+              {
+                model: course,
+                include: [
+                  {
+                    model: courseCategory,
+                    attributes: ['name'],
+                  },
+                  {
+                    model: courseChapter,
+                    attributes: ['duration', 'id'],
+                    order: [['id', 'ASC']],
+                    include: [
+                      {
+                        model: chapterModule,
+                        attributes: ['title', 'course_link'],
+                        order: [['id', 'ASC']],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                model: user,
+                attributes: ['name'],
+              },
+            ],
           },
-        } = userCourseItem;
-        const courseCategoryItem = userCourseItem.course.courseCategory.name;
-        return {
-          image,
-          category: courseCategoryItem,
-          courseName: name,
-          courseAuthor: author,
-          courseLevel: level,
-          totalModules: totalModule,
-          totalMinutes: totalMinute,
-        };
+        ],
       });
-      return payments;
+
+      // eslint-disable-next-line max-len
+      const totalModule = userCourses.reduce((total, courseItem) => total + courseItem.course.courseChapters.length, 0);
+
+      const totalMinute = userCourses.reduce(
+        // eslint-disable-next-line max-len
+        (total, courseItem) => total + courseItem.course.courseChapters.reduce((sum, chapter) => sum + chapter.duration, 0),
+        0,
+      );
+
+      const formattedOutput = payments.map((payment) => ({
+        image: payment.userCourse.course.image,
+        courseCategory: payment.userCourse.course.courseCategory.name,
+        courseName: payment.userCourse.course.name,
+        courseAuthor: payment.userCourse.course.author,
+        courseLevel: payment.userCourse.course.level,
+        totalModules: totalModule,
+        totalMinutes: totalMinute,
+        courseRating: payment.userCourse.course.rating,
+        is_paid: payment.is_paid,
+      }));
+
+      return formattedOutput;
     } catch (error) {
       if (error instanceof ValidationError) {
-        // Handle validation errors
         errorHandling.badRequest(error.errors[0].message);
       } else {
-        // Handle other errors
         errorHandling.internalError(error);
       }
     }
