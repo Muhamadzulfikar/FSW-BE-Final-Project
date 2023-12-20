@@ -30,7 +30,10 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM('credit card', 'bank transfer'),
         allowNull: true,
         validate: {
-          isIn: [['credit card', 'bank transfer']],
+          isIn: {
+            args: [['credit card', 'bank transfer']],
+            msg: 'Payment method must be credit card or bank transfer',
+          },
         },
       },
       is_paid: {
@@ -43,7 +46,7 @@ module.exports = (sequelize) => {
       },
       expiredAt: {
         type: DataTypes.DATE,
-        defaultValue: Date.now() + 43200,
+        defaultValue: Date.now() + 24 * 60 * 60 * 1000,
         validate: {
           notEmpty: true,
         },

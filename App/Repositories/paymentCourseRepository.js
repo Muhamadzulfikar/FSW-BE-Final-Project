@@ -1,6 +1,3 @@
-const { ValidationError } = require('sequelize');
-const errorHandling = require('../Error/errorHandling');
-
 const {
   userCourse,
   userCoursePayment,
@@ -48,62 +45,28 @@ module.exports = {
           ],
         },
       ],
-      attributes: ['expiredAt', 'is_paid'],
+      attributes: ['uuid', 'expiredAt', 'is_paid', 'payment_method'],
     });
   },
 
-  async buyCourseUserDetail(userUuid, courseUuid) {
-    try {
-      const createdUserCourse = await userCourse.create({
-        user_uuid: userUuid,
-        course_uuid: courseUuid,
-        is_onboarding: false,
-      });
-
-      return createdUserCourse;
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        errorHandling.badRequest(error.errors[0].message);
-      }
-      errorHandling.internalError(error);
-    }
+  async paymentCourse(paymentUuid, payload) {
+    const payment = await userCoursePayment.update(payload, {
+      where: {
+        uuid: paymentUuid,
+      },
+    });
+    return payment;
   },
 
-  async paymentCourseUserDetail(userCourseUuid) {
-    try {
-      const createdUserCoursePayment = await userCoursePayment.create({
+  async getPaymentById(paymentUuid) {
+    return userCoursePayment.findByPk(paymentUuid);
+  },
+
+  async getPaymentByUserCourse(userCourseUuid) {
+    return userCoursePayment.findOne({
+      where: {
         user_course_uuid: userCourseUuid,
-      });
-
-      return createdUserCoursePayment;
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        errorHandling.badRequest(error.errors[0].message);
-      }
-      errorHandling.internalError(error);
-    }
-  },
-
-  async paymentCourseUser(userCourseUuid, dataPayment) {
-    try {
-      const payment = await userCoursePayment.update(
-        {
-          payment_method: dataPayment.payment_method,
-          is_paid: true,
-          expiredAt: new Date(),
-        },
-        {
-          where: {
-            user_course_uuid: userCourseUuid,
-          },
-        },
-      );
-      return payment;
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        errorHandling.badRequest(error.errors[0].message);
-      }
-      errorHandling.internalError(error);
-    }
+      },
+    });
   },
 };
