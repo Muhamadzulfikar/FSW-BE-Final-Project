@@ -73,4 +73,23 @@ module.exports = {
       responseError(res, error);
     }
   },
+
+  async isPremiumCourseAndPaid(req, res, next) {
+    try {
+      const { chapterModuleUuid } = req.params;
+      const { userUuid } = req.user;
+      const course = await courseService.getCourseByChapterModule(chapterModuleUuid);
+
+      if (course.isPremium) {
+        const paymentStatus = await courseService.getPaymentStatusByUserCourse(userUuid, course.uuid);
+        const userCoursePayments = paymentStatus?.userCoursePayments[0];
+        const paidCourse = userCoursePayments?.is_paid;
+        if (!paidCourse) errorHandling.badRequest('You must pay this course first');
+      }
+
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
 };

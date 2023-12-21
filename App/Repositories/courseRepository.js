@@ -35,7 +35,7 @@ module.exports = {
     });
   },
 
-  getCourseById(id) {
+  getCourseById(id, userUuid) {
     return course.findByPk(id, {
       include: [
         {
@@ -55,6 +55,28 @@ module.exports = {
               model: chapterModule,
               attributes: ['title', 'course_link'],
               order: ['id', 'ASC'],
+              include: [
+                {
+                  model: userChapterModule,
+                  where: {
+                    user_uuid: userUuid,
+                  },
+                  required: false,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: userCourse,
+          where: {
+            user_uuid: userUuid,
+          },
+          required: false,
+          include: [
+            {
+              model: userCoursePayment,
+              required: false,
             },
           ],
         },
@@ -160,6 +182,49 @@ module.exports = {
         user_uuid: userUuid,
         chapter_module_uuid: chapterModuleUuid,
       },
+    });
+  },
+
+  getVideoCourse(chapterModuleUuid) {
+    return chapterModule.findByPk(chapterModuleUuid, {
+      attributes: ['course_link'],
+    });
+  },
+
+  getCourseByChapterModule(chapterModuleUuid) {
+    return course.findOne({
+      include: [
+        {
+          model: courseChapter,
+          attributes: ['id'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['uuid'],
+              where: {
+                uuid: chapterModuleUuid,
+              },
+            },
+          ],
+        },
+      ],
+      attributes: ['uuid', 'isPremium'],
+    });
+  },
+
+  getPaymentStatusByUserCourse(userUuid, courseUuid) {
+    return userCourse.findOne({
+      where: {
+        user_uuid: userUuid,
+        course_uuid: courseUuid,
+      },
+      include: [
+        {
+          model: userCoursePayment,
+          attributes: ['is_paid'],
+        },
+      ],
+      attributes: ['uuid'],
     });
   },
 };

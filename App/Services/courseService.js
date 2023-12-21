@@ -34,9 +34,9 @@ module.exports = {
     }
   },
 
-  async getCourseDetailById(id) {
+  async getCourseDetailById(id, userUuid) {
     try {
-      const course = await courseRepository.getCourseById(id);
+      const course = await courseRepository.getCourseById(id, userUuid);
       const { courseChapters } = course;
       const totalModule = courseChapters.length;
       const totalMinute = courseChapters.reduce((total, chapter) => total + chapter.duration, 0);
@@ -51,11 +51,19 @@ module.exports = {
       const courseModules = course.courseChapters.map((courseChapter) => ({
         chapter: courseChapter.id,
         estimation: courseChapter.duration,
-        module: courseChapter.chapterModules.map((courseModule) => ({
-          title: courseModule.title,
-          courseLink: courseModule.course_link,
-        })),
+        module: courseChapter.chapterModules.map((courseModule) => {
+          const userChapterModules = courseModule.userChapterModules[0];
+          return {
+            title: courseModule.title,
+            courseLink: courseModule.course_link,
+            isCompleted: userChapterModules ? userChapterModules.is_complete : false,
+          };
+        }),
       }));
+
+      const userCourses = course.userCourses[0];
+      const payment = userCourses?.userCoursePayments[0];
+      const isPaid = payment ? payment.is_paid : null;
 
       const responseData = {
         id: course.uuid,
@@ -75,12 +83,16 @@ module.exports = {
         telegram,
         introVideo: course.intro_video,
         onboarding,
+        isPaid,
         courseModules,
       };
 
       return responseData;
     } catch (error) {
-      errorHandling.badRequest(error);
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
     }
   },
 
@@ -205,4 +217,39 @@ module.exports = {
     }
   },
 
+  async getVideoCourse(chapterModuleUuid) {
+    try {
+      const videoCourse = await courseRepository.getVideoCourse(chapterModuleUuid);
+      return videoCourse;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Chapter Module Uuid format is not valid');
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getCourseByChapterModule(chapterModuleUuid) {
+    try {
+      const course = await courseRepository.getCourseByChapterModule(chapterModuleUuid);
+      return course;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getPaymentStatusByUserCourse(userUuid, courseUuid) {
+    try {
+      const paymentStatus = await courseRepository.getPaymentStatusByUserCourse(userUuid, courseUuid);
+      return paymentStatus;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
 };

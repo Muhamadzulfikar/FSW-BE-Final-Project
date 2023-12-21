@@ -23,7 +23,8 @@ module.exports = {
 
   async getCourseDetailById(req, res) {
     try {
-      const courseDetail = await courseService.getCourseDetailById(req.params.id);
+      const { userUuid } = req.user;
+      const courseDetail = await courseService.getCourseDetailById(req.params.id, userUuid);
 
       res.status(200).json({
         status: 'OK',
@@ -179,6 +180,26 @@ module.exports = {
         code: 201,
         message: 'Successfully Completing Module',
         data: userChapterModule,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async getVideoCourse(req, res) {
+    try {
+      const { chapterModuleUuid } = req.params;
+      const videoCourse = await courseService.getVideoCourse(chapterModuleUuid);
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Successfully get Video',
+        data: videoCourse,
+
       });
     } catch (error) {
       res.status(error.code).json({
