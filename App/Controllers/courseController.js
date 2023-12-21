@@ -55,6 +55,23 @@ module.exports = {
     }
   },
 
+  async getCourseStatistic(req, res) {
+    try {
+      const courses = await courseService.getListCourseStatisticAdmin();
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: courses,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
   async getCourseAdmin(req, res) {
     try {
       const courses = await courseService.getListCourseAdmin();

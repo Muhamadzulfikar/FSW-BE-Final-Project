@@ -12,11 +12,12 @@ route.get('/course-categories', courseCategoryController.getAllCourseCategory);
 route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', authorize, courseController.getCourseDetailById);
 
+route.get('/admin/statistic', authorize, isSuperAdminAndAdmin, courseController.getCourseStatistic);
 route.get('/admin/payment-status', authorize, isSuperAdminAndAdmin, courseController.getCourseAdmin);
 route.get('/admin/courses', authorize, isSuperAdminAndAdmin, courseController.getManagementCourse);
 route.post('/admin/courses', authorize, isSuperAdminAndAdmin, courseController.createCourse);
 route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
-route.delete('/admin/course:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
+route.delete('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
 
 route.post('/courses/enrollment', authorize, isEnrollCourse, paymentCourseController.enrollCourse);
 route.put('/courses/payment/:paymentUuid', authorize, validatePaymentRequest, paymentCourseController.paymentCourse);

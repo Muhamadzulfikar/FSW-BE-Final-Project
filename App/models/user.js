@@ -21,6 +21,10 @@ module.exports = (sequelize) => {
       this.hasMany(models.otpUser, {
         foreignKey: 'user_uuid',
       });
+
+      this.hasMany(models.userNotification, {
+        foreignKey: 'user_uuid',
+      });
     }
   }
   user.init(
