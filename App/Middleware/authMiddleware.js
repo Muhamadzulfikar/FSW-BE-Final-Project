@@ -110,4 +110,17 @@ module.exports = {
       responseError(res, error);
     }
   },
+
+  async isLoginAdmin(req, res, next) {
+    try {
+      const { email } = req.body;
+      const user = await authService.findUser(email);
+      if (user.role !== 'admin' && user.role !== 'super admin') {
+        errorHandling.unauthorized('User is not admin');
+      }
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
 };

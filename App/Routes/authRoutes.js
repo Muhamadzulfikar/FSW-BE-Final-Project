@@ -17,9 +17,11 @@ const {
   validateBodyRequest,
   authorize,
   isSuperAdmin,
+  isLoginAdmin,
 } = require('../Middleware/authMiddleware');
 
 route.post('/login', validateBodyLogin, isUserHasRegister, userLogin);
+route.post('/login/admin', validateBodyLogin, isUserHasRegister, isLoginAdmin, userLogin);
 route.post(
   '/register',
   validateBodyRequest,
