@@ -157,6 +157,9 @@ module.exports = {
       );
 
       const formattedOutput = payments.map((payment) => ({
+        courseUuid: payment.userCourse.course.uuid,
+        paymentUuid: payment.uuid,
+        userCourseUuid: payment.userCourse.uuid,
         image: payment.userCourse.course.image,
         courseCategory: payment.userCourse.course.courseCategory.name,
         courseName: payment.userCourse.course.name,
