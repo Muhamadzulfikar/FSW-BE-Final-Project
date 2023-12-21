@@ -15,12 +15,12 @@ module.exports = (sequelize) => {
     }
   }
   userNotification.init({
-    uuid: {
-      type: DataTypes.UUID,
+    id: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
     },
     user_uuid: DataTypes.STRING,
-    tittle: DataTypes.STRING,
+    title: DataTypes.STRING,
     is_conditional: DataTypes.BOOLEAN,
     is_read: DataTypes.BOOLEAN,
   }, {

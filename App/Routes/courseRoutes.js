@@ -2,6 +2,7 @@ const express = require('express');
 const courseCategoryController = require('../Controllers/courseCategoryController');
 const courseController = require('../Controllers/courseController');
 const paymentCourseController = require('../Controllers/paymentCourseController');
+const userNotificationController = require('../Controllers/userNotificationController');
 const { filterByCategoriesAndLevel, validateUserCourse, isCompletedCourseModule } = require('../Middleware/courseMiddleware');
 const { authorize, isSuperAdminAndAdmin } = require('../Middleware/authMiddleware');
 const { validatePaymentRequest, isEnrollCourse } = require('../Middleware/paymentMiddleware');
@@ -25,4 +26,6 @@ route.put('/courses/payment/:paymentUuid', authorize, validatePaymentRequest, pa
 route.put('/courses/onboarding/:courseUuid', authorize, validateUserCourse, courseController.isOnboarding);
 route.post('/course-modules/module-completed', authorize, isCompletedCourseModule, courseController.completingModule);
 route.get('/courses/payment-history', authorize, paymentCourseController.paymentHistory);
+
+route.get('/notification', authorize, userNotificationController.notification);
 module.exports = route;

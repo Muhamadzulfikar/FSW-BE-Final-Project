@@ -9,14 +9,14 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       user_uuid: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'users',
           key: 'uuid',
         },
       },
-      tittle: {
+      title: {
         type: Sequelize.STRING,
       },
       is_conditional: {
