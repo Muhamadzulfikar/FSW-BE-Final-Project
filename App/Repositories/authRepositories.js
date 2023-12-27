@@ -33,4 +33,8 @@ module.exports = {
       },
     });
   },
+
+  resetPassword(userUuid, newPassword) {
+    return user.update({ password: newPassword }, { where: { uuid: userUuid } });
+  },
 };

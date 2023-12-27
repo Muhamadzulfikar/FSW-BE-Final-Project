@@ -63,4 +63,38 @@ module.exports = {
       responseError(res, error);
     }
   },
+
+  async forgetPassword(req, res) {
+    try {
+      await authService.forgetPassword(req.user);
+      res.status(200).json({
+        status: 'Ok',
+        code: 200,
+        message: 'Successfully send email to reset password',
+        data: {},
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async resetPassword(req, res) {
+    try {
+      const { jwtToken } = req.params;
+      const { new_password: newPassword } = req.body;
+      await authService.resetPassword(jwtToken, newPassword);
+      res.status(200).json({
+        status: 'Ok',
+        code: 200,
+        message: 'Successfully reset password',
+        data: {},
+      });
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
 };

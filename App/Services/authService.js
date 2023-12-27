@@ -63,6 +63,38 @@ module.exports = {
     }
   },
 
+  async forgetPassword(user) {
+    try {
+      const token = await this.createTokenRegister({ id: user.uuid });
+      const client = createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      });
+
+      client.sendMail({
+        from: 'Skill Hub <noreply@gmail.com>',
+        to: user.email,
+        subject: 'Reset Password',
+        html: `https://fsw-fe-backup.vercel.app/reset-password/${token}`,
+      });
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
+  },
+
+  async resetPassword(jwtToken, newPassword) {
+    try {
+      const { id } = await this.validateToken(jwtToken);
+      const encrypt = await this.encryptPassword(newPassword);
+      await authRepositories.resetPassword(id, encrypt);
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
+  },
+
   async sendMail(user, otpGenerated) {
     const client = createTransport({
       service: 'Gmail',

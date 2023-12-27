@@ -8,6 +8,8 @@ const {
   userRegister,
   validateOtp,
   validateJwt,
+  forgetPassword,
+  resetPassword,
 } = require('../Controllers/authController');
 
 const {
@@ -42,5 +44,7 @@ route.post(
 route.get('/profile', authorize, user);
 
 route.put('/update-password', authorize, updatePassword);
+route.post('/forget-password', isUserHasRegister, forgetPassword);
+route.put('/reset-password/:jwtToken', resetPassword);
 
 module.exports = route;
