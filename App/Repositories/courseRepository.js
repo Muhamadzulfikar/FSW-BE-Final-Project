@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const {
   course,
   courseDetail,
@@ -48,12 +49,12 @@ module.exports = {
         },
         {
           model: courseChapter,
-          attributes: ['duration', 'id'],
+          attributes: ['duration', 'chapter'],
           order: ['id', 'ASC'],
           include: [
             {
               model: chapterModule,
-              attributes: ['title', 'course_link'],
+              attributes: ['title', 'uuid'],
               order: ['id', 'ASC'],
               include: [
                 {
@@ -169,11 +170,12 @@ module.exports = {
         user_uuid: userUuid,
         course_uuid: courseUuid,
       },
+      attributes: ['uuid'],
     });
   },
 
-  completingModule(payload) {
-    return userChapterModule.create(payload);
+  completingModule(userChapterModuleUuid) {
+    return userChapterModule.update({ is_complete: true }, { where: { uuid: userChapterModuleUuid } });
   },
 
   getUserModule(userUuid, chapterModuleUuid) {
@@ -196,7 +198,7 @@ module.exports = {
       include: [
         {
           model: courseChapter,
-          attributes: ['id'],
+          attributes: ['id', 'chapter'],
           include: [
             {
               model: chapterModule,
@@ -225,6 +227,36 @@ module.exports = {
         },
       ],
       attributes: ['uuid'],
+    });
+  },
+
+  getChapterModuleByCourse(courseUuid) {
+    return courseChapter.findAll({
+      where: {
+        course_uuid: courseUuid,
+      },
+      attributes: ['id'],
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+        },
+        {
+          model: course,
+          attributes: ['isPremium'],
+        },
+      ],
+    });
+  },
+
+  countTotalProgress(userChapterModuleUuid, userUuid) {
+    return userChapterModule.count({
+      where: {
+        uuid: {
+          [Op.in]: userChapterModuleUuid,
+        },
+        user_uuid: userUuid,
+      },
     });
   },
 };

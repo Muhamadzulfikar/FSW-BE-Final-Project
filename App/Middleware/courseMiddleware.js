@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const errorHandling = require('../Error/errorHandling');
 const courseService = require('../Services/courseService');
 const responseError = require('../Error/responseError');
+const authService = require('../Services/authService');
 
 module.exports = {
   filterByCategoriesAndLevel(req, res, next) {
@@ -79,8 +80,9 @@ module.exports = {
       const { chapterModuleUuid } = req.params;
       const { userUuid } = req.user;
       const course = await courseService.getCourseByChapterModule(chapterModuleUuid);
+      const { chapter } = course.courseChapters[0];
 
-      if (course.isPremium) {
+      if (course.isPremium && chapter !== 'Chapter 1') {
         const paymentStatus = await courseService.getPaymentStatusByUserCourse(userUuid, course.uuid);
         const userCoursePayments = paymentStatus?.userCoursePayments[0];
         const paidCourse = userCoursePayments?.is_paid;
@@ -90,6 +92,27 @@ module.exports = {
       next();
     } catch (error) {
       responseError(res, error);
+    }
+  },
+
+  async authorizeCourse(req, res, next) {
+    try {
+      const token = req.headers.authorization;
+      if (token) {
+        const user = await authService.authorize(token);
+        if (!user) errorHandling.badRequest('User Not Found');
+        req.user = user;
+      }
+      next();
+    } catch (error) {
+      if (error.code) {
+        responseError(res, error);
+      }
+      res.status(500).json({
+        code: 500,
+        status: 'Internal Server Error',
+        message: error.message,
+      });
     }
   },
 };
