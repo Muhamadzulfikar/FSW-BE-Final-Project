@@ -20,6 +20,7 @@ module.exports = (sequelize) => {
        */
       this.hasMany(models.chapterModule, {
         foreignKey: 'course_chapter_id',
+        onDelete: 'CASCADE',
       });
     }
   }

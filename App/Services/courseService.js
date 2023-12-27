@@ -114,6 +114,14 @@ module.exports = {
     }
   },
 
+  async getListCourseStatisticAdmin() {
+    try {
+      const courses = await courseRepository.getCoursesStatisticDetail();
+      return courses;
+    } catch (error) {
+      errorHandling.badRequest(error);
+    }
+  },
   async getListCourseAdmin() {
     try {
       const courses = await courseRepository.getCoursesAdmin();

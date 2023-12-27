@@ -90,12 +90,32 @@ module.exports = {
     return course.findByPk(id);
   },
 
+  async getCoursesStatisticDetail() {
+    const activeUsers = await userCourse.count();
+    const activeClass = await userCourse.count({
+      where: {
+        is_onboarding: true,
+      },
+    });
+    const premiumClass = await course.count({
+      where: {
+        isPremium: true,
+      },
+    });
+
+    return {
+      activeUsersItem: activeUsers,
+      activeClassItem: activeClass,
+      premiumClassItem: premiumClass,
+    };
+  },
+
   getCoursesAdmin() {
     return userCoursePayment.findAll({
       include: [
         {
           model: userCourse,
-          attributes: ['user_uuid'],
+          attributes: ['user_uuid', 'is_onboarding'],
           include: [
             {
               model: user,
@@ -103,7 +123,7 @@ module.exports = {
             },
             {
               model: course,
-              attributes: ['course_category_id', 'name'],
+              attributes: ['course_category_id', 'name', 'isPremium'],
               include: [
                 {
                   model: courseCategory,
@@ -151,8 +171,35 @@ module.exports = {
     return course.update(dataCourse, { where: { uuid }, returnig: true });
   },
 
-  deleteCourse(uuid) {
-    return course.destroy({ where: { uuid }, returnig: true });
+  async deleteCourse(uuid) {
+    // eslint-disable-next-line max-len
+    const userCoursePayments = await userCoursePayment.findAll({ where: { user_course_uuid: uuid } });
+    await Promise.all(userCoursePayments.map((payment) => payment.destroy()));
+
+    // Find and delete associated user courses
+    const userCourses = await userCourse.findAll({ where: { course_uuid: uuid } });
+    await Promise.all(userCourses.map(async (userCourseItem) => {
+      // eslint-disable-next-line max-len
+      const coursePayments = await userCoursePayment.findAll({ where: { user_course_uuid: userCourseItem.uuid } });
+      await Promise.all(coursePayments.map((payment) => payment.destroy()));
+      await userCourseItem.destroy();
+    }));
+
+    const courseDetails = await courseDetail.findAll({ where: { course_uuid: uuid } });
+    await Promise.all(courseDetails.map((detail) => detail.destroy()));
+
+    const courseChapters = await courseChapter.findAll({ where: { course_uuid: uuid } });
+    await Promise.all(courseChapters.map(async (chapter) => {
+      // eslint-disable-next-line max-len
+      const chapterModules = await chapterModule.findAll({ where: { course_chapter_id: chapter.uuid } });
+      await Promise.all(chapterModules.map((module) => module.destroy()));
+
+      await chapter.destroy();
+    }));
+
+    const deletedCourse = await course.destroy({ where: { uuid }, returning: true });
+
+    return deletedCourse;
   },
 
   isOnboarding(userUuid, courseUuid, payload) {
