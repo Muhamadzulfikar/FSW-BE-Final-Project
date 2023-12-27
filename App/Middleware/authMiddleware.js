@@ -55,6 +55,7 @@ module.exports = {
 
   async isUserHasRegister(req, res, next) {
     try {
+      if (!req.body.email) errorHandling.badRequest('Email must not be empty');
       const user = await authService.findUser(req.body.email);
       if (!user) {
         errorHandling.unauthorized('Cannot Find User');
