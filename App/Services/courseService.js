@@ -3,59 +3,74 @@ const courseRepository = require('../Repositories/courseRepository');
 const errorHandling = require('../Error/errorHandling');
 
 module.exports = {
-  courseResponse(courses) {
-    return courses.map((course) => {
-      const { courseChapters } = course;
-      const totalModule = courseChapters.length;
-      const totalMinute = courseChapters.reduce((total, chapter) => total + chapter.duration, 0);
-      return {
-        id: course.uuid,
-        category: course.courseCategory.name,
-        image: course.image,
-        name: course.name,
-        author: course.author,
-        price: course.price,
-        level: course.level,
-        rating: course.rating,
-        isPremium: course.isPremium,
-        classCode: course.code,
-        totalModule,
-        totalMinute,
-      };
-    });
+  mapCourseResponse(course) {
+    const { courseChapters } = course;
+    const totalModule = courseChapters.length;
+    const totalMinute = courseChapters.reduce((total, chapter) => total + chapter.duration, 0);
+    return {
+      id: course.uuid,
+      category: course.courseCategory.name,
+      image: course.image,
+      name: course.name,
+      author: course.author,
+      price: course.price,
+      level: course.level,
+      rating: course.rating,
+      isPremium: course.isPremium,
+      classCode: course.code,
+      totalModule,
+      totalMinute,
+    };
   },
 
   async getAllListCourses(filter) {
     try {
       const courses = await courseRepository.getAllCourses(filter);
-      return this.courseResponse(courses);
+      return courses.map(this.mapCourseResponse);
     } catch (error) {
       errorHandling.badRequest(error);
     }
   },
 
-  async getCourseDetailById(id) {
+  async getCourseDetailById(id, userUuid) {
     try {
-      const course = await courseRepository.getCourseById(id);
+      const course = await courseRepository.getCourseById(id, userUuid);
       const { courseChapters } = course;
       const totalModule = courseChapters.length;
       const totalMinute = courseChapters.reduce((total, chapter) => total + chapter.duration, 0);
 
       const {
-        description,
-        class_target: courseTarget,
-        telegram,
-        onboarding,
+        description, class_target: courseTarget, telegram, onboarding,
       } = course.courseDetail.dataValues;
 
+      let totalCompleteVideo = 0;
+      const userChapterModuleUuids = [];
+
       const courseModules = course.courseChapters.map((courseChapter) => ({
-        chapter: courseChapter.id,
+        chapter: courseChapter.chapter,
         estimation: courseChapter.duration,
-        module: courseChapter.chapterModules.map((courseModule) => ({
-          title: courseModule.title,
-          courseLink: courseModule.course_link,
-        })),
+        module: courseChapter.chapterModules.map((courseModule) => {
+          const userChapterModules = courseModule.userChapterModules[0];
+          const isCompleted = userChapterModules ? userChapterModules.is_complete : false;
+          userChapterModuleUuids.push(userChapterModules?.uuid);
+          if (isCompleted) {
+            totalCompleteVideo += 1;
+          }
+          return {
+            chapterModuleUuid: courseModule.uuid,
+            userChapterModuleUuid: userChapterModules?.uuid,
+            title: courseModule.title,
+            isCompleted,
+          };
+        }),
       }));
+
+      const totalVideo = await courseRepository.countTotalProgress(userChapterModuleUuids, userUuid);
+      const progressBar = Number(((totalCompleteVideo / totalVideo) * 100).toFixed());
+
+      const userCourses = course.userCourses[0];
+      const payment = userCourses?.userCoursePayments[0];
+      const isPaid = payment ? payment.is_paid : false;
 
       const responseData = {
         id: course.uuid,
@@ -75,12 +90,18 @@ module.exports = {
         telegram,
         introVideo: course.intro_video,
         onboarding,
+        isOnboarding: userCourses ? userCourses.is_onboarding : false,
+        progressBar,
+        isPaid,
         courseModules,
       };
 
       return responseData;
     } catch (error) {
-      errorHandling.badRequest(error);
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
     }
   },
 
@@ -180,15 +201,9 @@ module.exports = {
     }
   },
 
-  async completingModule(userUuid, chapterModuleUuid) {
+  async completingModule(userChapterModuleUuid) {
     try {
-      const payload = {
-        chapter_module_uuid: chapterModuleUuid,
-        user_uuid: userUuid,
-        is_complete: true,
-      };
-
-      const completingModule = await courseRepository.completingModule(payload);
+      const completingModule = await courseRepository.completingModule(userChapterModuleUuid);
       return completingModule;
     } catch (error) {
       if (error instanceof ForeignKeyConstraintError) {
@@ -213,4 +228,39 @@ module.exports = {
     }
   },
 
+  async getVideoCourse(chapterModuleUuid) {
+    try {
+      const videoCourse = await courseRepository.getVideoCourse(chapterModuleUuid);
+      return videoCourse;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Chapter Module Uuid format is not valid');
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getCourseByChapterModule(chapterModuleUuid) {
+    try {
+      const course = await courseRepository.getCourseByChapterModule(chapterModuleUuid);
+      return course;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getPaymentStatusByUserCourse(userUuid, courseUuid) {
+    try {
+      const paymentStatus = await courseRepository.getPaymentStatusByUserCourse(userUuid, courseUuid);
+      return paymentStatus;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
 };

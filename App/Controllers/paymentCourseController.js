@@ -60,4 +60,24 @@ module.exports = {
       });
     }
   },
+
+  async invoicePayment(req, res) {
+    try {
+      const { paymentUuid } = req.params;
+      const invoice = await paymentCourseService.invoicePayment(paymentUuid);
+
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Successfully Get Invoice Course',
+        data: invoice,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
 };

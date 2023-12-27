@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const {
   course,
   courseDetail,
@@ -35,7 +36,7 @@ module.exports = {
     });
   },
 
-  async getCourseById(id) {
+  getCourseById(id, userUuid) {
     return course.findByPk(id, {
       include: [
         {
@@ -48,13 +49,35 @@ module.exports = {
         },
         {
           model: courseChapter,
-          attributes: ['duration', 'id'],
+          attributes: ['duration', 'chapter'],
           order: ['id', 'ASC'],
           include: [
             {
               model: chapterModule,
-              attributes: ['title', 'course_link'],
+              attributes: ['title', 'uuid'],
               order: ['id', 'ASC'],
+              include: [
+                {
+                  model: userChapterModule,
+                  where: {
+                    user_uuid: userUuid,
+                  },
+                  required: false,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          model: userCourse,
+          where: {
+            user_uuid: userUuid,
+          },
+          required: false,
+          include: [
+            {
+              model: userCoursePayment,
+              required: false,
             },
           ],
         },
@@ -194,11 +217,12 @@ module.exports = {
         user_uuid: userUuid,
         course_uuid: courseUuid,
       },
+      attributes: ['uuid'],
     });
   },
 
-  completingModule(payload) {
-    return userChapterModule.create(payload);
+  completingModule(userChapterModuleUuid) {
+    return userChapterModule.update({ is_complete: true }, { where: { uuid: userChapterModuleUuid } });
   },
 
   getUserModule(userUuid, chapterModuleUuid) {
@@ -206,6 +230,79 @@ module.exports = {
       where: {
         user_uuid: userUuid,
         chapter_module_uuid: chapterModuleUuid,
+      },
+    });
+  },
+
+  getVideoCourse(chapterModuleUuid) {
+    return chapterModule.findByPk(chapterModuleUuid, {
+      attributes: ['course_link'],
+    });
+  },
+
+  getCourseByChapterModule(chapterModuleUuid) {
+    return course.findOne({
+      include: [
+        {
+          model: courseChapter,
+          attributes: ['id', 'chapter'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['uuid'],
+              where: {
+                uuid: chapterModuleUuid,
+              },
+            },
+          ],
+        },
+      ],
+      attributes: ['uuid', 'isPremium'],
+    });
+  },
+
+  getPaymentStatusByUserCourse(userUuid, courseUuid) {
+    return userCourse.findOne({
+      where: {
+        user_uuid: userUuid,
+        course_uuid: courseUuid,
+      },
+      include: [
+        {
+          model: userCoursePayment,
+          attributes: ['is_paid'],
+        },
+      ],
+      attributes: ['uuid'],
+    });
+  },
+
+  getChapterModuleByCourse(courseUuid) {
+    return courseChapter.findAll({
+      where: {
+        course_uuid: courseUuid,
+      },
+      attributes: ['id'],
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+        },
+        {
+          model: course,
+          attributes: ['isPremium'],
+        },
+      ],
+    });
+  },
+
+  countTotalProgress(userChapterModuleUuid, userUuid) {
+    return userChapterModule.count({
+      where: {
+        uuid: {
+          [Op.in]: userChapterModuleUuid,
+        },
+        user_uuid: userUuid,
       },
     });
   },

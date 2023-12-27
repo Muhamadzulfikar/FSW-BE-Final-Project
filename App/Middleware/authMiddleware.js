@@ -55,6 +55,7 @@ module.exports = {
 
   async isUserHasRegister(req, res, next) {
     try {
+      if (!req.body.email) errorHandling.badRequest('Email must not be empty');
       const user = await authService.findUser(req.body.email);
       if (!user) {
         errorHandling.unauthorized('Cannot Find User');
@@ -104,6 +105,19 @@ module.exports = {
       const { user } = req;
       if (user.role !== 'super admin' && user.role !== 'admin') {
         errorHandling.forbidden(`${user.name} Is Not Super Admin`);
+      }
+      next();
+    } catch (error) {
+      responseError(res, error);
+    }
+  },
+
+  async isLoginAdmin(req, res, next) {
+    try {
+      const { email } = req.body;
+      const user = await authService.findUser(email);
+      if (user.role !== 'admin' && user.role !== 'super admin') {
+        errorHandling.unauthorized('User is not admin');
       }
       next();
     } catch (error) {

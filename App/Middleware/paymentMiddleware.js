@@ -42,7 +42,17 @@ module.exports = {
 
       if (userCourse) {
         const payment = await paymentCourseService.getPaymentByUserCourse(userCourse.uuid);
-        if (payment.is_paid === true || payment.expiredAt > new Date()) errorHandling.badRequest('You already enroll this course');
+        if (payment?.is_paid === true) errorHandling.badRequest('You already enroll this course');
+        if (payment?.expiredAt > new Date()) {
+          res.status(200).json({
+            status: 'OK',
+            code: 200,
+            message: 'Success',
+            data: {
+              paymentUuid: payment?.uuid,
+            },
+          });
+        }
       }
 
       next();

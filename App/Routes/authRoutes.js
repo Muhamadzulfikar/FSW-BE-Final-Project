@@ -8,6 +8,8 @@ const {
   userRegister,
   validateOtp,
   validateJwt,
+  forgetPassword,
+  resetPassword,
 } = require('../Controllers/authController');
 
 const {
@@ -17,9 +19,11 @@ const {
   validateBodyRequest,
   authorize,
   isSuperAdmin,
+  isLoginAdmin,
 } = require('../Middleware/authMiddleware');
 
 route.post('/login', validateBodyLogin, isUserHasRegister, userLogin);
+route.post('/login/admin', validateBodyLogin, isUserHasRegister, isLoginAdmin, userLogin);
 route.post(
   '/register',
   validateBodyRequest,
@@ -40,5 +44,7 @@ route.post(
 route.get('/profile', authorize, user);
 
 route.put('/update-password', authorize, updatePassword);
+route.post('/forget-password', isUserHasRegister, forgetPassword);
+route.put('/reset-password/:jwtToken', resetPassword);
 
 module.exports = route;

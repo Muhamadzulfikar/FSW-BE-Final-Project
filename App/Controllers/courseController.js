@@ -1,3 +1,4 @@
+const responseError = require('../Error/responseError');
 const courseService = require('../Services/courseService');
 
 module.exports = {
@@ -23,7 +24,9 @@ module.exports = {
 
   async getCourseDetailById(req, res) {
     try {
-      const courseDetail = await courseService.getCourseDetailById(req.params.id);
+      const { user } = req;
+      const userUuid = user ? user.userUuid : null;
+      const courseDetail = await courseService.getCourseDetailById(req.params.id, userUuid);
 
       res.status(200).json({
         status: 'OK',
@@ -32,9 +35,12 @@ module.exports = {
         data: courseDetail,
       });
     } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
+      if (error.code) {
+        responseError(res, error);
+      }
+      res.status(500).json({
+        code: 500,
+        status: 'Internal Server Error',
         message: error.message,
       });
     }
@@ -188,14 +194,33 @@ module.exports = {
 
   async completingModule(req, res) {
     try {
-      const { userUuid } = req.user;
-      const { chapter_module_uuid: chapterModuleUuid } = req.body;
-      const userChapterModule = await courseService.completingModule(userUuid, chapterModuleUuid);
+      const { userChapterModuleUuid } = req.params;
+      const userChapterModule = await courseService.completingModule(userChapterModuleUuid);
       res.status(201).json({
         status: 'created',
         code: 201,
         message: 'Successfully Completing Module',
         data: userChapterModule,
+      });
+    } catch (error) {
+      res.status(error.code).json({
+        code: error.code,
+        status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async getVideoCourse(req, res) {
+    try {
+      const { chapterModuleUuid } = req.params;
+      const videoCourse = await courseService.getVideoCourse(chapterModuleUuid);
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Successfully get Video',
+        data: videoCourse,
+
       });
     } catch (error) {
       res.status(error.code).json({
