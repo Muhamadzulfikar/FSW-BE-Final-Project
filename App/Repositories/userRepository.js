@@ -48,4 +48,8 @@ module.exports = {
       }
     }
   },
+
+  updateProfileUser(userUuid, payload) {
+    return user.update(payload, { where: { uuid: userUuid } });
+  },
 };
