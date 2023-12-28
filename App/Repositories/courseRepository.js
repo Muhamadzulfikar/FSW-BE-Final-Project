@@ -1,4 +1,3 @@
-const { Op } = require('sequelize');
 const {
   course,
   courseDetail,
@@ -59,10 +58,12 @@ module.exports = {
               include: [
                 {
                   model: userChapterModule,
+                  attributes: ['is_complete', 'uuid'],
                   where: {
                     user_uuid: userUuid,
                   },
                   required: false,
+                  order: ['chapter_module_uuid', 'ASC'],
                 },
               ],
             },
@@ -171,35 +172,8 @@ module.exports = {
     return course.update(dataCourse, { where: { uuid }, returnig: true });
   },
 
-  async deleteCourse(uuid) {
-    // eslint-disable-next-line max-len
-    const userCoursePayments = await userCoursePayment.findAll({ where: { user_course_uuid: uuid } });
-    await Promise.all(userCoursePayments.map((payment) => payment.destroy()));
-
-    // Find and delete associated user courses
-    const userCourses = await userCourse.findAll({ where: { course_uuid: uuid } });
-    await Promise.all(userCourses.map(async (userCourseItem) => {
-      // eslint-disable-next-line max-len
-      const coursePayments = await userCoursePayment.findAll({ where: { user_course_uuid: userCourseItem.uuid } });
-      await Promise.all(coursePayments.map((payment) => payment.destroy()));
-      await userCourseItem.destroy();
-    }));
-
-    const courseDetails = await courseDetail.findAll({ where: { course_uuid: uuid } });
-    await Promise.all(courseDetails.map((detail) => detail.destroy()));
-
-    const courseChapters = await courseChapter.findAll({ where: { course_uuid: uuid } });
-    await Promise.all(courseChapters.map(async (chapter) => {
-      // eslint-disable-next-line max-len
-      const chapterModules = await chapterModule.findAll({ where: { course_chapter_id: chapter.uuid } });
-      await Promise.all(chapterModules.map((module) => module.destroy()));
-
-      await chapter.destroy();
-    }));
-
-    const deletedCourse = await course.destroy({ where: { uuid }, returning: true });
-
-    return deletedCourse;
+  deleteCourse(courseUuid) {
+    return course.destroy({ where: { uuid: courseUuid } });
   },
 
   isOnboarding(userUuid, courseUuid, payload) {
@@ -296,14 +270,38 @@ module.exports = {
     });
   },
 
-  countTotalProgress(userChapterModuleUuid, userUuid) {
-    return userChapterModule.count({
-      where: {
-        uuid: {
-          [Op.in]: userChapterModuleUuid,
+  getMyCourse(userUuid) {
+    return course.findAll({
+      include: [
+        {
+          model: userCourse,
+          where: {
+            user_uuid: userUuid,
+          },
+          attributes: ['uuid'],
         },
-        user_uuid: userUuid,
-      },
+        {
+          model: courseCategory,
+          attributes: ['name'],
+        },
+        {
+          model: courseChapter,
+          attributes: ['duration'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['uuid'],
+              include: [
+                {
+                  model: userChapterModule,
+                  attributes: ['is_complete'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'intro_video'] },
     });
   },
 };

@@ -155,12 +155,13 @@ module.exports = {
 
   async deleteCourse(req, res) {
     try {
-      const { id } = req.params;
-      await courseService.deleteCourseAdmin(id);
-      res.status(200).json({
+      const { courseUuid } = req.params;
+      await courseService.deleteCourseAdmin(courseUuid);
+      res.status(201).json({
         status: 'OK',
-        code: 200,
-        message: 'Success',
+        code: 201,
+        message: 'Successfully Delete Data',
+        data: true,
 
       });
     } catch (error) {
@@ -226,6 +227,33 @@ module.exports = {
       res.status(error.code).json({
         code: error.code,
         status: error.status,
+        message: error.message,
+      });
+    }
+  },
+
+  async getMyCourse(req, res) {
+    try {
+      const { userUuid } = req.user;
+      const myCourse = await courseService.getMyCourse(userUuid);
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Successfully get My Course',
+        data: myCourse,
+
+      });
+    } catch (error) {
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      }
+      res.status(500).json({
+        code: 500,
+        status: 'Internal Server Error',
         message: error.message,
       });
     }

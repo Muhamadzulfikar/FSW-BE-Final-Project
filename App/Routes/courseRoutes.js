@@ -12,7 +12,6 @@ const {
   validateUserCourse,
   isPremiumCourseAndPaid,
   authorizeCourse,
-  // isCompletedCourseModule,
 } = require('../Middleware/courseMiddleware');
 
 const route = express.Router();
@@ -21,13 +20,14 @@ route.get('/course-categories', courseCategoryController.getAllCourseCategory);
 route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', authorizeCourse, courseController.getCourseDetailById);
 route.get('/courses/video-course/:chapterModuleUuid', authorize, isPremiumCourseAndPaid, courseController.getVideoCourse);
+route.get('/courses/my-courses', authorize, courseController.getMyCourse);
 
 route.get('/admin/statistic', authorize, isSuperAdminAndAdmin, courseController.getCourseStatistic);
 route.get('/admin/payment-status', authorize, isSuperAdminAndAdmin, courseController.getCourseAdmin);
 route.get('/admin/courses', authorize, isSuperAdminAndAdmin, courseController.getManagementCourse);
 route.post('/admin/courses', authorize, isSuperAdminAndAdmin, courseController.createCourse);
 route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
-route.delete('/admin/courses/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
+route.delete('/admin/courses/:courseUuid', authorize, isSuperAdminAndAdmin, courseController.deleteCourse);
 
 route.post('/courses/enrollment', authorize, isEnrollCourse, paymentCourseController.enrollCourse);
 route.get('/courses/invoice/:paymentUuid', authorize, paymentCourseController.invoicePayment);

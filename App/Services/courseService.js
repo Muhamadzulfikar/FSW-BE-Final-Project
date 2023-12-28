@@ -7,6 +7,31 @@ module.exports = {
     const { courseChapters } = course;
     const totalModule = courseChapters.length;
     const totalMinute = courseChapters.reduce((total, chapter) => total + chapter.duration, 0);
+    let progressBar = 0;
+
+    if (courseChapters[0].chapterModules) {
+      let totalCompleteVideo = 0;
+      let totalVideo = 0;
+
+      courseChapters.forEach((courseChapter) => {
+        const { chapterModules } = courseChapter;
+
+        chapterModules.forEach((chapterModule) => {
+          const userChapterModules = chapterModule.userChapterModules[0];
+          const isCompleted = userChapterModules?.is_complete;
+
+          if (isCompleted) {
+            totalCompleteVideo += 1;
+            totalVideo += 1;
+          } else {
+            totalVideo += 1;
+          }
+        });
+      });
+
+      progressBar = Number(((totalCompleteVideo / totalVideo) * 100).toFixed());
+    }
+
     return {
       id: course.uuid,
       category: course.courseCategory.name,
@@ -20,6 +45,7 @@ module.exports = {
       classCode: course.code,
       totalModule,
       totalMinute,
+      progressBar,
     };
   },
 
@@ -44,7 +70,7 @@ module.exports = {
       } = course.courseDetail.dataValues;
 
       let totalCompleteVideo = 0;
-      const userChapterModuleUuids = [];
+      let totalVideo = 0;
 
       const courseModules = course.courseChapters.map((courseChapter) => ({
         chapter: courseChapter.chapter,
@@ -52,9 +78,11 @@ module.exports = {
         module: courseChapter.chapterModules.map((courseModule) => {
           const userChapterModules = courseModule.userChapterModules[0];
           const isCompleted = userChapterModules ? userChapterModules.is_complete : false;
-          userChapterModuleUuids.push(userChapterModules?.uuid);
           if (isCompleted) {
             totalCompleteVideo += 1;
+            totalVideo += 1;
+          } else {
+            totalVideo += 1;
           }
           return {
             chapterModuleUuid: courseModule.uuid,
@@ -65,7 +93,6 @@ module.exports = {
         }),
       }));
 
-      const totalVideo = await courseRepository.countTotalProgress(userChapterModuleUuids, userUuid);
       const progressBar = Number(((totalCompleteVideo / totalVideo) * 100).toFixed());
 
       const userCourses = course.userCourses[0];
@@ -164,9 +191,9 @@ module.exports = {
     }
   },
 
-  async deleteCourseAdmin(uuid) {
+  async deleteCourseAdmin(courseUuid) {
     try {
-      const course = await courseRepository.deleteCourse(uuid);
+      const course = await courseRepository.deleteCourse(courseUuid);
       return course;
     } catch (error) {
       return errorHandling.badRequest(error);
@@ -256,6 +283,18 @@ module.exports = {
     try {
       const paymentStatus = await courseRepository.getPaymentStatusByUserCourse(userUuid, courseUuid);
       return paymentStatus;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      }
+      errorHandling.internalError(error);
+    }
+  },
+
+  async getMyCourse(userUuid) {
+    try {
+      const myCourses = await courseRepository.getMyCourse(userUuid);
+      return myCourses.map(this.mapCourseResponse);
     } catch (error) {
       if (error instanceof DatabaseError) {
         errorHandling.badRequest(error.message);
