@@ -11,10 +11,12 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.courseChapter, {
         foreignKey: 'course_chapter_id',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.userChapterModule, {
         foreignKey: 'chapter_module_uuid',
+        onDelete: 'CASCADE',
       });
     }
   }
