@@ -163,8 +163,37 @@ module.exports = {
         price: item.price,
       })));
   },
-  createCourse(dataCourse) {
-    return course.create(dataCourse);
+  async createCourse(dataCourse) {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const createdCourse = await course.create(dataCourse);
+
+      const chaptersData = dataCourse.chapters || [];
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const chapterData of chaptersData) {
+        // eslint-disable-next-line no-await-in-loop
+        const createdChapter = await courseChapter.create({
+          course_uuid: createdCourse.uuid,
+          ...chapterData,
+        });
+
+        const modulesData = chapterData.modules || [];
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const moduleData of modulesData) {
+          // eslint-disable-next-line no-await-in-loop
+          await chapterModule.create({
+            course_chapter_id: createdChapter.id,
+            ...moduleData,
+          });
+        }
+      }
+
+      return createdCourse;
+    } catch (error) {
+      throw error;
+    }
   },
 
   updateCourse(uuid, dataCourse) {

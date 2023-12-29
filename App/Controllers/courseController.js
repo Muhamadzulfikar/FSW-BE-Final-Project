@@ -1,5 +1,9 @@
 const responseError = require('../Error/responseError');
+// const multer = require('multer');
 const courseService = require('../Services/courseService');
+const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
+
+// const upload = multer({ dest: 'uploads/' });
 
 module.exports = {
   async getAllCourses(req, res) {
@@ -116,19 +120,33 @@ module.exports = {
 
   async createCourse(req, res) {
     try {
-      const dataCourse = req.body;
-      const courses = await courseService.createCourseAdmin(dataCourse);
-      res.status(200).json({
+      // console.log(req.body);
+      // Menggunakan Multer untuk menyimpan file gambar sementara di server
+      const imageData = req.file; // Menggunakan req.file karena Multer menyimpan file di req.file
+      console.log(imageData);
+
+      // Mengunggah file gambar ke Cloudinary
+      const imageUrl = await uploadToCloudinary(imageData);
+
+      // Mengganti URL gambar dengan URL dari Cloudinary
+      req.body.image = imageUrl;
+
+      // Memanggil layanan untuk membuat kursus
+      const courses = await courseService.createCourseAdmin(req.body);
+
+      // Memberikan respons ke klien
+      res.status(201).json({
         status: 'OK',
-        code: 200,
+        code: 201,
         message: 'Success',
         data: courses,
       });
     } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
+      // Menangani kesalahan dan memberikan respons yang sesuai
+      res.status(error.code || 500).json({
+        code: error.code || 500,
+        status: error.status || 'Internal Server Error',
+        message: error.message || 'Something went wrong',
       });
     }
   },

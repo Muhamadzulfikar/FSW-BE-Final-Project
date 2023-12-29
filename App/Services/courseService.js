@@ -1,4 +1,7 @@
-const { ValidationError, DatabaseError, ForeignKeyConstraintError } = require('sequelize');
+const {
+  ValidationError, DatabaseError, ForeignKeyConstraintError,
+} = require('sequelize');
+// const { v4: uuidv4 } = require('uuid');
 const courseRepository = require('../Repositories/courseRepository');
 const errorHandling = require('../Error/errorHandling');
 
@@ -149,9 +152,9 @@ module.exports = {
       return course;
     } catch (error) {
       if (error instanceof ValidationError) {
-        errorHandling.badRequest(error.errors[0].message);
+        throw error;
       }
-      errorHandling.internalError(error);
+      throw error;
     }
   },
 
