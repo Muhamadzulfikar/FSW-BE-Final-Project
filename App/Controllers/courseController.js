@@ -120,18 +120,14 @@ module.exports = {
 
   async createCourse(req, res) {
     try {
-      // console.log(req.body);
-      // Menggunakan Multer untuk menyimpan file gambar sementara di server
-      const imageData = req.file; // Menggunakan req.file karena Multer menyimpan file di req.file
+      console.log('ini adalah req.body: ', req.body);
+      const imageData = req.file;
       console.log(imageData);
 
-      // Mengunggah file gambar ke Cloudinary
       const imageUrl = await uploadToCloudinary(imageData);
 
-      // Mengganti URL gambar dengan URL dari Cloudinary
       req.body.image = imageUrl;
 
-      // Memanggil layanan untuk membuat kursus
       const courses = await courseService.createCourseAdmin(req.body);
 
       // Memberikan respons ke klien
@@ -147,6 +143,26 @@ module.exports = {
         code: error.code || 500,
         status: error.status || 'Internal Server Error',
         message: error.message || 'Something went wrong',
+      });
+      console.error('Error uploading to Cloudinary:', error);
+      throw error;
+    }
+  },
+
+  async processImage(req, res, next) {
+    try {
+      if (req.file) {
+        const imageData = req.file;
+        const imageUrl = await uploadToCloudinary(imageData);
+        req.body.image_url = imageUrl;
+      }
+      next();
+    } catch (error) {
+      console.error('Error processing image:', error);
+      res.status(500).json({
+        code: 500,
+        status: 'Internal Server Error',
+        message: 'Error processing image',
       });
     }
   },

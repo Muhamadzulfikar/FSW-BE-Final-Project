@@ -37,7 +37,15 @@ route.post('/admin/courses', upload.single('image'), courseController.createCour
 // route.post('/admin/courses', upload.none(), (req, res, next)=> {
 //   console.log(req.body);
 // });
-route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
+route.put(
+  '/admin/course/:id',
+  authorize,
+  isSuperAdminAndAdmin,
+  courseController.getCourseById,
+  courseController.processImage, // Tambahkan fungsi untuk memproses gambar
+  courseController.updateCourse,
+);
+// route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
 route.delete('/admin/courses/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
 
 route.post('/courses/enrollment', authorize, isEnrollCourse, paymentCourseController.enrollCourse);
