@@ -19,6 +19,44 @@ module.exports = {
     }
   },
 
+  async updateProfile(req, res) {
+    try {
+      const { userUuid } = req.user;
+      const payload = {};
+      const {
+        name, phone, address, country, city,
+      } = req.body;
+
+      if (name) payload.name = name;
+      if (phone) payload.phone = phone;
+      if (address) payload.address = address;
+      if (country) payload.country = country;
+      if (city) payload.city = city;
+
+      const profile = await userServices.updateProfileUser(userUuid, payload);
+
+      res.status(201).json({
+        status: 'Created',
+        code: 201,
+        message: 'Successfully update profile',
+        data: profile,
+      });
+    } catch (error) {
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      }
+      res.status(500).json({
+        code: 500,
+        status: 'Internal Server Error',
+        message: error,
+      });
+    }
+  },
+
   async changePassword(req, res) {
     try {
       const courseDetail = await userServices.changePasswordUser(req.params.id);

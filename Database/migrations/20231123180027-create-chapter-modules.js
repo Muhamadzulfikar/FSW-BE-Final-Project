@@ -19,6 +19,7 @@ module.exports = {
           model: 'course_chapters',
           key: 'id',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       title: {

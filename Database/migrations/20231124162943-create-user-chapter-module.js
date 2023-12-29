@@ -19,6 +19,7 @@ module.exports = {
           model: 'chapter_modules',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       user_uuid: {
@@ -26,6 +27,7 @@ module.exports = {
         references: {
           model: 'users',
           key: 'uuid',
+          onDelete: 'CASCADE',
         },
         allowNull: false,
       },

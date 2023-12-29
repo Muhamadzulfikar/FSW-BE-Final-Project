@@ -13,6 +13,7 @@ module.exports = (sequelize) => {
        */
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
+        onDelete: 'CASCADE',
       });
 
       /**

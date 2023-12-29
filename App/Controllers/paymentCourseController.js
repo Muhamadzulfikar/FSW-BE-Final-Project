@@ -25,7 +25,8 @@ module.exports = {
     try {
       const { paymentUuid } = req.params;
       const { paymentMethod } = req;
-      const paymentCourse = await paymentCourseService.paymentCourse(paymentUuid, paymentMethod);
+      const { userUuid } = req.user;
+      const paymentCourse = await paymentCourseService.paymentCourse(paymentUuid, paymentMethod, userUuid);
       res.status(201).json({
         status: 'OK',
         code: 201,

@@ -10,6 +10,7 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.hasMany(models.course, {
         foreignKey: 'course_category_id',
+        onDelete: 'CASCADE',
       });
     }
   }

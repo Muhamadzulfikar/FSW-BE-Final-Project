@@ -19,6 +19,7 @@ module.exports = {
           model: 'users',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       course_uuid: {
@@ -27,6 +28,7 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       is_onboarding: {

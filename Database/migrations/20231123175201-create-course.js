@@ -15,6 +15,7 @@ module.exports = {
           model: 'course_categories',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       uuid: {
         type: Sequelize.UUID,

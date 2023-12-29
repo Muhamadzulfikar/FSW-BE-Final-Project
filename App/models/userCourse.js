@@ -11,14 +11,17 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.course, {
         foreignKey: 'course_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.userCoursePayment, {
         foreignKey: 'user_course_uuid',
+        onDelete: 'CASCADE',
       });
     }
   }
