@@ -15,6 +15,7 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
       },
       description: {
         type: Sequelize.STRING,

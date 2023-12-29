@@ -12,18 +12,22 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.hasMany(models.userChapterModule, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.userCourse, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.otpUser, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.userNotification, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
     }
   }
@@ -78,7 +82,9 @@ module.exports = (sequelize) => {
             msg: 'Phone number must be not empty',
           },
         },
-        unique: true,
+        unique: {
+          msg: 'Phone number already exists',
+        },
       },
       is_verify: {
         type: DataTypes.BOOLEAN,

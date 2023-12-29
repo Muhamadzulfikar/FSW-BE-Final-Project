@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
     }
   }

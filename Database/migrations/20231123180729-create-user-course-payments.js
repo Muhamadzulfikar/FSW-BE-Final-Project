@@ -18,6 +18,7 @@ module.exports = {
           model: 'user_courses',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       payment_method: {

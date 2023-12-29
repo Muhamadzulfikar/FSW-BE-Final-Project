@@ -2,6 +2,7 @@ const { DatabaseError, ForeignKeyConstraintError } = require('sequelize');
 const paymentCourseRepository = require('../Repositories/paymentCourseRepository');
 const errorHandling = require('../Error/errorHandling');
 const courseRepository = require('../Repositories/courseRepository');
+const userNotificationRepository = require('../Repositories/userNotificationRepository');
 
 module.exports = {
   invoiceResponse(invoice) {
@@ -58,17 +59,28 @@ module.exports = {
     }
   },
 
-  async paymentCourse(paymentUuid, paymentMethod) {
+  async paymentCourse(paymentUuid, paymentMethod, userUuid) {
     try {
       const payload = {
         payment_method: paymentMethod,
         is_paid: true,
       };
 
+      const notification = {
+        title: 'Payment Course',
+        notification: 'Selamat anda telah berhasil melakukan pembayaran course',
+        user_uuid: userUuid,
+      };
+
       await paymentCourseRepository.paymentCourse(paymentUuid, payload);
       const invoice = await paymentCourseRepository.InvoicePayment(paymentUuid);
+      await userNotificationRepository.createNotification(notification);
 
-      return this.invoiceResponse(invoice);
+      return {
+        courseUuid: invoice.userCourse.course_uuid,
+        ...this.invoiceResponse(invoice),
+        paymentMethod: invoice.payment_method,
+      };
     } catch (error) {
       errorHandling.internalError(error);
     }

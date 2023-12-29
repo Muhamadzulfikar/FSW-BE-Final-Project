@@ -15,6 +15,7 @@ module.exports = (sequelize) => {
 
       this.belongsTo(models.courseCategory, {
         foreignKey: 'course_category_id',
+        onDelete: 'CASCADE',
       });
 
       /**
@@ -23,10 +24,12 @@ module.exports = (sequelize) => {
 
       this.hasMany(models.userCourse, {
         foreignKey: 'course_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasOne(models.courseDetail, {
         foreignKey: 'course_uuid',
+        onDelete: 'CASCADE',
       });
 
       this.hasMany(models.courseChapter, {

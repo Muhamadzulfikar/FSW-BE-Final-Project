@@ -14,6 +14,7 @@ module.exports = {
           model: 'courses',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
         allowNull: false,
       },
       chapter: {

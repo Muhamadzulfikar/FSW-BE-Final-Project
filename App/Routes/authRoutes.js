@@ -1,7 +1,7 @@
 const express = require('express');
 
 const route = express.Router();
-const { user, updatePassword } = require('../Controllers/userController');
+const { user, updatePassword, updateProfile } = require('../Controllers/userController');
 
 const {
   userLogin,
@@ -42,6 +42,7 @@ route.post(
   userRegister,
 );
 route.get('/profile', authorize, user);
+route.put('/profile', authorize, updateProfile);
 
 route.put('/update-password', authorize, updatePassword);
 route.post('/forget-password', isUserHasRegister, forgetPassword);

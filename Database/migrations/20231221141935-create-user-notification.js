@@ -19,6 +19,9 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
       },
+      notification: {
+        type: Sequelize.STRING,
+      },
       is_conditional: {
         type: Sequelize.BOOLEAN,
         allowNull: true,

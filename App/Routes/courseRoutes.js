@@ -17,7 +17,6 @@ const {
   validateUserCourse,
   isPremiumCourseAndPaid,
   authorizeCourse,
-  // isCompletedCourseModule,
 } = require('../Middleware/courseMiddleware');
 
 // const upload = multer();
@@ -28,6 +27,7 @@ route.get('/course-categories', courseCategoryController.getAllCourseCategory);
 route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', authorizeCourse, courseController.getCourseDetailById);
 route.get('/courses/video-course/:chapterModuleUuid', authorize, isPremiumCourseAndPaid, courseController.getVideoCourse);
+route.get('/courses/my-courses', authorize, filterByCategoriesAndLevel, courseController.getMyCourse);
 
 route.get('/admin/statistic', authorize, isSuperAdminAndAdmin, courseController.getCourseStatistic);
 route.get('/admin/payment-status', authorize, isSuperAdminAndAdmin, courseController.getCourseAdmin);
@@ -38,7 +38,7 @@ route.post('/admin/courses', upload.single('image'), courseController.createCour
 //   console.log(req.body);
 // });
 route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
-route.delete('/admin/courses/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.deleteCourse);
+route.delete('/admin/courses/:courseUuid', authorize, isSuperAdminAndAdmin, courseController.deleteCourse);
 
 route.post('/courses/enrollment', authorize, isEnrollCourse, paymentCourseController.enrollCourse);
 route.get('/courses/invoice/:paymentUuid', authorize, paymentCourseController.invoicePayment);

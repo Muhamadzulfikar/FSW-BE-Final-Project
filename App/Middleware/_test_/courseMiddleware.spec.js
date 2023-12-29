@@ -86,3 +86,39 @@ describe('filterByCategoriesAndLevel', () => {
     });
   });
 });
+
+describe('validateUserCourse', () => {
+  it('should set userCourseId when valid query params are provided', () => {
+    const req = { params: { userCourseId: 1 } };
+    const res = {};
+    const next = jest.fn();
+    middleware.validateUserCourse(req, res, next);
+
+    expect(req.userCourseId).toEqual(1);
+    expect(next).toHaveBeenCalled();
+  });
+});
+
+describe('isCompleteCourseModule', () => {
+  it('should set userCourseId when valid query params are provided', () => {
+    const req = { params: { userCourseId: 1 } };
+    const res = {};
+    const next = jest.fn();
+    middleware.isCompleteCourseModule(req, res, next);
+
+    expect(req.userCourseId).toEqual(1);
+    expect(next).toHaveBeenCalled();
+  });
+});
+
+describe('isPremiumCourseAndPaid', () => {
+  it('should set userCourseId when valid query params are provided', () => {
+    const req = { params: { userCourseId: 1 } };
+    const res = {};
+    const next = jest.fn();
+    middleware.isPremiumCourseAndPaid(req, res, next);
+
+    expect(req.userCourseId).toEqual(1);
+    expect(next).toHaveBeenCalled();
+  });
+});

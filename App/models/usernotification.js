@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
     static associate(models) {
       this.belongsTo(models.user, {
         foreignKey: 'user_uuid',
+        onDelete: 'CASCADE',
       });
     }
   }
@@ -18,11 +19,25 @@ module.exports = (sequelize) => {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
-    user_uuid: DataTypes.STRING,
-    title: DataTypes.STRING,
-    is_conditional: DataTypes.BOOLEAN,
-    is_read: DataTypes.BOOLEAN,
+    user_uuid: DataTypes.UUID,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    notification: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    is_conditional: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    is_read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     sequelize,
     modelName: 'userNotification',
