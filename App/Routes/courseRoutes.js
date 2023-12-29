@@ -42,7 +42,7 @@ route.put(
   authorize,
   isSuperAdminAndAdmin,
   courseController.getCourseById,
-  courseController.processImage, // Tambahkan fungsi untuk memproses gambar
+  courseController.processImage,
   courseController.updateCourse,
 );
 // route.put('/admin/course/:id', authorize, isSuperAdminAndAdmin, courseController.getCourseById, courseController.updateCourse);
