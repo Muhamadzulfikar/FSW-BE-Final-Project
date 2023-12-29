@@ -78,6 +78,7 @@ module.exports = {
       });
     }
   },
+
   async getCourseAdmin(req, res) {
     try {
       const courses = await courseService.getListCourseAdmin();
@@ -235,7 +236,8 @@ module.exports = {
   async getMyCourse(req, res) {
     try {
       const { userUuid } = req.user;
-      const myCourse = await courseService.getMyCourse(userUuid);
+      const { isComplete } = req.query;
+      const myCourse = await courseService.getMyCourse(userUuid, req.filter, isComplete);
       res.status(200).json({
         status: 'OK',
         code: 200,

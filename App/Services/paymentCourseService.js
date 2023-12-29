@@ -76,7 +76,11 @@ module.exports = {
       const invoice = await paymentCourseRepository.InvoicePayment(paymentUuid);
       await userNotificationRepository.createNotification(notification);
 
-      return this.invoiceResponse(invoice);
+      return {
+        courseUuid: invoice.userCourse.course_uuid,
+        ...this.invoiceResponse(invoice),
+        paymentMethod: invoice.payment_method,
+      };
     } catch (error) {
       errorHandling.internalError(error);
     }

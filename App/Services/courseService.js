@@ -291,10 +291,20 @@ module.exports = {
     }
   },
 
-  async getMyCourse(userUuid) {
+  async getMyCourse(userUuid, filter, isComplete) {
     try {
-      const myCourses = await courseRepository.getMyCourse(userUuid);
-      return myCourses.map(this.mapCourseResponse);
+      let responseData;
+      const myCourses = await courseRepository.getMyCourse(userUuid, filter);
+
+      if (isComplete === '1') {
+        responseData = myCourses.map(this.mapCourseResponse).filter((course) => course.progressBar === 100);
+      } else if (isComplete === '0') {
+        responseData = myCourses.map(this.mapCourseResponse).filter((course) => course.progressBar < 100);
+      } else {
+        responseData = myCourses.map(this.mapCourseResponse);
+      }
+
+      return responseData;
     } catch (error) {
       if (error instanceof DatabaseError) {
         errorHandling.badRequest(error.message);

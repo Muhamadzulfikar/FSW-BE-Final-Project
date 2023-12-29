@@ -113,6 +113,9 @@ module.exports = {
 
   getCoursesAdmin() {
     return userCoursePayment.findAll({
+      where: {
+        payment_method: ['bank transfer', 'credit card'],
+      },
       include: [
         {
           model: userCourse,
@@ -270,8 +273,9 @@ module.exports = {
     });
   },
 
-  getMyCourse(userUuid) {
+  getMyCourse(userUuid, filter) {
     return course.findAll({
+      where: filter,
       include: [
         {
           model: userCourse,

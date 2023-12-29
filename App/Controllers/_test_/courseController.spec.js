@@ -146,3 +146,295 @@ describe('getCourseDetailById', () => {
     });
   });
 });
+
+describe('getCourseById', () => {
+  it('should return the course when a valid id is provided', async () => {
+    const req = { params: { uuid: 1 } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedCourse = { id: 1, name: 'Course 1' };
+    courseService.getCourseById = jest.fn().mockResolvedValue(expectedCourse);
+
+    await courseController.getCourseById(req, res);
+
+    expect(req.course).toEqual(expectedCourse);
+  });
+});
+
+describe('getCourseStatistic', () => {
+  it('should return the course statistic', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedCourseStatistic = {
+      activeClassItem: 1,
+      activeUserItem: 2,
+      premiumClassItem: 3,
+    };
+    courseService.getCourseStatistic = jest.fn().mockResolvedValue(expectedCourseStatistic);
+
+    await courseController.getCourseStatistic(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedCourseStatistic,
+    });
+  });
+});
+
+describe('getCourseAdmin', () => {
+  it('should return the course admin', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedCourseAdmin = [
+      {
+        buyAt: '2023-12-29T03:41:48.581Z',
+        courseCategory: 'UI/UX Design',
+        courseName: 'Intro to Basic of User Interaction Design',
+        is_paid: true,
+        paymentMethod: 'credit card',
+        user: 'Terry Jones',
+      },
+    ];
+    courseService.getCourseAdmin = jest.fn().mockResolvedValue(expectedCourseAdmin);
+
+    await courseController.getCourseAdmin(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedCourseAdmin,
+    });
+  });
+});
+
+describe('getManagementCourse', () => {
+  it('should return the management course', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedManagementCourse = [
+      {
+        buyAt: '2023-12-29T03:41:48.581Z',
+        courseCategory: 'UI/UX Design',
+        courseName: 'Intro to Basic of User Interaction Design',
+        is_paid: true,
+        paymentMethod: 'credit card',
+        user: 'Terry Jones',
+      },
+    ];
+    courseService.getManagementCourse = jest.fn().mockResolvedValue(expectedManagementCourse);
+
+    await courseController.getManagementCourse(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedManagementCourse,
+    });
+  });
+});
+
+describe('createCourse', () => {
+  it('should return the created course', async () => {
+    const req = {
+      body: {
+        name: 'Course 1',
+        description: 'Description 1',
+        level: 'beginner',
+        categoryId: 1,
+        price: 100,
+        discount: 0,
+        status: 'active',
+        imageUrl: 'image-url',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedCreatedCourse = {
+      id: 1,
+      name: 'Course 1',
+      description: 'Description 1',
+      level: 'beginner',
+      categoryId: 1,
+      price: 100,
+      discount: 0,
+      status: 'active',
+      imageUrl: 'image-url',
+    };
+    courseService.createCourse = jest.fn().mockResolvedValue(expectedCreatedCourse);
+
+    await courseController.createCourse(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'Created',
+      code: 201,
+      message: 'Success',
+      data: expectedCreatedCourse,
+    });
+  });
+});
+
+describe('updateCourse', () => {
+  it('should return the updated course', async () => {
+    const req = {
+      params: { id: 1 },
+      body: {
+        name: 'Course 1',
+        description: 'Description 1',
+        level: 'beginner',
+        categoryId: 1,
+        price: 100,
+        discount: 0,
+        status: 'active',
+        imageUrl: 'image-url',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedUpdatedCourse = {
+      id: 1,
+      name: 'Course 1',
+      description: 'Description 1',
+      level: 'beginner',
+      categoryId: 1,
+      price: 100,
+      discount: 0,
+      status: 'active',
+      imageUrl: 'image-url',
+    };
+    courseService.updateCourse = jest.fn().mockResolvedValue(expectedUpdatedCourse);
+
+    await courseController.updateCourse(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedUpdatedCourse,
+    });
+  });
+});
+
+describe('deleteCourse', () => {
+  it('should return the deleted course', async () => {
+    const req = { params: { id: 1 } };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedDeletedCourse = true;
+    courseService.deleteCourse = jest.fn().mockResolvedValue(expectedDeletedCourse);
+
+    await courseController.deleteCourse(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'No Content',
+      code: 204,
+      message: 'Success',
+      data: expectedDeletedCourse,
+    });
+  });
+});
+
+describe('isOnboarding', () => {
+  it('should return the onboarding status', async () => {
+    const req = {};
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedOnboardingStatus = true;
+    courseService.isOnboarding = jest.fn().mockResolvedValue(expectedOnboardingStatus);
+
+    await courseController.isOnboarding(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedOnboardingStatus,
+    });
+  });
+});
+
+describe('completingModule', () => {
+  it('should return the completed module', async () => {
+    const req = {
+      params: { id: 1 },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedCompletedModule = true;
+    courseService.completingModule = jest.fn().mockResolvedValue(expectedCompletedModule);
+
+    await courseController.completingModule(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedCompletedModule,
+    });
+  });
+});
+
+describe('getVideoCourse', () => {
+  it('should return the video course', async () => {
+    const req = {
+      params: { id: 1 },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const expectedVideoCourse = [
+      {
+        id: 1,
+        title: 'Video 1',
+        videoUrl: 'video-url',
+        duration: 100,
+        moduleId: 1,
+        courseId: 1,
+      },
+    ];
+    courseService.getVideoCourse = jest.fn().mockResolvedValue(expectedVideoCourse);
+
+    await courseController.getVideoCourse(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedVideoCourse,
+    });
+  });
+});

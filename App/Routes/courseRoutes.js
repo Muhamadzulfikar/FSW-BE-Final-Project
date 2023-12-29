@@ -20,7 +20,7 @@ route.get('/course-categories', courseCategoryController.getAllCourseCategory);
 route.get('/courses', filterByCategoriesAndLevel, courseController.getAllCourses);
 route.get('/course/:id', authorizeCourse, courseController.getCourseDetailById);
 route.get('/courses/video-course/:chapterModuleUuid', authorize, isPremiumCourseAndPaid, courseController.getVideoCourse);
-route.get('/courses/my-courses', authorize, courseController.getMyCourse);
+route.get('/courses/my-courses', authorize, filterByCategoriesAndLevel, courseController.getMyCourse);
 
 route.get('/admin/statistic', authorize, isSuperAdminAndAdmin, courseController.getCourseStatistic);
 route.get('/admin/payment-status', authorize, isSuperAdminAndAdmin, courseController.getCourseAdmin);

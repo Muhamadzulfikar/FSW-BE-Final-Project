@@ -42,7 +42,7 @@ route.post(
   userRegister,
 );
 route.get('/profile', authorize, user);
-route.post('/profile', authorize, updateProfile);
+route.put('/profile', authorize, updateProfile);
 
 route.put('/update-password', authorize, updatePassword);
 route.post('/forget-password', isUserHasRegister, forgetPassword);
