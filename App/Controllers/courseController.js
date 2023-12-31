@@ -1,7 +1,7 @@
 const responseError = require('../Error/responseError');
 // const multer = require('multer');
 const courseService = require('../Services/courseService');
-const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
+// const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
 
 // const upload = multer({ dest: 'uploads/' });
 
@@ -119,51 +119,51 @@ module.exports = {
     }
   },
 
-  async createCourse(req, res) {
+  async createCourseAdmin(req, res) {
     try {
-      // console.log(req.body);
-      // Menggunakan Multer untuk menyimpan file gambar sementara di server
-      const imageData = req.file; // Menggunakan req.file karena Multer menyimpan file di req.file
-      console.log(imageData);
+      const course = await courseService.createCourseAdmin(req.body);
 
-      // Mengunggah file gambar ke Cloudinary
-      const imageUrl = await uploadToCloudinary(imageData);
-
-      // Mengganti URL gambar dengan URL dari Cloudinary
-      req.body.image = imageUrl;
-
-      // Memanggil layanan untuk membuat kursus
-      const courses = await courseService.createCourseAdmin(req.body);
-
-      // Memberikan respons ke klien
       res.status(201).json({
         status: 'OK',
         code: 201,
         message: 'Success',
-        data: courses,
+        data: course,
       });
     } catch (error) {
-      // Menangani kesalahan dan memberikan respons yang sesuai
-      res.status(error.code || 500).json({
-        code: error.code || 500,
-        status: error.status || 'Internal Server Error',
-        message: error.message || 'Something went wrong',
-      });
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: 'Internal Server Error',
+          message: error,
+        });
+      }
     }
   },
 
-  async updateCourse(req, res) {
+  async updateCourseAdmin(req, res) {
     try {
-      const { id } = req.params;
-      const dataCourse = req.body;
-      await courseService.updateCourseAdmin(id, dataCourse);
+      const { courseUuid } = req.params;
+      const course = await courseService.updateCourseAdmin(courseUuid, req.body);
       res.status(200).json({
         status: 'OK',
         code: 200,
         message: 'Success',
-
+        data: course,
       });
     } catch (error) {
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      }
       res.status(error.code).json({
         code: error.code,
         status: error.status,
