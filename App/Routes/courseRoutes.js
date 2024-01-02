@@ -54,6 +54,7 @@ route.put('/courses/payment/:paymentUuid', authorize, validatePaymentRequest, pa
 
 route.put('/courses/onboarding/:courseUuid', authorize, validateUserCourse, courseController.isOnboarding);
 route.put('/course-modules/module-completed/:userChapterModuleUuid', authorize, courseController.completingModule);
+
 route.get('/courses/payment-history', authorize, paymentCourseController.paymentHistory);
 
 route.get('/notification', authorize, userNotificationController.notification);

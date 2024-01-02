@@ -34,6 +34,14 @@
     {
       "name": "Auth",
       "description": "Everything about payment"
+    },
+    {
+      "name": "Admin",
+      "description": "Everything about payment"
+    },
+    {
+      "name": "Notification",
+      "description": "Everything about payment"
     }
   ],
   "paths": {
@@ -229,9 +237,167 @@
         }
       }
     },
-    "/v1/course": {
+    "/v1/courses/onboarding/:courseUuid": {
+      "put": {
+        "tags": [
+          "Class"
+        ],
+        "summary": "Update onboarding course",
+        "description": "This end point will update user onboarding course",
+        "operationId": "courseOnboarding",
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Successfully Completed Onboarding",
+                  "data": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/course-modules/module-completed/:userChapterModuleUuid": {
+      "put": {
+        "tags": [
+          "Class"
+        ],
+        "summary": "Update Completing Module",
+        "description": "This end point will update user Completing Module",
+        "operationId": "completingModule",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Successfully Completing Module",
+                  "data": [
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/video-course/:chapterModuleUuid": {
       "get": {
-        "tags": ["Class"],
+        "tags": [
+          "Class"
+        ],
+        "summary": "Get Video Course",
+        "description": "This end point will Get Video Course",
+        "operationId": "videoCourse",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully get Video",
+                  "data": {
+                    "course_link":"https://www.youtube.com/embed/wSxl5tNp23U?si=kY5UOoMuwnGxuu8W"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/my-courses": {
+      "get": {
+        "tags": [
+          "Class"
+        ],
+        "summary": "Get User Course",
+        "description": "This end point will Get User Course",
+        "operationId": "userCourse",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully get My Course",
+                  "data": {
+                    "id":"53117f3a-7da9-4e5e-8c3f-0abe4455ef52",
+                    "category":"UI/UX Design",
+                    "name":"Intro to Basic of User Interaction Design",
+                    "author":"Simon Doe",
+                    "price":280000,
+                    "level":"intermediate",
+                    "rating":5,
+                    "isPremium":false,
+                    "classCode":"UIUX0123",
+                    "totalModule":2,
+                    "totalMinute":128,
+                    "progressBar":0
+
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/courses": {
+      "get": {
+        "tags": ["Admin"],
         "summary": "Get Management Class Admin",
         "description": "This end point will serve data of classes",
         "operationId": "getCourse",
@@ -259,7 +425,7 @@
         }
       },
       "post": {
-        "tags": ["Class"],
+        "tags": ["Admin"],
         "summary": "Create Class",
         "description": "This end point will create data of class",
         "operationId": "createAdminCourses",
@@ -298,9 +464,9 @@
         }
       }
     },
-    "/v1/courses/{id}": {
+    "/v1/admin/courses/{id}": {
       "put": {
-        "tags": ["Class"],
+        "tags": ["Admin"],
         "summary": "Update Class",
         "description": "This end point will update data of class",
         "operationId": "updateAdminCourses",
@@ -353,7 +519,7 @@
         }
       },
       "delete": {
-        "tags": ["Class"],
+        "tags": ["Admin"],
         "summary": "Delete Class",
         "description": "This end point will delete data of class",
         "operationId": "deleteAdminCourses",
@@ -406,7 +572,7 @@
         }
       }
     },
-    "/v1/payment": {
+    "/v1/courses/enrollment": {
       "post": {
         "tags": ["Payment"],
         "summary": "Make Payment",
@@ -457,11 +623,16 @@
                   "message": "Success",
                   "data": [
                     {
-                      "expiredAt": "2023-12-13 14:54:26.057+07",
-                      "uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
-                      "user_course_uuid": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb",
-                      "payment_method": "credit card",
-                      "is_paid": false
+                      "paymentUuid": "be400614-d942-4648-933c-379537c64a30",
+                      "image": "https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/b4zuplewxgtb5yxvw1gx.png",
+                      "type": "UI/UX Design",
+                      "name": "Intro to Basic of User Interaction Design",
+                      "author": "Simon Doe",
+                      "price": 280000,
+                      "tax":28000,
+                      "total":308000,
+                      "paid":true,
+                      "expired":"3 0 2024 11:37"
                     }
                   ]
                 }
@@ -481,30 +652,88 @@
         }
       }
     },
-    "/v1/payment/{id}": {
+    "/courses/invoice/:paymentUuid": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get Invoice",
+        "description": "This end point will get data of user invoice",
+        "operationId": "invoice",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Created"
+                    },
+                    "code": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/resBuyCourse"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully get Invoice Course",
+                  "data": [
+                    {
+                      "paymentUuid": "be400614-d942-4648-933c-379537c64a30",
+                      "image": "https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/b4zuplewxgtb5yxvw1gx.png",
+                      "type": "UI/UX Design",
+                      "name": "Intro to Basic of User Interaction Design",
+                      "author": "Simon Doe",
+                      "price": 280000,
+                      "tax":28000,
+                      "total":308000,
+                      "paid":true,
+                      "expired":"3 0 2024 11:37"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/payment/:paymentUuid": {
       "put": {
         "tags": ["Payment"],
         "summary": "Make Payment",
-        "description": "This endpoint will update data in UserCoursePayment",
-        "operationId": "payment",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of userClass to fetch",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/paramsID"
-            }
-          }
-        ],
+        "description": "This end point will post data to UserCourse",
+        "operationId": "buyCourse",
         "requestBody": {
-          "description": "Data of the userCoursePayment to be updated",
+          "description": "Data of the course to be updated",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/reqPayment"
+                "$ref": "#/components/schemas/reqPaymentCourse"
               }
             }
           }
@@ -515,12 +744,126 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resPayment"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Created"
+                    },
+                    "code": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/resBuyCourse"
+                      }
+                    }
+                  }
                 },
                 "example": {
                   "status": "Created",
                   "code": 201,
-                  "message": "Success"
+                  "message": "Success",
+                  "data": [
+                    {
+                      "course_uuid":"721e7486-5796-42e7-b55d-0f466b709d35",
+                      "paymentUuid": "be400614-d942-4648-933c-379537c64a30",
+                      "image": "https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/b4zuplewxgtb5yxvw1gx.png",
+                      "type": "UI/UX Design",
+                      "name": "Intro to Basic of User Interaction Design",
+                      "author": "Simon Doe",
+                      "price": 280000,
+                      "tax":28000,
+                      "total":308000,
+                      "paid":true,
+                      "expired":"3 0 2024 11:37",
+                      "payment_method":"credit card"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/courses/payment-history": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Payment History",
+        "description": "This endpoint will get user payment history",
+        "operationId": "paymentHistory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "OK" },
+                    "code": { "type": "integer", "example": 200 },
+                    "message": { "type": "string", "example": "Success" },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/resPayment"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "courseUuid": "721e7486-5796-42e7-b55d-0f466b709d35",
+                      "paymentUuid": "54d3308d-7e83-4f9e-b3c6-ac6f7b8afdce",
+                      "userCourseUuid": "eb285ddf-45c3-4e49-a4c6-b4986d7bd8cd",
+                      "image": "https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/b4zuplewxgtb5yxvw1gx.png",
+                      "courseCategory": "UI/UX Design",
+                      "courseName": "Intro to Basic of User Interaction Design",
+                      "courseAuthor": "Simon Doe",
+                      "courseLevel": "intermediate",
+                      "totalModules": 1,
+                      "totalMinutes": 42,
+                      "expiredAt": "2023-12-16T02:13:22.448Z",
+                      "courseRating": "4.5",
+                      "is_paid": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/unauthorized"
                 }
               }
             }
@@ -629,6 +972,129 @@
                       "city": null,
                       "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
                     }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/statistic": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Statistic User",
+        "description": "This endpoint will get statistic user",
+        "operationId": "statisticUser",
+        "responses": {
+          "201": {
+            "description": "Statistic User",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "activeUsersItem": 28,
+                      "activeClassItem": 27,
+                      "premiumClassItem": 9
+                  }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/payment-status": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Payment Status",
+        "description": "This endpoint will get Payment Status",
+        "operationId": "paymentStatus",
+        "responses": {
+          "201": {
+            "description": "Payment Status",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "user": "David Casper",
+                      "courseCategory": "UI/UX Design",
+                      "courseName": "Intro to Basic of User Interaction Design",
+                      "is_paid": true,
+                      "paymentMethod": "credit card",
+                      "buyAt": "2023-12-15T10:45:12.619Z"
+                  }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notification": {
+      "get": {
+        "tags": ["Notification"],
+        "summary": "Notification",
+        "description": "This endpoint will get data from user notification",
+        "operationId": "notification",
+        "responses": {
+          "201": {
+            "description": "Notification",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "id": 6,
+                      "user_uuid": "44fca4cf-3a55-456f-9aa4-377f238ad786",
+                      "title": "Payment Course",
+                      "notification": "Selamat anda telah melakukan pembayaran course",
+                      "is_conditional": false,
+                      "is_read": false                      
+                  }
                   ]
                 }
               }
@@ -1129,49 +1595,102 @@
       "reqClass": {
         "type": "object",
         "properties": {
+          "course_category_id": {
+            "type": "string",
+            "example": "4"
+          },
           "name": {
             "type": "string",
             "example": "Intro to Basic of User Interaction Design"
           },
-          "image": {
-            "type": "string",
-            "example": "https://www.image.com"
-          },
           "author": {
             "type": "string",
-            "example": "nameexample"
+            "example": "Williamz1"
           },
           "price": {
-            "type": "number",
-            "example": 280000
+            "type": "string",
+            "example": "280000"
           },
           "level": {
             "type": "string",
-            "example": "Advanced"
+            "example": "intermediate"
           },
           "rating": {
-            "type": "number",
-            "example": 4.9
-          },
-          "totalModule": {
-            "type": "number",
-            "example": 5
-          },
-          "totalMinute": {
-            "type": "number",
-            "example": 60
+            "type": "string",
+            "example": "5"
           },
           "isPremium": {
-            "type": "boolean",
-            "example": true
-          },
-          "classCode": {
             "type": "string",
-            "example": "UIUX0123"
+            "example": "true"
           },
-          "category": {
+          "code": {
             "type": "string",
-            "example": "UI/UX Design"
+            "example": "UIUX0124"
+          },
+          "intro_video": {
+            "type": "string",
+            "example": "https://www.youtube.com/embed/t3uVPX6rwgM?si=sxXq8LNBDtlP-ZFv"
+          },
+          "chapters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chapter": {
+                  "type": "string",
+                  "example": "Chapter 1"
+                },
+                "duration": {
+                  "type": "string",
+                  "example": "30"
+                },
+                "modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "Module 1"
+                      },
+                      "course_link": {
+                        "type": "string",
+                        "example": "https://example.com/module1"
+                      },
+                      "ImageData": {
+                        "type": "object",
+                        "properties": {
+                          "fieldname": {
+                            "type": "string",
+                            "example": "image"
+                          },
+                          "originalname": {
+                            "type": "string",
+                            "example": "mitra_767893f5-ba57-494d-a95c-477ca5da6aca.png"
+                          },
+                          "encoding": {
+                            "type": "string",
+                            "example": "7bit"
+                          },
+                          "mimetype": {
+                            "type": "string",
+                            "example": "image/png"
+                          },
+                          "buffer": {
+                            "type": "string",
+                            "example": "<Buffer 89 50 4e 47 0d...>"
+                          },
+                          "size": {
+                            "type": "integer",
+                            "example": 25888
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1209,6 +1728,27 @@
           }
         }
       },
+      "resPayment": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "courseUuid": { "type": "string", "example": "721e7486-5796-42e7-b55d-0f466b709d35" },
+            "paymentUuid": { "type": "string", "example": "54d3308d-7e83-4f9e-b3c6-ac6f7b8afdce" },
+            "userCourseUuid": { "type": "string", "example": "eb285ddf-45c3-4e49-a4c6-b4986d7bd8cd" },
+            "image": { "type": "string", "example": "https://res.cloudinary.com/dpg0tbbot/image/upload/v1701180735/b4zuplewxgtb5yxvw1gx.png" },
+            "courseCategory": { "type": "string", "example": "UI/UX Design" },
+            "courseName": { "type": "string", "example": "Intro to Basic of User Interaction Design" },
+            "courseAuthor": { "type": "string", "example": "Simon Doe" },
+            "courseLevel": { "type": "string", "example": "intermediate" },
+            "totalModules": { "type": "integer", "example": 1 },
+            "totalMinutes": { "type": "integer", "example": 42 },
+            "expiredAt": { "type": "string", "example": "2023-12-16T02:13:22.448Z" },
+            "courseRating": { "type": "string", "example": "4.5" },
+            "is_paid": { "type": "boolean", "example": true }
+          }
+        }
+      },
       "reqLogin": {
         "type": "object",
         "properties": {
@@ -1228,10 +1768,15 @@
           "course_uuid": {
             "type": "string",
             "example": "7b835907-c7b4-43ed-a9ba-cf7e6d7043cb"
-          },
-          "is_onboarding": {
-            "type": "boolean",
-            "example": true
+          }
+        }
+      },
+      "reqPaymentCourse": {
+        "type": "object",
+        "properties": {
+          "course_uuid": {
+            "type": "string",
+            "example": "credit card"
           }
         }
       },
