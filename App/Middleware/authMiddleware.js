@@ -69,7 +69,6 @@ module.exports = {
 
   async authorize(req, res, next) {
     try {
-      console.log(req.body);
       const user = await authService.authorize(req.headers.authorization);
       if (!user) {
         errorHandling.unauthorized('User Not Found');

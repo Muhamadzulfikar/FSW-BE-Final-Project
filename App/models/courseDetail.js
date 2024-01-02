@@ -18,37 +18,53 @@ module.exports = (sequelize) => {
     {
       id: {
         type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
       },
       course_uuid: {
         type: DataTypes.UUID,
         validate: {
+          notEmpty: {
+            msg: 'course_uuid must be provided',
+          },
+        },
+      },
+      description: {
+        type: DataTypes.STRING,
+        validate: {
           notEmpty: true,
-        },
-        description: {
-          type: DataTypes.STRING,
-          validate: {
-            notEmpty: true,
-            min: 5,
-            max: 255,
+          len: {
+            args: [10, 255],
+            msg: 'description must be between 10 and 255 characters',
           },
         },
-        class_target: {
-          type: DataTypes.ARRAY(DataTypes.STRING),
-          validate: {
-            notEmpty: true,
+      },
+      class_target: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        validate: {
+          notEmpty: {
+            msg: 'class_target must be provided',
           },
         },
-        telegram: {
-          type: DataTypes.STRING,
-          validate: {
-            notEmpty: true,
+      },
+      telegram: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: 'telegram must be provided',
+          },
+          isUrl: {
+            msg: 'telegram must be a valid url',
           },
         },
-        onboarding: {
-          type: DataTypes.STRING,
-          validate: {
-            notEmpty: true,
+      },
+      onboarding: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+          len: {
+            args: [10, 255],
+            msg: 'onboarding must be between 10 and 255 characters',
           },
         },
       },

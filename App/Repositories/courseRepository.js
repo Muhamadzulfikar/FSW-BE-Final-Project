@@ -167,41 +167,59 @@ module.exports = {
         price: item.price,
       })));
   },
-  async createCourse(dataCourse) {
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const createdCourse = await course.create(dataCourse);
 
-      const chaptersData = dataCourse.chapters || [];
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const chapterData of chaptersData) {
-        // eslint-disable-next-line no-await-in-loop
-        const createdChapter = await courseChapter.create({
-          course_uuid: createdCourse.uuid,
-          ...chapterData,
-        });
-
-        const modulesData = chapterData.modules || [];
-
-        // eslint-disable-next-line no-restricted-syntax
-        for (const moduleData of modulesData) {
-          // eslint-disable-next-line no-await-in-loop
-          await chapterModule.create({
-            course_chapter_id: createdChapter.id,
-            ...moduleData,
-          });
-        }
-      }
-
-      return createdCourse;
-    } catch (error) {
-      throw error;
-    }
+  createCourseAdmin(payload) {
+    return course.create(payload, {
+      include: [
+        {
+          model: courseDetail,
+        },
+        {
+          model: courseChapter,
+          include: [
+            {
+              model: chapterModule,
+            },
+          ],
+        },
+      ],
+    });
   },
 
-  updateCourse(uuid, dataCourse) {
-    return course.update(dataCourse, { where: { uuid }, returnig: true });
+  updateCourse(courseUuid, payload) {
+    return course.update(payload, {
+      where: {
+        uuid: courseUuid,
+      },
+    });
+  },
+
+  updateCourseDetail(courseUuid, payload) {
+    return courseDetail.update(payload, {
+      where: {
+        course_uuid: courseUuid,
+      },
+    });
+  },
+
+  async updateCourseChapter(courseChapters) {
+    courseChapters.forEach(async (chapter) => {
+      await courseChapter.update(chapter, {
+        where: {
+          uuid: chapter.id,
+        },
+      });
+    });
+  },
+
+  async updateChapterModule(chapterModules) {
+    chapterModules.forEach(async (module) => {
+      await chapterModule.update(module, {
+        where: {
+          uuid: module.uuid,
+        },
+      });
+    });
   },
 
   deleteCourse(courseUuid) {
@@ -335,6 +353,21 @@ module.exports = {
         },
       ],
       attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'intro_video'] },
+    });
+  },
+
+  getChapterAndModuleUuid(courseUuid) {
+    return courseChapter.findAll({
+      where: {
+        course_uuid: courseUuid,
+      },
+      attributes: ['id'],
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+        },
+      ],
     });
   },
 };
