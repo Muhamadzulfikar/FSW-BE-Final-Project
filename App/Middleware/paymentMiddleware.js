@@ -44,7 +44,7 @@ module.exports = {
         const payment = await paymentCourseService.getPaymentByUserCourse(userCourse.uuid);
         if (payment?.is_paid === true) errorHandling.badRequest('You already enroll this course');
         if (payment?.expiredAt > new Date()) {
-          res.status(200).json({
+          return res.status(200).json({
             status: 'OK',
             code: 200,
             message: 'Success',
@@ -54,7 +54,6 @@ module.exports = {
           });
         }
       }
-
       next();
     } catch (error) {
       responseError(res, error);

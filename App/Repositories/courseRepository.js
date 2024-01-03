@@ -8,6 +8,7 @@ const {
   userCoursePayment,
   userChapterModule,
   user,
+  sequelize,
 } = require('../models');
 
 const baseCourseQuery = {
@@ -37,6 +38,9 @@ module.exports = {
 
   getCourseById(id, userUuid) {
     return course.findByPk(id, {
+      order: [
+        [courseChapter, 'id', 'ASC'],
+      ],
       include: [
         {
           model: courseCategory,
@@ -88,7 +92,28 @@ module.exports = {
   },
 
   getCourseByIdAdmin(id) {
-    return course.findByPk(id);
+    return course.findByPk(id, {
+      include: [
+        {
+          model: courseCategory,
+          attributes: ['name', 'id'],
+        },
+        {
+          model: courseDetail,
+          attributes: ['description', 'class_target', 'telegram', 'onboarding'],
+        },
+        {
+          model: courseChapter,
+          attributes: ['duration', 'chapter', 'id'],
+          include: [
+            {
+              model: chapterModule,
+              attributes: ['title', 'course_link', 'uuid'],
+            },
+          ],
+        },
+      ],
+    });
   },
 
   async getCoursesStatisticDetail() {
@@ -186,6 +211,63 @@ module.exports = {
     });
   },
 
+  createCourseChapter(payloads) {
+    return sequelize.transaction(async (t) => {
+      payloads.forEach(async (payload) => {
+        courseChapter.create(payload, {
+          include: [
+            {
+              model: chapterModule,
+              include: [
+                {
+                  model: userChapterModule,
+                },
+              ],
+            },
+          ],
+        }, { transaction: t });
+      });
+    });
+  },
+
+  createChapterModule(payloads) {
+    return sequelize.transaction(async (t) => {
+      payloads.forEach((payload) => {
+        chapterModule.create(payload, {
+          include: [
+            {
+              model: userChapterModule,
+            },
+          ],
+        }, { transaction: t });
+      });
+    });
+  },
+
+  deleteCourseChapter(payloads) {
+    return sequelize.transaction((t) => {
+      payloads.forEach((payload) => {
+        courseChapter.destroy({
+          where: {
+            id: payload.id,
+          },
+        }, { transaction: t });
+      });
+    });
+  },
+
+  deleteChapterModule(payloads) {
+    return sequelize.transaction(async (t) => {
+      payloads.forEach((payload) => {
+        chapterModule.destroy({
+          where: {
+            uuid: payload.uuid,
+          },
+        }, { transaction: t });
+      });
+    });
+  },
+
   updateCourse(courseUuid, payload) {
     return course.update(payload, {
       where: {
@@ -202,19 +284,19 @@ module.exports = {
     });
   },
 
-  async updateCourseChapter(courseChapters) {
-    courseChapters.forEach(async (chapter) => {
-      await courseChapter.update(chapter, {
+  updateCourseChapter(courseChapters) {
+    courseChapters.forEach((chapter) => {
+      courseChapter.update(chapter, {
         where: {
-          uuid: chapter.id,
+          id: chapter.id,
         },
       });
     });
   },
 
-  async updateChapterModule(chapterModules) {
-    chapterModules.forEach(async (module) => {
-      await chapterModule.update(module, {
+  updateChapterModule(chapterModules) {
+    chapterModules.forEach((module) => {
+      chapterModule.update(module, {
         where: {
           uuid: module.uuid,
         },
@@ -242,6 +324,27 @@ module.exports = {
         course_uuid: courseUuid,
       },
       attributes: ['uuid'],
+    });
+  },
+
+  getUserModuleByCourse(courseUuid) {
+    return courseChapter.findAll({
+      attributes: ['id'],
+      where: {
+        course_uuid: courseUuid,
+      },
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+          include: [
+            {
+              model: userChapterModule,
+              attributes: ['user_uuid'],
+            },
+          ],
+        },
+      ],
     });
   },
 
@@ -346,6 +449,9 @@ module.exports = {
                 {
                   model: userChapterModule,
                   attributes: ['is_complete'],
+                  where: {
+                    user_uuid: userUuid,
+                  },
                 },
               ],
             },

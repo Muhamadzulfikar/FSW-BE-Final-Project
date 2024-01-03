@@ -134,12 +134,51 @@ module.exports = {
     }
   },
 
-  async getCourseById(id) {
+  async getCourseByIdAdmin(id) {
     try {
-      const courses = await courseRepository.getCourseByIdAdmin(id);
-      return courses;
+      const course = await courseRepository.getCourseByIdAdmin(id);
+      const { courseChapters } = course;
+      const {
+        description, class_target: courseTarget, telegram, onboarding,
+      } = course.courseDetail.dataValues;
+
+      const courseModules = courseChapters.map((chapter) => ({
+        id: chapter.id,
+        chapter: chapter.chapter,
+        estimation: chapter.duration,
+        module: chapter.chapterModules.map((module) => ({
+          chapterModuleUuid: module.uuid,
+          title: module.title,
+          courseLink: module.course_link,
+        })),
+      }));
+
+      const responseData = {
+        id: course.uuid,
+        name: course.name,
+        image: course.image,
+        author: course.author,
+        price: course.price,
+        level: course.level,
+        rating: course.rating,
+        isPremium: course.isPremium,
+        courseCode: course.code,
+        category: course.courseCategory.name,
+        description,
+        classTarget: courseTarget,
+        telegram,
+        introVideo: course.intro_video,
+        onboarding,
+        courseModules,
+      };
+
+      return responseData;
     } catch (error) {
-      errorHandling.badRequest(error);
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      } else {
+        errorHandling.internalError(error);
+      }
     }
   },
 
@@ -185,20 +224,60 @@ module.exports = {
     }
   },
 
-  async createChapterAndModule(chapters, modules) {
+  filterCreateModule(filterChapter, userUuids) {
+    const result = [];
+
+    filterChapter.forEach((chapter) => {
+      const filteredModules = chapter.chapterModules.filter((module) => !module.uuid);
+
+      if (filteredModules) {
+        const { id: chapterId } = chapter;
+
+        filteredModules.forEach((module) => {
+          result.push({
+            course_chapter_id: chapterId,
+            title: module.title,
+            course_link: module.course_link,
+            userChapterModules: userUuids.map((userUuid) => ({
+              user_uuid: userUuid,
+              is_complete: false,
+            })),
+          });
+        });
+      }
+    });
+
+    return result;
+  },
+
+  filterCreateChapter(chapters, userUuids, courseUuid) {
+    return chapters.filter((chapter) => !chapter.id).map((chapter) => ({
+      course_uuid: courseUuid,
+      duration: chapter.duration,
+      chapter: chapter.chapter,
+      chapterModules: chapter.chapterModules.map((module) => ({
+        ...module,
+        userChapterModules: userUuids.map((userUuid) => ({
+          user_uuid: userUuid,
+          is_complete: false,
+        })),
+      })),
+    }));
+  },
+
+  async createChapterAndModule(chapters, filterChapter, courseUuid) {
     try {
-      const createCourseChapters = chapters.filter((chapter) => !chapter.id);
-      const createChapterModules = modules.filter((module) => !module.uuid);
+      const userModule = await courseRepository.getUserModuleByCourse(courseUuid);
+      const userUuids = userModule.flatMap((chapter) => chapter.chapterModules.flatMap((module) => module.userChapterModules.map((user) => user.user_uuid)));
 
-      return {
-        courseChapters: createCourseChapters,
-        chapterModules: createChapterModules,
-      };
+      const createCourseChapters = this.filterCreateChapter(chapters, userUuids, courseUuid);
+      const createChapterModules = this.filterCreateModule(filterChapter, userUuids);
 
-      // await Promise.all([
-      //   createCourseChapters.length > 0 && courseRepository.createCourseChapter(createCourseChapters),
-      //   createChapterModules.length > 0 && courseRepository.createChapterModule(createChapterModules),
-      // ]);
+      if (createCourseChapters.length > 0) {
+        courseRepository.createCourseChapter(createCourseChapters);
+      } else if (createChapterModules.length > 0) {
+        courseRepository.createChapterModule(createChapterModules);
+      }
     } catch (error) {
       errorHandling.internalError(error);
     }
@@ -211,15 +290,11 @@ module.exports = {
       const deleteCourseChapters = chapters.filter((chapter) => !chapterIds.includes(chapter.id));
       const deleteChapterModules = chapterModules.filter((module) => !moduleUuids.includes(module.uuid));
 
-      return {
-        courseChapters: deleteCourseChapters,
-        chapterModules: deleteChapterModules,
-      };
-
-      // await Promise.all([
-      //   deleteCourseChapters.length > 0 && courseRepository.deleteCourseChapter(deleteCourseChapters),
-      //   deleteChapterModules.length > 0 && courseRepository.deleteChapterModule(deleteChapterModules),
-      // ]);
+      if (deleteCourseChapters.length > 0) {
+        courseRepository.deleteCourseChapter(deleteCourseChapters);
+      } else if (deleteChapterModules.length > 0) {
+        courseRepository.deleteChapterModule(deleteChapterModules);
+      }
     } catch (error) {
       errorHandling.internalError(error);
     }
@@ -244,7 +319,6 @@ module.exports = {
       const deleteCourse = await this.deleteChapterAndModule(paramsDelete);
       const createCourse = await this.createChapterAndModule(bodyRequest.courseChapters, payloadChapterModules);
       return [deleteCourse, createCourse];
-      // eslint-disable-next-line no-unreachable
       await courseRepository.updateCourse(courseUuid, bodyRequest);
       await courseRepository.updateCourseDetail(courseUuid, bodyRequest.courseDetail);
       await courseRepository.updateCourseChapter(filterChapter);
