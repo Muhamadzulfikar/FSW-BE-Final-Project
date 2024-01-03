@@ -30,9 +30,11 @@ module.exports = (sequelize) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
       },
       course_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },

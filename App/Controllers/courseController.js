@@ -1,5 +1,9 @@
 const responseError = require('../Error/responseError');
+// const multer = require('multer');
 const courseService = require('../Services/courseService');
+// const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
+
+// const upload = multer({ dest: 'uploads/' });
 
 module.exports = {
   async getAllCourses(req, res) {
@@ -46,18 +50,27 @@ module.exports = {
     }
   },
 
-  async getCourseById(req, res, next) {
+  async getCourseByIdAdmin(req, res) {
     try {
       const { uuid } = req.params;
-      const course = await courseService.getCourseById(uuid);
-      req.course = course;
-      next();
-    } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
+      const course = await courseService.getCourseByIdAdmin(uuid);
+
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: course,
       });
+    } catch (error) {
+      if (error.code) {
+        responseError(res, error);
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: 'Internal Server Error',
+          message: error.message,
+        });
+      }
     }
   },
 
@@ -115,37 +128,51 @@ module.exports = {
     }
   },
 
-  async createCourse(req, res) {
+  async createCourseAdmin(req, res) {
     try {
-      const dataCourse = req.body;
-      const courses = await courseService.createCourseAdmin(dataCourse);
-      res.status(200).json({
+      const course = await courseService.createCourseAdmin(req.body);
+
+      res.status(201).json({
         status: 'OK',
-        code: 200,
+        code: 201,
         message: 'Success',
-        data: courses,
+        data: course,
       });
     } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
-      });
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: 'Internal Server Error',
+          message: error,
+        });
+      }
     }
   },
 
-  async updateCourse(req, res) {
+  async updateCourseAdmin(req, res) {
     try {
-      const { id } = req.params;
-      const dataCourse = req.body;
-      await courseService.updateCourseAdmin(id, dataCourse);
+      const { courseUuid } = req.params;
+      const course = await courseService.updateCourseAdmin(courseUuid, req.body);
       res.status(200).json({
         status: 'OK',
         code: 200,
         message: 'Success',
-
+        data: course,
       });
     } catch (error) {
+      if (error.code) {
+        res.status(error.code).json({
+          code: error.code,
+          status: error.status,
+          message: error.message,
+        });
+      }
       res.status(error.code).json({
         code: error.code,
         status: error.status,

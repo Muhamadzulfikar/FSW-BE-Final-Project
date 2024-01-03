@@ -60,7 +60,10 @@ module.exports = (sequelize) => {
     },
   );
 
-  chapterModule.beforeCreate((ChapterModule) => ChapterModule.uuid === uuidv4());
+  chapterModule.beforeCreate((ChapterModule) => {
+    // eslint-disable-next-line no-param-reassign
+    ChapterModule.uuid = uuidv4();
+  });
 
   return chapterModule;
 };
