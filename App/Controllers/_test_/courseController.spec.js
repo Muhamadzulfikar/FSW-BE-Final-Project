@@ -106,7 +106,7 @@ describe('#getAllCourses', () => {
 
 describe('getCourseDetailById', () => {
   it('should return the course detail when a valid id is provided', async () => {
-    const req = { params: { id: 1 } };
+    const req = { params: { id: 1 }, user: { userUuid: 1 } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -147,7 +147,7 @@ describe('getCourseDetailById', () => {
   });
 });
 
-describe('getCourseById', () => {
+describe('getCourseByIdAdmin', () => {
   it('should return the course when a valid id is provided', async () => {
     const req = { params: { uuid: 1 } };
     const res = {
@@ -155,11 +155,17 @@ describe('getCourseById', () => {
       json: jest.fn(),
     };
     const expectedCourse = { id: 1, name: 'Course 1' };
-    courseService.getCourseById = jest.fn().mockResolvedValue(expectedCourse);
+    courseService.getCourseByIdAdmin = jest.fn().mockResolvedValue(expectedCourse);
 
-    await courseController.getCourseById(req, res);
+    await courseController.getCourseByIdAdmin(req, res);
 
-    expect(req.course).toEqual(expectedCourse);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'OK',
+      code: 200,
+      message: 'Success',
+      data: expectedCourse,
+    });
   });
 });
 
@@ -175,7 +181,7 @@ describe('getCourseStatistic', () => {
       activeUserItem: 2,
       premiumClassItem: 3,
     };
-    courseService.getCourseStatistic = jest.fn().mockResolvedValue(expectedCourseStatistic);
+    courseService.getListCourseStatisticAdmin = jest.fn().mockResolvedValue(expectedCourseStatistic);
 
     await courseController.getCourseStatistic(req, res);
 
@@ -206,7 +212,7 @@ describe('getCourseAdmin', () => {
         user: 'Terry Jones',
       },
     ];
-    courseService.getCourseAdmin = jest.fn().mockResolvedValue(expectedCourseAdmin);
+    courseService.getListCourseAdmin = jest.fn().mockResolvedValue(expectedCourseAdmin);
 
     await courseController.getCourseAdmin(req, res);
 
@@ -237,7 +243,7 @@ describe('getManagementCourse', () => {
         user: 'Terry Jones',
       },
     ];
-    courseService.getManagementCourse = jest.fn().mockResolvedValue(expectedManagementCourse);
+    courseService.getListCourseManagement = jest.fn().mockResolvedValue(expectedManagementCourse);
 
     await courseController.getManagementCourse(req, res);
 
@@ -280,13 +286,13 @@ describe('createCourse', () => {
       status: 'active',
       imageUrl: 'image-url',
     };
-    courseService.createCourse = jest.fn().mockResolvedValue(expectedCreatedCourse);
+    courseService.createCourseAdmin = jest.fn().mockResolvedValue(expectedCreatedCourse);
 
-    await courseController.createCourse(req, res);
+    await courseController.createCourseAdmin(req, res);
 
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      status: 'Created',
+      status: 'OK',
       code: 201,
       message: 'Success',
       data: expectedCreatedCourse,
@@ -297,7 +303,7 @@ describe('createCourse', () => {
 describe('updateCourse', () => {
   it('should return the updated course', async () => {
     const req = {
-      params: { id: 1 },
+      params: { courseUuid: 1 },
       body: {
         name: 'Course 1',
         description: 'Description 1',
@@ -314,7 +320,7 @@ describe('updateCourse', () => {
       json: jest.fn(),
     };
     const expectedUpdatedCourse = {
-      id: 1,
+      courseUuid: 1,
       name: 'Course 1',
       description: 'Description 1',
       level: 'beginner',
@@ -324,9 +330,9 @@ describe('updateCourse', () => {
       status: 'active',
       imageUrl: 'image-url',
     };
-    courseService.updateCourse = jest.fn().mockResolvedValue(expectedUpdatedCourse);
+    courseService.updateCourseAdmin = jest.fn().mockResolvedValue(expectedUpdatedCourse);
 
-    await courseController.updateCourse(req, res);
+    await courseController.updateCourseAdmin(req, res);
 
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
@@ -340,21 +346,21 @@ describe('updateCourse', () => {
 
 describe('deleteCourse', () => {
   it('should return the deleted course', async () => {
-    const req = { params: { id: 1 } };
+    const req = { params: { courseUuid: 1 } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
     const expectedDeletedCourse = true;
-    courseService.deleteCourse = jest.fn().mockResolvedValue(expectedDeletedCourse);
+    courseService.deleteCourseAdmin = jest.fn().mockResolvedValue(expectedDeletedCourse);
 
     await courseController.deleteCourse(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(204);
+    expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      status: 'No Content',
-      code: 204,
-      message: 'Success',
+      status: 'OK',
+      code: 201,
+      message: 'Successfully Delete Data',
       data: expectedDeletedCourse,
     });
   });
@@ -362,7 +368,7 @@ describe('deleteCourse', () => {
 
 describe('isOnboarding', () => {
   it('should return the onboarding status', async () => {
-    const req = {};
+    const req = { user: { userUuid: 1 }, params: { courseUuid: 1 } };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -372,11 +378,11 @@ describe('isOnboarding', () => {
 
     await courseController.isOnboarding(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      status: 'OK',
-      code: 200,
-      message: 'Success',
+      status: 'created',
+      code: 201,
+      message: 'Successfully Completed Onboarding',
       data: expectedOnboardingStatus,
     });
   });
@@ -396,11 +402,11 @@ describe('completingModule', () => {
 
     await courseController.completingModule(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith({
-      status: 'OK',
-      code: 200,
-      message: 'Success',
+      status: 'created',
+      code: 201,
+      message: 'Successfully Completing Module',
       data: expectedCompletedModule,
     });
   });
@@ -433,7 +439,7 @@ describe('getVideoCourse', () => {
     expect(res.json).toHaveBeenCalledWith({
       status: 'OK',
       code: 200,
-      message: 'Success',
+      message: 'Successfully get Video',
       data: expectedVideoCourse,
     });
   });

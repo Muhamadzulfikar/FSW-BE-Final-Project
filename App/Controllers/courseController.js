@@ -50,18 +50,27 @@ module.exports = {
     }
   },
 
-  async getCourseById(req, res, next) {
+  async getCourseByIdAdmin(req, res) {
     try {
       const { uuid } = req.params;
-      const course = await courseService.getCourseById(uuid);
-      req.course = course;
-      next();
-    } catch (error) {
-      res.status(error.code).json({
-        code: error.code,
-        status: error.status,
-        message: error.message,
+      const course = await courseService.getCourseByIdAdmin(uuid);
+
+      res.status(200).json({
+        status: 'OK',
+        code: 200,
+        message: 'Success',
+        data: course,
       });
+    } catch (error) {
+      if (error.code) {
+        responseError(res, error);
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: 'Internal Server Error',
+          message: error.message,
+        });
+      }
     }
   },
 

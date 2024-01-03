@@ -34,6 +34,7 @@ module.exports = (sequelize) => {
       },
       course_uuid: {
         type: DataTypes.UUID,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },
