@@ -1,9 +1,19 @@
-const responseError = require('../Error/responseError');
 // const multer = require('multer');
+const multer = require('multer');
+const util = require('util');
+const responseError = require('../Error/responseError');
 const courseService = require('../Services/courseService');
-// const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
+const cloudinaryUtil = require('../../config/cloudinaryUtils');
 
-// const upload = multer({ dest: 'uploads/' });
+const { uploadToCloudinary } = cloudinaryUtil;
+
+// Multer setup
+
+const storage = multer.memoryStorage();
+// eslint-disable-next-line object-shorthand
+const upload = multer({ storage: storage });
+
+const uploadMiddleware = util.promisify(upload.single('image'));
 
 module.exports = {
   async getAllCourses(req, res) {
@@ -121,7 +131,25 @@ module.exports = {
 
   async createCourseAdmin(req, res) {
     try {
-      const course = await courseService.createCourseAdmin(req.body);
+      await uploadMiddleware(req, res);
+
+      const imageUrl = req.file ? await uploadToCloudinary(req.file) : null;
+
+      const courseData = {
+        course_category_id: req.body.course_category_id,
+        name: req.body.name,
+        author: req.body.author,
+        price: req.body.price,
+        level: req.body.level,
+        rating: req.body.rating,
+        isPremium: req.body.isPremium,
+        code: req.body.code,
+        intro_video: req.body.intro_video,
+        image: imageUrl,
+        chapters: req.body.chapters,
+      };
+
+      const course = await courseService.createCourseAdmin(courseData);
 
       res.status(201).json({
         status: 'OK',
@@ -130,19 +158,7 @@ module.exports = {
         data: course,
       });
     } catch (error) {
-      if (error.code) {
-        res.status(error.code).json({
-          code: error.code,
-          status: error.status,
-          message: error.message,
-        });
-      } else {
-        res.status(500).json({
-          code: 500,
-          status: 'Internal Server Error',
-          message: error,
-        });
-      }
+      return res.status(500).json({ error: 'Error creating course' });
     }
   },
 

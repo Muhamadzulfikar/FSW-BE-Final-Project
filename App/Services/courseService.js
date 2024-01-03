@@ -244,6 +244,7 @@ module.exports = {
       const deleteCourse = await this.deleteChapterAndModule(paramsDelete);
       const createCourse = await this.createChapterAndModule(bodyRequest.courseChapters, payloadChapterModules);
       return [deleteCourse, createCourse];
+      // eslint-disable-next-line no-unreachable
       await courseRepository.updateCourse(courseUuid, bodyRequest);
       await courseRepository.updateCourseDetail(courseUuid, bodyRequest.courseDetail);
       await courseRepository.updateCourseChapter(filterChapter);

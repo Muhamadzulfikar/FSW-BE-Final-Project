@@ -33,15 +33,19 @@
     },
     {
       "name": "Auth",
-      "description": "Everything about payment"
+      "description": "Everything about authorization"
     },
     {
       "name": "Admin",
-      "description": "Everything about payment"
+      "description": "Everything about admin"
     },
     {
       "name": "Notification",
-      "description": "Everything about payment"
+      "description": "Everything about notification"
+    },
+    {
+      "name": "User",
+      "description": "Everything about User"
     }
   ],
   "paths": {
@@ -907,14 +911,70 @@
                   "$ref": "#/components/schemas/resLogin"
                 },
                 "example": {
-                  "status": "Created",
-                  "code": 201,
-                  "message": "Success",
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully Login",
                   "data": [
                     {
                       "name": "Fahrel",
                       "email": "fahrel@gmail.com",
                       "phone": "081231238",
+                      "country": "Indonesia",
+                      "city": "Jember",
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/login/admin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "description": "This endpoint will login an admin",
+        "operationId": "loginAdmin",
+        "requestBody": {
+          "description": "Login for Admin",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resLogin"
+                },
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully Login",
+                  "data": [
+                    {
+                      "name": "Fahrel Admin",
+                      "email": "fahreladmin@gmail.com",
+                      "phone": "0812312312",
                       "country": "Indonesia",
                       "city": "Jember",
                       "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
@@ -968,6 +1028,59 @@
                       "name": "Fahrel",
                       "email": "fahrel@gmail.com",
                       "phone": "081231238",
+                      "country": null,
+                      "city": null,
+                      "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/register/admin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register for Admin",
+        "description": "This endpoint will register an Admin",
+        "operationId": "registerAdmin",
+        "requestBody": {
+          "description": "post a data to user for admin",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Created",
+                  "code": 201,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "name": "Fahrel Admin",
+                      "email": "fahreladmin@gmail.com",
+                      "phone": "081231212",
                       "country": null,
                       "city": null,
                       "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYxMGY2ZWQwLTEzYzAtNDYzZC05MWRhLWYwNmVmM2I5MjhlZSIsImlhdCI6MTcwMjQ2MzEyNSwiZXhwIjoxNzAyNDY0OTI1fQ.r94ceYn_zj1O8g7KuNUpc9lZxzU04m26s8wQsdSck88"
@@ -1112,7 +1225,138 @@
           }
         }
       }
+    },
+    "/v1/profile": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Profile User",
+        "description": "This endpoint will get data from the user profile",
+        "operationId": "getUserProfile",
+        "responses": {
+          "200": {
+            "description": "Profile",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "userUuid": "44fca4cf-3a55-456f-9aa4-377f238ad786",
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231212",
+                      "country": null,
+                      "city": null,
+                      "role": "admin"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["User"],
+        "summary": "Update Profile User",
+        "description": "This endpoint will update data in the user profile",
+        "operationId": "updateUserProfile",
+        "responses": {
+          "200": {
+            "description": "Profile Updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": [
+                    {
+                      "userUuid": "44fca4cf-3a55-456f-9aa4-377f238ad786",
+                      "name": "Fahrel",
+                      "email": "fahrel@gmail.com",
+                      "phone": "081231212",
+                      "country": null,
+                      "city": null,
+                      "role": "admin"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/update-password": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Update Password User",
+        "description": "This endpoint will update the password in the user profile",
+        "operationId": "updateUserPassword",
+        "requestBody": {
+          "description": "Request body for updating user password",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "oldPassword": "fahrel123",
+                "newPassword": "fahrel888"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password Updated",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Success",
+                  "data": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/internalError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
+    
+    
   },
   "components": {
     "schemas": {
