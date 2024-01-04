@@ -138,9 +138,6 @@ module.exports = {
 
   getCoursesAdmin() {
     return userCoursePayment.findAll({
-      where: {
-        payment_method: ['bank transfer', 'credit card'],
-      },
       include: [
         {
           model: userCourse,
@@ -474,6 +471,43 @@ module.exports = {
           attributes: ['uuid'],
         },
       ],
+    });
+  },
+
+  getCourseByUserChapterModule(userChapterModuleUuid) {
+    return userChapterModule.findOne({
+      where: {
+        uuid: userChapterModuleUuid,
+      },
+      attributes: ['uuid'],
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+          include: [
+            {
+              attributes: ['id'],
+              model: courseChapter,
+              include: [
+                {
+                  model: course,
+                  attributes: ['isPremium', 'uuid'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  },
+
+  getUserChapterModuleByChapterModule(userUuid, chapterModuleUuid) {
+    return userChapterModule.findAll({
+      where: {
+        user_uuid: userUuid,
+        chapter_module_uuid: chapterModuleUuid,
+      },
+      attributes: ['uuid'],
     });
   },
 };

@@ -201,12 +201,7 @@ module.exports = {
       const { id, exp } = await this.validateToken(token);
       await authRepositories.findUserById(id);
 
-      const d = new Date(exp * 1000);
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
-      const seconds = d.getSeconds();
-
-      const expiredAt = `Please Validation OTP Before ${hours}:${minutes}:${seconds}`;
+      const expiredAt = new Date(exp * 1000);
 
       response = {
         expiredAt,

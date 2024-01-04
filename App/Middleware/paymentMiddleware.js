@@ -37,6 +37,7 @@ module.exports = {
      */
       const { userUuid } = req.user;
       const { course_uuid: courseUuid } = req.body;
+
       if (!courseUuid) errorHandling.badRequest('Course uuid must not be empty');
       const userCourse = await courseService.getUserCourse(userUuid, courseUuid);
 
@@ -52,8 +53,14 @@ module.exports = {
               paymentUuid: payment?.uuid,
             },
           });
+          // eslint-disable-next-line no-else-return
+        } else {
+          const chapterModuleUuid = await courseService.getChapterModuleByCourse(courseUuid);
+          const userChapterModuleUuid = await courseService.getUserChapterModuleByChapterModule(userUuid, chapterModuleUuid);
+          await paymentCourseService.deleteUserCourseAndPayment(userCourse.uuid, userChapterModuleUuid);
         }
       }
+
       next();
     } catch (error) {
       responseError(res, error);

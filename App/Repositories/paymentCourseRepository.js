@@ -134,4 +134,22 @@ module.exports = {
       ],
     });
   },
+
+  async deleteUserCourseAndPayment(userCourseUuid, userChapterModuleUuid) {
+    const result = await sequelize.transaction((t) => {
+      userCourse.destroy({
+        where: {
+          uuid: userCourseUuid,
+        },
+      }, { transaction: t });
+
+      userChapterModule.destroy({
+        where: {
+          uuid: userChapterModuleUuid,
+        },
+      }, { transaction: t });
+    });
+
+    return result;
+  },
 };

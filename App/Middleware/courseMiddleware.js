@@ -118,9 +118,9 @@ module.exports = {
 
   async isEnrollNotPaid(req, res, next) {
     try {
-      const { chapterModuleUuid } = req.params;
+      const { userChapterModuleUuid } = req.params;
       const { userUuid } = req.user;
-      const course = await courseService.getCourseByChapterModule(chapterModuleUuid);
+      const course = await courseService.getCourseByUserChapterModule(userChapterModuleUuid);
 
       if (course.isPremium) {
         const paymentStatus = await courseService.getPaymentStatusByUserCourse(userUuid, course.uuid);
@@ -131,7 +131,15 @@ module.exports = {
 
       next();
     } catch (error) {
-      responseError(res, error);
+      if (error.code) {
+        responseError(res, error);
+      } else {
+        res.status(500).json({
+          code: 500,
+          status: 'Internal Server Error',
+          message: error.message,
+        });
+      }
     }
   },
 };

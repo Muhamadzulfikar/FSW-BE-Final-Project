@@ -408,8 +408,7 @@ module.exports = {
     } catch (error) {
       if (error instanceof DatabaseError) {
         errorHandling.badRequest('Chapter Module Uuid format is not valid');
-      }
-      errorHandling.internalError(error);
+      } else errorHandling.internalError(error);
     }
   },
 
@@ -454,8 +453,49 @@ module.exports = {
     } catch (error) {
       if (error instanceof DatabaseError) {
         errorHandling.badRequest(error.message);
+      } else errorHandling.internalError(error);
+    }
+  },
+
+  async getCourseByUserChapterModule(userChapterModuleUuid) {
+    try {
+      const userChapterModule = await courseRepository.getCourseByUserChapterModule(userChapterModuleUuid);
+      const { course } = userChapterModule.chapterModule.courseChapter;
+      return course;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('User Chapter Module Uuid format is not valid');
+      } else if (error instanceof TypeError) {
+        errorHandling.badRequest('User Chapter Module Uuid not found');
+      } else {
+        errorHandling.internalError(error);
       }
-      errorHandling.internalError(error);
+    }
+  },
+
+  async getChapterModuleByCourse(courseUuid) {
+    try {
+      const chapterModule = await courseRepository.getChapterModuleByCourse(courseUuid);
+      return chapterModule.flatMap((chapter) => chapter.chapterModules.map((module) => module.uuid));
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Course Uuid format is not valid');
+      } else {
+        errorHandling.internalError(error);
+      }
+    }
+  },
+
+  async getUserChapterModuleByChapterModule(userUuid, chapterModuleUuid) {
+    try {
+      const userChapterModule = await courseRepository.getUserChapterModuleByChapterModule(userUuid, chapterModuleUuid);
+      return userChapterModule.map((userModule) => userModule.uuid);
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Chapter Module Uuid format is not valid');
+      } else {
+        errorHandling.internalError(error);
+      }
     }
   },
 };

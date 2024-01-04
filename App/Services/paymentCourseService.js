@@ -144,4 +144,16 @@ module.exports = {
       errorHandling.badRequest(error);
     }
   },
+
+  async deleteUserCourseAndPayment(userCourseUuid, userChapterModuleUuid) {
+    try {
+      return await paymentCourseRepository.deleteUserCourseAndPayment(userCourseUuid, userChapterModuleUuid);
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest(error.message);
+      } else {
+        errorHandling.internalError(error);
+      }
+    }
+  },
 };

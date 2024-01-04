@@ -108,10 +108,6 @@ module.exports = (sequelize) => {
         notEmpty: {
           msg: 'price must not be empty',
         },
-        min: {
-          args: [20000],
-          msg: 'price must be greater than 20000',
-        },
       },
     },
     level: {
