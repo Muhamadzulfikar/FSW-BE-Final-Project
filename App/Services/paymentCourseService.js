@@ -10,8 +10,10 @@ module.exports = {
     const tax = course.price * 0.1;
     const total = course.price + tax;
 
-    const d = new Date(invoice.expiredAt);
-    const expired = `${d.getDate()} ${d.getMonth()} ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}`;
+    const d = invoice.expiredAt;
+    const expired = d.getDate() < 10
+      ? `0${d.getUTCDate()}/0${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.getUTCHours()}:${d.getUTCMinutes()}`
+      : `${d.getUTCDate()}/${d.getUTCMonth() + 1}/${d.getUTCFullYear()} ${d.getUTCHours()}:${d.getUTCMinutes()}`;
 
     const responseData = {
       paymentUuid: invoice.uuid,

@@ -37,4 +37,24 @@ module.exports = {
   resetPassword(userUuid, newPassword) {
     return user.update({ password: newPassword }, { where: { uuid: userUuid } });
   },
+
+  validateUser(userUuid) {
+    return user.update({ is_verify: true }, { where: { uuid: userUuid } });
+  },
+
+  getOtp(userUuid) {
+    return otpUser.findOne({
+      where: {
+        user_uuid: userUuid,
+      },
+    });
+  },
+
+  deleteUser(userUuid) {
+    return user.destroy({
+      where: {
+        uuid: userUuid,
+      },
+    });
+  },
 };

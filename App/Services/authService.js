@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { randomInt } = require('crypto');
-const { ValidationError } = require('sequelize');
+const { ValidationError, DatabaseError } = require('sequelize');
 const { createTransport } = require('nodemailer');
 const authRepositories = require('../Repositories/authRepositories');
 const errorHandling = require('../Error/errorHandling');
@@ -117,6 +117,7 @@ module.exports = {
       if (!otp) errorHandling.badRequest('OTP must not be empty');
       const { userUuid } = user;
       const validate = await authRepositories.validateOtp(otp, userUuid);
+      authRepositories.validateUser(userUuid);
 
       if (!validate) {
         errorHandling.badRequest('OTP is not valid');
@@ -186,6 +187,7 @@ module.exports = {
       country: user.country,
       city: user.city,
       role: user.role,
+      isVerify: user.is_verify,
     };
 
     return response;
@@ -211,5 +213,26 @@ module.exports = {
     }
 
     return response;
+  },
+
+  async getOtp(userUuid) {
+    try {
+      const otp = await authRepositories.getOtp(userUuid);
+      return otp;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Format user uuid tidak sesuai');
+      } else {
+        errorHandling.internalError(error);
+      }
+    }
+  },
+
+  async deleteUser(userUuid) {
+    try {
+      return await authRepositories.deleteUser(userUuid);
+    } catch (error) {
+      errorHandling.internalError(error);
+    }
   },
 };

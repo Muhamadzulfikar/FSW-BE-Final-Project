@@ -20,6 +20,7 @@ module.exports = {
           model: 'users',
           key: 'uuid',
         },
+        onDelete: 'CASCADE',
       },
       otp_code: {
         type: Sequelize.STRING(6),

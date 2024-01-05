@@ -20,6 +20,7 @@ const {
   authorize,
   isSuperAdmin,
   isLoginAdmin,
+  authorizeRegister,
 } = require('../Middleware/authMiddleware');
 
 route.post('/login', validateBodyLogin, isUserHasRegister, userLogin);
@@ -31,7 +32,7 @@ route.post(
   userRegister,
 );
 
-route.post('/validate-register', authorize, validateOtp);
+route.post('/validate-register', authorizeRegister, validateOtp);
 route.get('/validate-jwt', validateJwt);
 
 route.post(

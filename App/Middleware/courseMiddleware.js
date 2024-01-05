@@ -80,9 +80,10 @@ module.exports = {
       const { chapterModuleUuid } = req.params;
       const { userUuid } = req.user;
       const course = await courseService.getCourseByChapterModule(chapterModuleUuid);
-      const { chapter } = course.courseChapters[0];
+      const chapters = await courseService.getChapterByCourse(course.uuid);
+      const ModuleFree = chapters[0].chapterModules.map((chapterModule) => chapterModule.uuid);
 
-      if (course.isPremium && chapter !== 'Chapter 1') {
+      if (course.isPremium && !ModuleFree.includes(chapterModuleUuid)) {
         const paymentStatus = await courseService.getPaymentStatusByUserCourse(userUuid, course.uuid);
         const userCoursePayments = paymentStatus?.userCoursePayments[0];
         const paidCourse = userCoursePayments?.is_paid;

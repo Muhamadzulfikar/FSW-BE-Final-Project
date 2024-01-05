@@ -369,7 +369,7 @@ module.exports = {
       include: [
         {
           model: courseChapter,
-          attributes: ['id', 'chapter'],
+          attributes: ['id'],
           include: [
             {
               model: chapterModule,
@@ -429,6 +429,15 @@ module.exports = {
           where: {
             user_uuid: userUuid,
           },
+          include: [
+            {
+              model: userCoursePayment,
+              attributes: ['uuid'],
+              where: {
+                is_paid: true,
+              },
+            },
+          ],
           attributes: ['uuid'],
         },
         {
@@ -508,6 +517,23 @@ module.exports = {
         chapter_module_uuid: chapterModuleUuid,
       },
       attributes: ['uuid'],
+    });
+  },
+
+  getChapterByCourse(courseUuid) {
+    return courseChapter.findAll({
+      where: {
+        course_uuid: courseUuid,
+      },
+      order: [
+        ['id', 'ASC'],
+      ],
+      include: [
+        {
+          model: chapterModule,
+          attributes: ['uuid'],
+        },
+      ],
     });
   },
 };

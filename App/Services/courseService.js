@@ -415,10 +415,13 @@ module.exports = {
   async getCourseByChapterModule(chapterModuleUuid) {
     try {
       const course = await courseRepository.getCourseByChapterModule(chapterModuleUuid);
-      return course;
+      return {
+        uuid: course.uuid,
+        isPremium: course.isPremium,
+      };
     } catch (error) {
       if (error instanceof DatabaseError) {
-        errorHandling.badRequest(error.message);
+        errorHandling.badRequest('Chapter Module Uuid format is not valid');
       }
       errorHandling.internalError(error);
     }
@@ -493,6 +496,19 @@ module.exports = {
     } catch (error) {
       if (error instanceof DatabaseError) {
         errorHandling.badRequest('Chapter Module Uuid format is not valid');
+      } else {
+        errorHandling.internalError(error);
+      }
+    }
+  },
+
+  async getChapterByCourse(courseUuid) {
+    try {
+      const chapters = await courseRepository.getChapterByCourse(courseUuid);
+      return chapters;
+    } catch (error) {
+      if (error instanceof DatabaseError) {
+        errorHandling.badRequest('Course Uuid format is not valid');
       } else {
         errorHandling.internalError(error);
       }
