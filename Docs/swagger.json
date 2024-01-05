@@ -241,7 +241,7 @@
         }
       }
     },
-    "/v1/courses/onboarding/:courseUuid": {
+    "/v1/courses/onboarding/{courseUuid}": {
       "put": {
         "tags": [
           "Class"
@@ -276,7 +276,7 @@
         }
       }
     },
-    "/v1/course-modules/module-completed/:userChapterModuleUuid": {
+    "/v1/course-modules/module-completed/{userChapterModuleUuid}": {
       "put": {
         "tags": [
           "Class"
@@ -313,7 +313,7 @@
         }
       }
     },
-    "/v1/courses/video-course/:chapterModuleUuid": {
+    "/v1/courses/video-course/{chapterModuleUuid}": {
       "get": {
         "tags": [
           "Class"
@@ -656,7 +656,7 @@
         }
       }
     },
-    "/courses/invoice/:paymentUuid": {
+    "/courses/invoice/{paymentUuid}": {
       "get": {
         "tags": ["Payment"],
         "summary": "Get Invoice",
@@ -725,7 +725,7 @@
         }
       }
     },
-    "/v1/courses/payment/:paymentUuid": {
+    "/v1/courses/payment/{paymentUuid}": {
       "put": {
         "tags": ["Payment"],
         "summary": "Make Payment",
@@ -928,12 +928,12 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/internalError"
+                  "$ref": "#/components/schemas/unauthorized"
                 }
               }
             }
@@ -1090,12 +1090,258 @@
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/internalError"
+                  "$ref": "#/components/schemas/unauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/validate-register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Validate Otp When Register",
+        "description": "This endpoint will validate Otp when register",
+        "operationId": "validateOtp",
+        "requestBody": {
+          "description": "post a data otpUser and vaildate Otp",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reqValidateOtp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully registered",
+                  "data": [
+                    {}
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/badRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validate-jwt": {
+      "get": {
+        "summary": "Validate JWT",
+        "description": "Validate a JWT token",
+        "operationId": "validateJwt",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JWT is valid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "OK",
+                  "code": 200,
+                  "message": "Successfully Login",
+                  "data": {
+                    "name": "fahrel",
+                    "email": "fahrel@gmail.com",
+                    "phone": "081234543234",
+                    "country": null,
+                    "city": null,
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY0ODM4NDAwLWY4YmItNDU2Yi1iZjU3LTRjMTg1YTJjZGI2OSIsImlhdCI6MTcwNDQ0NzA4MywiZXhwIjoxNzA0NTMzNDgzfQ.IvqV4XkGNJlQ4Eq5H9_HXAx5LB0bqRxRLY7pO3XSxv4"
+                }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Ok"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Jwt Valid"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "username": {
+                      "type": "string",
+                      "example": "john_doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john@example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/unauthorized"
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Token must not be empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forget-password": {
+      "post": {
+        "summary": "Forget Password",
+        "description": "Send email to reset password",
+        "tags": ["Auth"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully send email to reset password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Ok",
+                  "code": 200,
+                  "message": "Successfully send email to reset password",
+                  "data": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 400,
+                  "status": "Error",
+                  "message": "Bad Request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reset-password/{jwtToken}": {
+      "put": {
+        "summary": "Reset Password",
+        "description": "Reset user password using JWT token",
+        "tags": ["Auth"],
+        "parameters": [
+          {
+            "name": "jwtToken",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "JWT token received for password reset"
+          }
+        ],
+        "requestBody": {
+          "description": "New password for the user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_password": {
+                    "type": "string",
+                    "description": "The new password for the user"
+                  }
+                },
+                "required": ["new_password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully reset password",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "Ok",
+                  "code": 200,
+                  "message": "Successfully reset password",
+                  "data": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 400,
+                  "status": "Error",
+                  "message": "Bad Request"
                 }
               }
             }
@@ -1363,7 +1609,7 @@
       "paramsID": {
         "type": "string",
         "format": "uuid",
-        "example": "b74507f3-ec93-4d10-a62f-9d20479a3f56"
+        "example": "0f2feace-9e49-4fa6-aa58-a42ce05cd57c"
       },
       "ping": {
         "type": "object",
@@ -1951,6 +2197,15 @@
           }
         }
       },
+      "reqValidateOtp": {
+        "type": "object",
+        "properties": {
+          "otp": {
+            "type": "integer",
+            "example": 1234
+          }
+        }
+      },
       "reqRegister": {
         "type": "object",
         "properties": {
@@ -2054,7 +2309,7 @@
         "properties": {
           "status": {
             "type": "string",
-            "example": "FAILED"
+            "example": "unauthorized"
           },
           "code": {
             "type": "number",
@@ -2062,7 +2317,7 @@
           },
           "message": {
             "type": "string",
-            "example": "Please login first"
+            "example": "unauthorized"
           }
         }
       },
@@ -2080,6 +2335,27 @@
           "error": {
             "type": "string",
             "example": "Internal Server Error"
+          }
+        }
+      },
+      "badRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "Error"
+          },
+          "code": {
+            "type": "number",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "error": {
+            "type": "string",
+            "example": "OTP must not be empty"
           }
         }
       }
