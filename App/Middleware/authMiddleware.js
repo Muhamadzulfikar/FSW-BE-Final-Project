@@ -55,7 +55,9 @@ module.exports = {
               status: 'OK',
               code: 200,
               message: 'Kamu sudah register silahkan validasi otp',
-              data: token,
+              data: {
+                token,
+              },
             },
           );
           // eslint-disable-next-line no-else-return
