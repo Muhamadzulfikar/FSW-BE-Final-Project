@@ -1,9 +1,19 @@
-const responseError = require('../Error/responseError');
 // const multer = require('multer');
+const multer = require('multer');
+const util = require('util');
+const responseError = require('../Error/responseError');
 const courseService = require('../Services/courseService');
-// const { uploadToCloudinary } = require('../../config/cloudinaryUtils');
+const cloudinaryUtil = require('../../config/cloudinaryUtils');
 
-// const upload = multer({ dest: 'uploads/' });
+const { uploadToCloudinary } = cloudinaryUtil;
+
+// Multer setup
+
+const storage = multer.memoryStorage();
+// eslint-disable-next-line object-shorthand
+const upload = multer({ storage: storage });
+
+const uploadMiddleware = util.promisify(upload.single('image'));
 
 module.exports = {
   async getAllCourses(req, res) {
