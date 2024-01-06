@@ -1,19 +1,5 @@
-// const multer = require('multer');
-const multer = require('multer');
-const util = require('util');
 const responseError = require('../Error/responseError');
 const courseService = require('../Services/courseService');
-const cloudinaryUtil = require('../../config/cloudinaryUtils');
-
-const { uploadToCloudinary } = cloudinaryUtil;
-
-// Multer setup
-
-const storage = multer.memoryStorage();
-// eslint-disable-next-line object-shorthand
-const upload = multer({ storage: storage });
-
-const uploadMiddleware = util.promisify(upload.single('image'));
 
 module.exports = {
   async getAllCourses(req, res) {
@@ -140,10 +126,10 @@ module.exports = {
 
   async createCourseAdmin(req, res) {
     try {
-      await uploadMiddleware(req, res);
+      // await uploadMiddleware(req, res);
 
-      const imageUrl = req.file ? await uploadToCloudinary(req.file) : null;
-      const course = await courseService.createCourseAdmin(req.body, imageUrl);
+      // const imageUrl = req.file ? await uploadToCloudinary(req.file) : null;
+      const course = await courseService.createCourseAdmin(req.body);
 
       res.status(201).json({
         status: 'OK',

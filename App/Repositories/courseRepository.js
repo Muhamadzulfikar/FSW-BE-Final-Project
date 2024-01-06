@@ -40,6 +40,7 @@ module.exports = {
     return course.findByPk(id, {
       order: [
         [courseChapter, 'id', 'ASC'],
+        [courseChapter, chapterModule, 'id', 'ASC'],
       ],
       include: [
         {
@@ -117,12 +118,8 @@ module.exports = {
   },
 
   async getCoursesStatisticDetail() {
-    const activeUsers = await userCourse.count();
-    const activeClass = await userCourse.count({
-      where: {
-        is_onboarding: true,
-      },
-    });
+    const activeUsers = await user.count();
+    const activeClass = await course.count();
     const premiumClass = await course.count({
       where: {
         isPremium: true,

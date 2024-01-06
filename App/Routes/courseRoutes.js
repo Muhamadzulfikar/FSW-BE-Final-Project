@@ -1,9 +1,5 @@
 const express = require('express');
-// const multer = require('multer');
 
-// const storage = multer.memoryStorage();
-// eslint-disable-next-line object-shorthand
-// const upload = multer({ storage: storage });
 const courseCategoryController = require('../Controllers/courseCategoryController');
 const courseController = require('../Controllers/courseController');
 
@@ -19,8 +15,6 @@ const {
   authorizeCourse,
   isEnrollNotPaid,
 } = require('../Middleware/courseMiddleware');
-
-// const upload = multer();
 
 const route = express.Router();
 

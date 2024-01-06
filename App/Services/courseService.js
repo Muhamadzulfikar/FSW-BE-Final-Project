@@ -208,11 +208,9 @@ module.exports = {
     }
   },
 
-  async createCourseAdmin(bodyRequest, imageUrl) {
+  async createCourseAdmin(bodyRequest) {
     try {
-      const payload = bodyRequest;
-      payload.image = imageUrl;
-      const course = await courseRepository.createCourseAdmin(payload);
+      const course = await courseRepository.createCourseAdmin(bodyRequest);
 
       return course;
     } catch (error) {
