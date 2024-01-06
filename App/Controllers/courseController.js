@@ -140,7 +140,10 @@ module.exports = {
 
   async createCourseAdmin(req, res) {
     try {
-      const course = await courseService.createCourseAdmin(req.body);
+      await uploadMiddleware(req, res);
+
+      const imageUrl = req.file ? await uploadToCloudinary(req.file) : null;
+      const course = await courseService.createCourseAdmin(req.body, imageUrl);
 
       res.status(201).json({
         status: 'OK',
